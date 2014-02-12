@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Checklist App</title>
+	<link rel="stylesheet" href="jquery/jquery.mobile-1.4.0.css" />
+    <script src="jquery/jquery-1.9.1.min.js"></script>
+    <script src="jquery/jquery.mobile-1.4.0.min.js"></script>	
+	<script type="text/javascript" src="js/app.js"></script>
+	<link rel="stylesheet" href="css/style.css" />
+	<meta name="viewport" content="width = device-width, initial-scale=1, maximum-scale=1"/>
+</head>
+<body>
+	<div data-role="page" id="home">
+		<header data-role="header">
+			<h1>Home</h1>
+		</header>
+		<div data-role="content">   
+         <div data-role="fieldcontain">
+             <ul class = "list">
+                <div class="checkbox"><input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
+                <label for="checkbox-1">Option A</label>
+            </div>
+                 <input type="checkbox" name="checkbox-2" id="checkbox-2" class="custom" />
+                <label for="checkbox-2">Option B</label>
+                 <input type="checkbox" name="checkbox-3" id="checkbox-3" class="custom" />
+                <label for="checkbox-3">Option C</label>
+                <span>Ass</span>
+              </ul>
+         </div>
+        </div>
+		<footer data-role="footer" data-position="fixed">
+			<div class="inputGrid">               
+       		</div>
+			<nav data-role="navbar">
+				<ul>
+					<li><a href="#home" data-icon="home">Home</a></li>
+					<li id="newItem"><a href="#" data-icon="plus">New</a></li>
+					<li><a href="#templates" data-icon="grid">Templates</a></li>
+					<li id="newLabel"><a href="#" data-icon="info">About</a></li>
+				</ul>
+			</nav>
+		</footer>	
+	</div> <!-- one page -->
+	
+	<div data-role="page" id="templates">
+		<header data-role="header">
+			<h1>Templates</h1>
+			<a href="#home" data-icon="home" data-iconpos="notext">Home</a>
+		</header>	
+	</div> <!-- one page -->
+</body>
+</html>

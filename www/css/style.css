@@ -1,0 +1,21 @@
+span.ui-btn-text:before {
+    content:"";
+    border-right: 1px solid #CCC;
+    margin-right: 10px;
+    position: absolute;
+    height: 550px;
+    top:-300px;
+    left: -10px;
+}
+.ui-btn-text {
+    margin-left: 10px;
+}
+
+div.box {
+	width: 3em;
+    height: 3em;
+    background-color: #108040;
+}
+
+
+
