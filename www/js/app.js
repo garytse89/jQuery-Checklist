@@ -9,11 +9,11 @@ var inputField = '<span><input type="text" name="name" id="inputField" placehold
 var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
 
 function createListItem() {
-	var newItem = '<input type="checkbox" name="checkbox-'+i+'" id="checkbox-'+i+'" class="custom" />\
-                <label for="checkbox-'+i+'">' + $('#inputField').val() + '</label>';
+	var newItem = '<div class="checkbox"><input type="checkbox" name="checkbox-'+i+'" id="checkbox-'+i+'" class="custom" />\
+                <label for="checkbox-'+i+'">' + $('#inputField').val() + '</label></div>';
     $('.list').append(newItem);
     $('[type="checkbox"]').checkboxradio();
-
+    $( "div.checkbox" ).bind( "taphold", tapholdHandler );
   	i++;
 }
 
@@ -64,8 +64,5 @@ $(document).ready(function() {
 		
 		$(this).stopPropagation();
 	});	
-
-	$( "div.checkbox" ).bind( "taphold", tapholdHandler );
-
 
 });
