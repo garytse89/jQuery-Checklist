@@ -66,7 +66,7 @@ function createExistingItem(key,item) {
 }
 
 function createExistingLabel(key,item) {
-	var newItem = '<div class="'+key+'">' + item + '</div>';
+	var newLabel = '<div class="'+key+'">' + item + '</div>';
 
     $('.list').append(newLabel);
 
