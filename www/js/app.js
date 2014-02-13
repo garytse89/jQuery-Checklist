@@ -3,6 +3,8 @@
 /* jshint strict: false */
 // declares to jshint that $ is a variable
 
+var jStorageTesting = false;
+
 var i=2; // one existing item so current counter starts off at 2
 
 var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
@@ -74,35 +76,37 @@ $(document).ready(function() {
 		addingItem = false;		
 	});
 
-	/* Testing only */
+	if( jStorageTesting == true ) {
+		/* Testing only */
+		$('#testStore').mouseup(function(){
+			$('.inputGrid').show('fast');
+			addingItem = false;	
+			storing = true;	
+		});
 
-	$('#testStore').mouseup(function(){
-		$('.inputGrid').show('fast');
-		addingItem = false;	
-		storing = true;	
-	});
-
-	$('#testRetrieve').mouseup(function(){
-		$('.inputGrid').show('fast');
-		addingItem = false;	
-		storing = false;	
-	});
-
-	/**/
+		$('#testRetrieve').mouseup(function(){
+			$('.inputGrid').show('fast');
+			addingItem = false;	
+			storing = false;	
+		});
+		/**/
+	}
 
 	$('#inputButton').mouseup(function() {
 		if( addingItem == true ) {
 			createListItem();
 		}
 		else {
-			/* Testing only */
-			if( storing == true ) {
-				testStore();
+			if( jStorageTesting == true ) {
+				/* Testing only */
+				if( storing == true ) {
+					testStore();
+				}
+				else {
+					testRetrieve();
+				}
 			}
-			else {
-				testRetrieve();
-			}
-			//createNewLabel();
+			createNewLabel();
 		}
 
 		$('#inputField').val('');
