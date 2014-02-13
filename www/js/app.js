@@ -4,6 +4,7 @@
 // declares to jshint that $ is a variable
 
 var jStorageTesting = false;
+var listItems = {};
 var i=2; // one existing item so current counter starts off at 2
 
 var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
@@ -54,7 +55,7 @@ function testRetrieve() {
 
 // jQuery
 $(document).ready(function() {	
-	var listItems = {};
+	
 	var db = openDatabase ("Test", "1.0", "Test", 65535); // local storage
 	var addingItem = true;
 	var storing = true; // for testing only
