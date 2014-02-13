@@ -11,6 +11,11 @@ span.ui-btn-text:before {
     margin-left: 10px;
 }
 
+div.box {
+	width: 3em;
+    height: 3em;
+    background-color: #108040;
+}
 
 
 

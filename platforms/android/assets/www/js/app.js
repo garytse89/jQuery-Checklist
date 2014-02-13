@@ -3,23 +3,37 @@
 /* jshint strict: false */
 // declares to jshint that $ is a variable
 
-var i=4; // counter``
+var i=2; // one existing item so current counter starts off at 2
 
 var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
 var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
 
 function createListItem() {
-	var newItem = '<input type="checkbox" name="checkbox-'+i+'" id="checkbox-'+i+'" class="custom" />\
-                <label for="checkbox-'+i+'">' + $('#inputField').val() + '</label>';
+	if( !$('#inputField').val() ) return;
+	var itemNum = i;
+	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'" class="custom" />\
+                <label for="checkbox-'+itemNum+'">' + $('#inputField').val() + '</label></div>';
     $('.list').append(newItem);
     $('[type="checkbox"]').checkboxradio();
+
+    $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
+    	$("div.checkbox-"+itemNum).remove(); 
+    });
 
   	i++;
 }
 
 function createNewLabel() {
-	var newLabel = '<div>' + $('#inputField').val() + '</div>';
-	$('.list').append(newLabel);	
+	if( !$('#inputField').val() ) return;
+	var itemNum = i;
+	var newLabel = '<div class="label-'+itemNum+'">' + $('#inputField').val() + '</div>';
+	$('.list').append(newLabel);
+
+	$( "div.label-"+itemNum ).bind( "taphold", function(event) {
+    	$("div.label-"+itemNum).remove();
+    });
+
+  	i++;	
 }
 
 // jQuery
@@ -58,6 +72,6 @@ $(document).ready(function() {
 		$('.inputGrid').hide('fast');
 		
 		$(this).stopPropagation();
-	});		
+	});	
 
 });

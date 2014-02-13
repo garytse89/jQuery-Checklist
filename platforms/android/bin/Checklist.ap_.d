@@ -20,6 +20,7 @@
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/index.html \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/jquery \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/js \
+/Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/sample.html \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/css/index.css \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/css/style.css \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/img/logo.png \
