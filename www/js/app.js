@@ -11,6 +11,7 @@ var inputField = '<span><input type="text" name="name" id="inputField" placehold
 var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
 
 function createListItem() {
+
 	if( !$('#inputField').val() ) return;
 	var itemNum = i;
 	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'" class="custom" />\
@@ -20,12 +21,27 @@ function createListItem() {
 
     $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
     	$("div.checkbox-"+itemNum).remove(); 
+    	delete listItems['checkbox-'+itemNum];
+    	$.jStorage.set('untitled', JSON.stringify(listItems));
     });
 
-    listItems['checkbox'] = $('#inputField').val();
-    alert(JSON.stringify(listItems));
+    i++;
+    listItems['checkbox-'+itemNum] = $('#inputField').val();
+    $.jStorage.set('untitled', JSON.stringify(listItems)); 
+}
 
-  	i++;
+function createExistingItem(key,item) {
+	var newItem = '<div class="'+key+'"><input type="checkbox" name="'+key+'" id="'+key+'" class="custom" />\
+                <label for="'+key+'">' + item + '</label></div>';
+
+    $('.list').append(newItem);
+    $('[type="checkbox"]').checkboxradio();
+
+    $( 'div.'+key ).bind( "taphold", function(event) {
+    	$( 'div.'+key ).remove(); 
+    	delete listItems[key];
+    	$.jStorage.set('untitled', JSON.stringify(listItems));
+    });
 }
 
 function createNewLabel() {
@@ -39,6 +55,19 @@ function createNewLabel() {
     });
 
   	i++;	
+  	listItems['label-'+itemNum] = $('#inputField').val();
+  	$.jStorage.set('untitled', JSON.stringify(listItems));	
+}
+
+function createExistingLabel(key,item) {
+	var newItem = '<div class="'+key+'">' + item + '</div>';
+    $('.list').append(newLabel);
+
+    $( 'div.'+key ).bind( "taphold", function(event) {
+    	$( 'div.'+key ).remove(); 
+    	delete listItems[key];
+    	$.jStorage.set('untitled', JSON.stringify(listItems));
+    });
 }
 
 function testStore() {
@@ -79,6 +108,12 @@ $(document).ready(function() {
 		addingItem = false;		
 	});
 
+	$('#clear').mouseup(function(){
+		$.jStorage.set('untitled', null);
+		listItems = {};
+		console.log('Cleared checklist');
+	});
+
 	if( jStorageTesting == true ) {
 		/* Testing only */
 		$('#testStore').mouseup(function(){
@@ -117,5 +152,22 @@ $(document).ready(function() {
 		
 		$(this).stopPropagation();
 	});	
+
+	// load existing checklist
+	var existingChecklist = $.jStorage.get('untitled');
+	if( existingChecklist ) { // does an untitled checklist exist?
+		listItems = JSON.parse(existingChecklist);
+		for (var key in listItems) {
+		  	if (listItems.hasOwnProperty(key)) {
+		    	console.log(key + " -> " + listItems[key]);
+		    	if( key.match("label") != null ) {
+		    		createExistingLabel(key, listItems[key]);
+		    	}
+		    	else if( key.match("checkbox") != null ) {
+		    		createExistingItem(key, listItems[key]);		    		
+		    	}		    	
+		  	}
+		}
+	}
 
 });
