@@ -22,12 +22,39 @@
 		<div data-role="content">   
          <div data-role="fieldcontain">
              <ul class = "list">
+                <!--
                 <div class="checkbox-1">
                     <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" data-inline="true"/>
                     <label for="checkbox-1">Option A</label>
                 </div>
+                -->
               </ul>
          </div>
+
+         <div data-role="popup" id="saveDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+        <div data-role="header" data-theme="a" class="ui-corner-top">
+            <h1>Save</h1>
+        </div>
+        <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+            <h3 class="ui-title">What name do you want to save this list as?</h3>
+            <input type="text" id="saveField" />
+            <a href="#" id="save" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Save</a>
+            <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>            
+            </div>
+        </div>
+
+        <div data-role="popup" id="clearDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+        <div data-role="header" data-theme="a" class="ui-corner-top">
+            <h1>Delete</h1>
+        </div>
+        <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+            <h3 class="ui-title">Are you sure you want to delete this list?</h3>
+            <a href="#" id="clear" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Delete</a>
+            <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>            
+            </div>
+        </div>
+
+
         </div>
 		<footer data-role="footer" data-position="fixed">
 			<div class="inputGrid">               
@@ -37,8 +64,12 @@
 					<li id="newItem"><a href="#" data-icon="plus">New Item</a></li>
 					<li id="newLabel"><a href="#" data-icon="plus">New Label</a></li>
                     <li><a href="#templates" data-icon="grid">Templates</a></li>
+                    <li id="clearList"><a href="#clearDialog" data-icon="delete" data-rel="popup" data-position-to="window">Delete List</a></li>
+                    <li id="saveList"><a href="#saveDialog" data-icon="grid" data-rel="popup" data-position-to="window">Save as Template</a></li>
+                    <!--
                     <li id="testStore"><a href="#" data-icon="grid">Store</a></li>
-                    <li id="testRetrieve"><a href="#" data-icon="grid">Get</a></li>					
+                    <li id="testRetrieve"><a href="#" data-icon="grid">Get</a></li>
+                    -->				
 				</ul>
 			</nav>
 		</footer>	
@@ -49,7 +80,17 @@
 			<h1>Templates</h1>
 			<a href="#home" data-icon="home" data-iconpos="notext">Home</a>
 		</header>	
+        <div data-role="content"> 
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup">
+                    <ul data-role="listview" id="listOfChecklists">
+                    </ul>
+                </fieldset>
+            </div>
+        </div>
 	</div> <!-- one page -->
+
+    
 </div>
 </body>
 </html>
