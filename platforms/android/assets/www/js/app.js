@@ -36,10 +36,24 @@ function createNewLabel() {
   	i++;	
 }
 
+function testStore() {
+	if( !$('#inputField').val() ) return;
+	$.jStorage.set($('#inputField').val(), "balls");
+	alert('stored the value key = ' + $('#inputField').val() + ', value = balls');
+}
+
+function testRetrieve() {
+	if( !$('#inputField').val() ) return;
+	alert('retrieved (hopefully = balls): ' + $.jStorage.get($('#inputField').val()));
+}
+
+
 // jQuery
 $(document).ready(function() {	
 	var listItems = new Array();
+	var db = openDatabase ("Test", "1.0", "Test", 65535); // local storage
 	var addingItem = true;
+	var storing = true; // for testing only
 
 	// prepend text field to footer
 	$('.inputGrid').append(inputField);
@@ -60,12 +74,35 @@ $(document).ready(function() {
 		addingItem = false;		
 	});
 
+	/* Testing only */
+
+	$('#testStore').mouseup(function(){
+		$('.inputGrid').show('fast');
+		addingItem = false;	
+		storing = true;	
+	});
+
+	$('#testRetrieve').mouseup(function(){
+		$('.inputGrid').show('fast');
+		addingItem = false;	
+		storing = false;	
+	});
+
+	/**/
+
 	$('#inputButton').mouseup(function() {
 		if( addingItem == true ) {
 			createListItem();
 		}
 		else {
-			createNewLabel();
+			/* Testing only */
+			if( storing == true ) {
+				testStore();
+			}
+			else {
+				testRetrieve();
+			}
+			//createNewLabel();
 		}
 
 		$('#inputField').val('');
