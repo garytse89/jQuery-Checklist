@@ -3,23 +3,21 @@
 /* jshint strict: false */
 // declares to jshint that $ is a variable
 
-var i=4; // counter``
+var i=2; // counter``
 
 var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
 var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
 
 function createListItem() {
-	var newItem = '<div class="checkbox"><input type="checkbox" name="checkbox-'+i+'" id="checkbox-'+i+'" class="custom" />\
+	var newItem = '<div class="checkbox-'+i+'"><input type="checkbox" name="checkbox-'+i+'" id="checkbox-'+i+'" class="custom" />\
                 <label for="checkbox-'+i+'">' + $('#inputField').val() + '</label></div>';
     $('.list').append(newItem);
     $('[type="checkbox"]').checkboxradio();
-    $( "div.checkbox" ).bind( "taphold", tapholdHandler );
-  	i++;
-}
 
-function tapholdHandler( event ){
-	//$( event.target ).addClass( "taphold" );
-	alert('hi');
+    $( "div.checkbox-"+i ).bind( "taphold", function(event) {
+    	$("div.checkbox-"+(i-1)).remove(); // by the time this function runs, i will have been incremented
+    });
+  	i++;
 }
 
 function createNewLabel() {
