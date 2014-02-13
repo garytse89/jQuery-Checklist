@@ -4,7 +4,6 @@
 // declares to jshint that $ is a variable
 
 var jStorageTesting = false;
-
 var i=2; // one existing item so current counter starts off at 2
 
 var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
@@ -21,6 +20,9 @@ function createListItem() {
     $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
     	$("div.checkbox-"+itemNum).remove(); 
     });
+
+    listItems['checkbox'] = $('#inputField').val();
+    alert(JSON.stringify(listItems));
 
   	i++;
 }
@@ -52,7 +54,7 @@ function testRetrieve() {
 
 // jQuery
 $(document).ready(function() {	
-	var listItems = new Array();
+	var listItems = {};
 	var db = openDatabase ("Test", "1.0", "Test", 65535); // local storage
 	var addingItem = true;
 	var storing = true; // for testing only
