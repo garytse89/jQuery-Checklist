@@ -38,7 +38,7 @@ function createListItem() {
 
 function createNewLabel() {
 	if( !$('#inputField').val() ) return;
-	
+
 	while(listItems['checkbox-'+i] != null){
 		i++;
 	}
@@ -145,6 +145,7 @@ $(document).ready(function() {
 		}	
 	});
 
+	/* Delete the whole list */
 	$('#clear').mouseup(function(){
 		$.jStorage.set('untitled', null);
 		for (var key in listItems) {
@@ -154,6 +155,18 @@ $(document).ready(function() {
 		}
 		listItems = {};
 		console.log('Cleared checklist');
+	});
+
+	/* Save the list as a template */
+	$('#save').mouseup(function(){
+		var savedListName = $('#saveField').val();
+		if( savedListName == null ) return;
+
+		$.jStorage.set(savedListName, JSON.stringify(listItems));
+		console.log("Saved list named: " + savedListName);
+		$.jStorage.set('untitled', null); // wipe untitled list, so current list name should be different from now on
+
+		$('#listOfChecklists').append('<li>'+savedListName+'</li>');
 	});
 
 	if( jStorageTesting == true ) {

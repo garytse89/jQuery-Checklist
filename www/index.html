@@ -37,8 +37,8 @@
         </div>
         <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
             <h3 class="ui-title">What name do you want to save this list as?</h3>
-            <input type="text"/>
-            <a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Save</a>
+            <input type="text" id="saveField" />
+            <a href="#" id="save" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Save</a>
             <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>            
             </div>
         </div>
@@ -80,6 +80,14 @@
 			<h1>Templates</h1>
 			<a href="#home" data-icon="home" data-iconpos="notext">Home</a>
 		</header>	
+        <div data-role="content"> 
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup">
+                    <ul data-role="listview" id="listOfChecklists">
+                    </ul>
+                </fieldset>
+            </div>
+        </div>
 	</div> <!-- one page -->
 
     
