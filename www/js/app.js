@@ -5,7 +5,7 @@
 
 var jStorageTesting = false;
 var listItems = {};
-var i=2; // one existing item so current counter starts off at 2
+var i=1; // one existing item so current counter starts off at 2
 
 var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
 var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
@@ -13,7 +13,11 @@ var inputButton = '<span><input type="button" value="Submit" id="inputButton"/><
 function createListItem() {
 	if( !$('#inputField').val() ) return;
 	
+	while(listItems['checkbox-'+i] != null){
+		i++;
+	}
 	var itemNum = i;
+
 	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'" class="custom" />\
                 <label for="checkbox-'+itemNum+'">' + $('#inputField').val() + '</label></div>';
    
@@ -24,6 +28,7 @@ function createListItem() {
     	$("div.checkbox-"+itemNum).remove(); 
     	delete listItems['checkbox-'+itemNum];
     	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	i--;
     });
 
     i++;
@@ -33,7 +38,12 @@ function createListItem() {
 
 function createNewLabel() {
 	if( !$('#inputField').val() ) return;
+	
+	while(listItems['checkbox-'+i] != null){
+		i++;
+	}
 	var itemNum = i;
+
 	var newLabel = '<div class="label-'+itemNum+'"><span>' + $('#inputField').val() + '</span></div>';
 	
 	$('.list').append(newLabel);
@@ -42,6 +52,7 @@ function createNewLabel() {
     	$("div.label-"+itemNum).remove();
     	delete listItems['label-'+itemNum];
     	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	i--;
     });
 
   	i++;	
@@ -60,6 +71,7 @@ function createExistingItem(key,item) {
     	$( 'div.'+key ).remove(); 
     	delete listItems[key];
     	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	i--;
     });
 
     i++;	
@@ -74,6 +86,7 @@ function createExistingLabel(key,item) {
     	$( 'div.'+key ).remove(); 
     	delete listItems[key];
     	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	i--;
     });
 
     i++;	
@@ -96,6 +109,7 @@ $(document).ready(function() {
 	var db = openDatabase ("Test", "1.0", "Test", 65535); // local storage
 	var addingItem = true;
 	var storing = true; // for testing only
+	var inputShown = false;
 
 	// prepend text field to footer
 	$('.inputGrid').append(inputField);
@@ -107,17 +121,37 @@ $(document).ready(function() {
 	$('.inputGrid').hide();	
 
 	$('#newItem').mouseup(function(){
-		$('.inputGrid').show('fast');
-		addingItem = true;
+		if( inputShown == false ) {
+			$('.inputGrid').show();
+			addingItem = true;
+			inputShown = true;
+		}
+		else {
+			$('.inputGrid').hide();
+			inputShown = false;
+		}
 	});
 
 	$('#newLabel').mouseup(function(){
-		$('.inputGrid').show('fast');
-		addingItem = false;		
+		$('.inputGrid').show();
+		if( inputShown == false ) {
+			$('.inputGrid').show();
+			addingItem = false;
+			inputShown = true;
+		}
+		else {
+			$('.inputGrid').hide();
+			inputShown = false;
+		}	
 	});
 
 	$('#clear').mouseup(function(){
 		$.jStorage.set('untitled', null);
+		for (var key in listItems) {
+		  	if (listItems.hasOwnProperty(key)) {
+		  		$( 'div.'+key ).remove(); 	    	
+		  	}
+		}
 		listItems = {};
 		console.log('Cleared checklist');
 	});
@@ -125,13 +159,13 @@ $(document).ready(function() {
 	if( jStorageTesting == true ) {
 		/* Testing only */
 		$('#testStore').mouseup(function(){
-			$('.inputGrid').show('fast');
+			$('.inputGrid').show();
 			addingItem = false;	
 			storing = true;	
 		});
 
 		$('#testRetrieve').mouseup(function(){
-			$('.inputGrid').show('fast');
+			$('.inputGrid').show();
 			addingItem = false;	
 			storing = false;	
 		});
@@ -156,7 +190,8 @@ $(document).ready(function() {
 		}
 
 		$('#inputField').val('');
-		$('.inputGrid').hide('fast');
+		$('.inputGrid').hide();
+		inputShown = false;
 		
 		$(this).stopPropagation();
 	});	
