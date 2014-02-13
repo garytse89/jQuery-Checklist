@@ -11,11 +11,12 @@ var inputField = '<span><input type="text" name="name" id="inputField" placehold
 var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
 
 function createListItem() {
-
 	if( !$('#inputField').val() ) return;
+	
 	var itemNum = i;
 	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'" class="custom" />\
                 <label for="checkbox-'+itemNum+'">' + $('#inputField').val() + '</label></div>';
+   
     $('.list').append(newItem);
     $('[type="checkbox"]').checkboxradio();
 
@@ -28,6 +29,24 @@ function createListItem() {
     i++;
     listItems['checkbox-'+itemNum] = $('#inputField').val();
     $.jStorage.set('untitled', JSON.stringify(listItems)); 
+}
+
+function createNewLabel() {
+	if( !$('#inputField').val() ) return;
+	var itemNum = i;
+	var newLabel = '<div class="label-'+itemNum+'">' + $('#inputField').val() + '</div>';
+	
+	$('.list').append(newLabel);
+
+	$( "div.label-"+itemNum ).bind( "taphold", function(event) {
+    	$("div.label-"+itemNum).remove();
+    	delete listItems['label-'+itemNum];
+    	$.jStorage.set('untitled', JSON.stringify(listItems));
+    });
+
+  	i++;	
+  	listItems['label-'+itemNum] = $('#inputField').val();
+  	$.jStorage.set('untitled', JSON.stringify(listItems));	
 }
 
 function createExistingItem(key,item) {
@@ -44,29 +63,9 @@ function createExistingItem(key,item) {
     });
 }
 
-function createNewLabel() {
-	if( !$('#inputField').val() ) return;
-	var itemNum = i;
-	var newLabel = '<div class="label-'+itemNum+'">' + $('#inputField').val() + '</div>';
-	console.log("On new label use this HTML: ");
-	console.log(newLabel);
-	$('.list').append(newLabel);
-
-	$( "div.label-"+itemNum ).bind( "taphold", function(event) {
-    	$("div.label-"+itemNum).remove();
-    	delete listItems['label-'+itemNum];
-    	$.jStorage.set('untitled', JSON.stringify(listItems));
-    });
-
-  	i++;	
-  	listItems['label-'+itemNum] = $('#inputField').val();
-  	$.jStorage.set('untitled', JSON.stringify(listItems));	
-}
-
 function createExistingLabel(key,item) {
-	console.log(key + ' ' + item);
 	var newItem = '<div class="'+key+'">' + item + '</div>';
-	console.log("On existing label use this HTML: " + String(newItem));
+
     $('.list').append(newLabel);
 
     $( 'div.'+key ).bind( "taphold", function(event) {
