@@ -34,7 +34,7 @@ function createListItem() {
 function createNewLabel() {
 	if( !$('#inputField').val() ) return;
 	var itemNum = i;
-	var newLabel = '<div class="label-'+itemNum+'">' + $('#inputField').val() + '</div>';
+	var newLabel = '<div class="label-'+itemNum+'"><span>' + $('#inputField').val() + '</span></div>';
 	
 	$('.list').append(newLabel);
 
@@ -61,6 +61,8 @@ function createExistingItem(key,item) {
     	delete listItems[key];
     	$.jStorage.set('untitled', JSON.stringify(listItems));
     });
+
+    i++;	
 }
 
 function createExistingLabel(key,item) {
@@ -73,6 +75,8 @@ function createExistingLabel(key,item) {
     	delete listItems[key];
     	$.jStorage.set('untitled', JSON.stringify(listItems));
     });
+
+    i++;	
 }
 
 function testStore() {
@@ -173,5 +177,7 @@ $(document).ready(function() {
 		  	}
 		}
 	}
+
+	$('[type="checkbox"]').checkboxradio();
 
 });
