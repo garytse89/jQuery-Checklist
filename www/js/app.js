@@ -48,10 +48,14 @@ function createNewLabel() {
 	if( !$('#inputField').val() ) return;
 	var itemNum = i;
 	var newLabel = '<div class="label-'+itemNum+'">' + $('#inputField').val() + '</div>';
+	console.log("On new label use this HTML: ");
+	console.log(newLabel);
 	$('.list').append(newLabel);
 
 	$( "div.label-"+itemNum ).bind( "taphold", function(event) {
     	$("div.label-"+itemNum).remove();
+    	delete listItems['label-'+itemNum];
+    	$.jStorage.set('untitled', JSON.stringify(listItems));
     });
 
   	i++;	
@@ -60,7 +64,9 @@ function createNewLabel() {
 }
 
 function createExistingLabel(key,item) {
+	console.log(key + ' ' + item);
 	var newItem = '<div class="'+key+'">' + item + '</div>';
+	console.log("On existing label use this HTML: " + String(newItem));
     $('.list').append(newLabel);
 
     $( 'div.'+key ).bind( "taphold", function(event) {
@@ -80,7 +86,6 @@ function testRetrieve() {
 	if( !$('#inputField').val() ) return;
 	alert('retrieved the value (hopefully = someValue): ' + $.jStorage.get($('#inputField').val()));
 }
-
 
 // jQuery
 $(document).ready(function() {	
