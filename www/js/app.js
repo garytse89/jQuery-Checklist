@@ -17,7 +17,7 @@ function createListItem() {
     $('[type="checkbox"]').checkboxradio();
 
     $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
-    	$("div.checkbox-"+itemNum).remove(); // by the time this function runs, i will have been incremented
+    	$("div.checkbox-"+itemNum).remove(); 
     });
 
   	i++;
@@ -25,11 +25,14 @@ function createListItem() {
 
 function createNewLabel() {
 	if( !$('#inputField').val() ) return;
-	var newLabel = '<div class="label-'+i+'">' + $('#inputField').val() + '</div>';
+	var itemNum = i;
+	var newLabel = '<div class="label-'+itemNum+'">' + $('#inputField').val() + '</div>';
 	$('.list').append(newLabel);
-	$( "div.label-"+i ).bind( "taphold", function(event) {
-    	$("div.label-"+(i-1)).remove(); // by the time this function runs, i will have been incremented
+
+	$( "div.label-"+itemNum ).bind( "taphold", function(event) {
+    	$("div.label-"+itemNum).remove();
     });
+
   	i++;	
 }
 
