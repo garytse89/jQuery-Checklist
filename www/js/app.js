@@ -10,21 +10,21 @@ var inputButton = '<span><input type="button" value="Submit" id="inputButton"/><
 
 function createListItem() {
 	if( !$('#inputField').val() ) return;
-
-	var newItem = '<div class="checkbox-'+i+'"><input type="checkbox" name="checkbox-'+i+'" id="checkbox-'+i+'" class="custom" />\
-                <label for="checkbox-'+i+'">' + $('#inputField').val() + '</label></div>';
+	var itemNum = i;
+	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'" class="custom" />\
+                <label for="checkbox-'+itemNum+'">' + $('#inputField').val() + '</label></div>';
     $('.list').append(newItem);
     $('[type="checkbox"]').checkboxradio();
 
-    $( "div.checkbox-"+i ).bind( "taphold", function(event) {
-    	$("div.checkbox-"+(i-1)).remove(); // by the time this function runs, i will have been incremented
+    $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
+    	$("div.checkbox-"+itemNum).remove(); // by the time this function runs, i will have been incremented
     });
+
   	i++;
 }
 
 function createNewLabel() {
 	if( !$('#inputField').val() ) return;
-	
 	var newLabel = '<div class="label-'+i+'">' + $('#inputField').val() + '</div>';
 	$('.list').append(newLabel);
 	$( "div.label-"+i ).bind( "taphold", function(event) {
