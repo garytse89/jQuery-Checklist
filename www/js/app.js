@@ -154,6 +154,7 @@ function clearCurrentList() {
 }
 
 function loadChecklist(template) {
+	clearCurrentList();
 	console.log("Load checklist called " + currentChecklist);
 	// load template from local storage and render it
 	if( template ) { 
@@ -219,7 +220,7 @@ $(document).ready(function() {
 
 	/* Delete the whole list */
 	$('#clear').mouseup(function(){ 
-		clearCurrentList()
+		clearCurrentList();
 	});
 
 	/* Save the list as a template */
@@ -241,7 +242,6 @@ $(document).ready(function() {
 
 	/* Template page template links */
 	$('#confirmLoadTemplate').mouseup(function(){
-		clearCurrentList();
 		loadChecklist(templateToLoad);
 	});
 
