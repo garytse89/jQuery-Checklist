@@ -129,7 +129,7 @@ function renderTemplates() {
 		}
 	}
 
- 	$('#'+key).mouseup(function(){
+ 	$('#'+key).click(function(){
  		currentChecklist = key;
  		console.log("Load checklist from TEMPLATE called " + currentChecklist);		
  		confirmDelete();
@@ -197,7 +197,7 @@ $(document).ready(function() {
 
 	$('.inputGrid').hide();	
 
-	$('#newItem').mouseup(function(){
+	$('#newItem').click(function(){
 		if( inputShown == false ) {
 			$('.inputGrid').show();
 			addingItem = true;
@@ -209,7 +209,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#newLabel').mouseup(function(){
+	$('#newLabel').click(function(){
 		$('.inputGrid').show();
 		if( inputShown == false ) {
 			$('.inputGrid').show();
@@ -223,12 +223,12 @@ $(document).ready(function() {
 	});
 
 	/* Delete the whole list */
-	$('#clear').mouseup(function(){ 
+	$('#clear').click(function(){ 
 		clearCurrentList();
 	});
 
 	/* Save the list as a template */
-	$('#save').mouseup(function(){
+	$('#save').click(function(){
 		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
 
 		// save the list into local storage
@@ -245,19 +245,19 @@ $(document).ready(function() {
 	});
 
 	/* Template page template links */
-	$('#confirmLoadTemplate').mouseup(function(){
+	$('#confirmLoadTemplate').click(function(){
 		loadChecklist(templateToLoad);
 	});
 
 	if( jStorageTesting == true ) {
 		/* Testing only */
-		$('#testStore').mouseup(function(){
+		$('#testStore').click(function(){
 			$('.inputGrid').show();
 			addingItem = false;	
 			storing = true;	
 		});
 
-		$('#testRetrieve').mouseup(function(){
+		$('#testRetrieve').click(function(){
 			$('.inputGrid').show();
 			addingItem = false;	
 			storing = false;	
@@ -265,7 +265,7 @@ $(document).ready(function() {
 		/**/
 	}
 
-	$('#inputButton').mouseup(function() {
+	$('#inputButton').click(function() {
 		if( addingItem == true ) {
 			createListItem();
 		}
