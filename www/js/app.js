@@ -78,7 +78,7 @@ function createExistingItem(key,item) {
     	i--;
     });
 
-    i++;	
+    //i++;	
 }
 
 function createExistingLabel(key,item) {
@@ -93,7 +93,7 @@ function createExistingLabel(key,item) {
     	i--;
     });
 
-    i++;	
+    //i++;	
 }
 
 function testStore() {
@@ -144,6 +144,11 @@ function clearCurrentList() {
 	if( currentChecklist == "untitled" ) {
 		$.jStorage.set('untitled', null);
 	}
+	else {
+  		// quicksave
+    	listOfChecklists[currentChecklist] = JSON.stringify(listItems);
+		$.jStorage.set('listOfChecklists', listOfChecklists);
+	}
 	for (var key in listItems) {
 	  	if (listItems.hasOwnProperty(key)) {
 	  		$( 'div.'+key ).remove(); 	    	
@@ -155,7 +160,6 @@ function clearCurrentList() {
 
 function loadChecklist(template) {
 	clearCurrentList();
-	console.log("Load checklist called " + currentChecklist);
 	// load template from local storage and render it
 	if( template ) { 
 		listItems = JSON.parse(template);
