@@ -30,7 +30,7 @@ function createListItem() {
     $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
     	$("div.checkbox-"+itemNum).remove(); 
     	delete listItems['checkbox-'+itemNum];
-    	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	$.jStorage.set(templateToLoad, JSON.stringify(listItems));
     	i--;
     });
 
@@ -107,9 +107,8 @@ function testRetrieve() {
 }
 
 function confirmDelete() {
-	console.log(Object.keys(listItems).length);
 	var n = Object.keys(listItems).length; // if there is at least one item in the current checklist, confirm its deletion with user
-	if( n > 0 ) {
+	if( n > 0 && templateToLoad == "untitled" ) {
 		$("#confirmDelete").popup("open");
 	}
 }
@@ -130,8 +129,8 @@ function renderTemplates() {
 	}
 
  	$("#listTemplate").mouseup(function(){
- 		console.log("ME!");
- 		templateToLoad = $(this).children('div').attr('id');		
+ 		templateToLoad = $(this).children('div').attr('id');
+ 		console.log(templateToLoad);		
  		confirmDelete();
  		loadChecklist(listOfChecklists[templateToLoad]);
  	});
@@ -152,7 +151,9 @@ function clearCurrentList() {
 }
 
 function loadChecklist(template) {
-	if( template ) { // does an untitled checklist exist?
+	console.log("Load checklist called " + template);
+	// load template from local storage and render it
+	if( template ) { 
 		listItems = JSON.parse(template);
 		for (var key in listItems) {
 		  	if (listItems.hasOwnProperty(key)) {
@@ -166,8 +167,9 @@ function loadChecklist(template) {
 		  	}
 		}
 	}
-	// load template from local storage and render it
-	
+	else {
+		templateToLoad = "untitled";
+	}	
 
 	// transition to current checklist page
 
@@ -222,8 +224,7 @@ $(document).ready(function() {
 
 	/* Save the list as a template */
 	$('#save').mouseup(function(){
-		var savedListName = $('#saveField').val();
-		if( savedListName == null ) return;
+		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
 
 		// save the list into local storage
 		var savedListString = JSON.stringify(listItems);
