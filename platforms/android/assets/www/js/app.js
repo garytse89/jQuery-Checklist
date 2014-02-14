@@ -3,8 +3,12 @@
 /* jshint strict: false */
 // declares to jshint that $ is a variable
 
+var listOfChecklists = {};
+
 var jStorageTesting = false;
 var listItems = {};
+var currentChecklist = 'untitled'; // string name for list
+var templateToLoad = null; // JSON string
 var i=1; // one existing item so current counter starts off at 2
 
 var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
@@ -27,13 +31,13 @@ function createListItem() {
     $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
     	$("div.checkbox-"+itemNum).remove(); 
     	delete listItems['checkbox-'+itemNum];
-    	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
     	i--;
     });
 
     i++;
     listItems['checkbox-'+itemNum] = $('#inputField').val();
-    $.jStorage.set('untitled', JSON.stringify(listItems)); 
+    $.jStorage.set(currentChecklist, JSON.stringify(listItems)); 
 }
 
 function createNewLabel() {
@@ -51,13 +55,13 @@ function createNewLabel() {
 	$( "div.label-"+itemNum ).bind( "taphold", function(event) {
     	$("div.label-"+itemNum).remove();
     	delete listItems['label-'+itemNum];
-    	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	$.jStorage.set(templateToLoad, JSON.stringify(listItems));
     	i--;
     });
 
   	i++;	
   	listItems['label-'+itemNum] = $('#inputField').val();
-  	$.jStorage.set('untitled', JSON.stringify(listItems));	
+  	$.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 }
 
 function createExistingItem(key,item) {
@@ -70,11 +74,11 @@ function createExistingItem(key,item) {
     $( 'div.'+key ).bind( "taphold", function(event) {
     	$( 'div.'+key ).remove(); 
     	delete listItems[key];
-    	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
     	i--;
     });
 
-    i++;	
+    //i++;	
 }
 
 function createExistingLabel(key,item) {
@@ -85,11 +89,11 @@ function createExistingLabel(key,item) {
     $( 'div.'+key ).bind( "taphold", function(event) {
     	$( 'div.'+key ).remove(); 
     	delete listItems[key];
-    	$.jStorage.set('untitled', JSON.stringify(listItems));
+    	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
     	i--;
     });
 
-    i++;	
+    //i++;	
 }
 
 function testStore() {
@@ -101,6 +105,79 @@ function testStore() {
 function testRetrieve() {
 	if( !$('#inputField').val() ) return;
 	alert('retrieved the value (hopefully = someValue): ' + $.jStorage.get($('#inputField').val()));
+}
+
+function confirmDelete() {
+	var n = Object.keys(listItems).length; // if there is at least one item in the current checklist, confirm its deletion with user
+	if( n > 0 && templateToLoad == "untitled" ) {
+		$("#confirmDelete").popup("open");
+	}
+}
+
+function renderTemplates() {
+
+	$('#listOfChecklists').remove();
+	$('#templateGroup').append('<ul data-role="listview" id="listOfChecklists"></ul>');
+
+
+	for (var key in listOfChecklists) {
+		if (listOfChecklists.hasOwnProperty(key)) {
+			if( key != "untitled" ) { // load untitled checklist in other page
+		 		//$('#listOfChecklists').append('<li><a href="#confirmDelete" data-rel="popup" data-position-to="window">'+key+'</a></li>');	
+		 		$('#listOfChecklists').append('<li id="listTemplate"><div id='+key+'><a href="#">'+key+'</a></div></li>');	
+		 	}    	
+		}
+	}
+
+ 	$('#'+key).click(function(){
+ 		currentChecklist = key;
+ 		console.log("Load checklist from TEMPLATE called " + currentChecklist);		
+ 		confirmDelete();
+ 		loadChecklist(listOfChecklists[currentChecklist]);
+ 	});
+ 	
+ 	// need a refresh for the list here
+
+}
+
+function clearCurrentList() {
+	if( currentChecklist == "untitled" ) {
+		$.jStorage.set('untitled', null);
+	}
+	else {
+  		// quicksave
+    	listOfChecklists[currentChecklist] = JSON.stringify(listItems);
+		$.jStorage.set('listOfChecklists', listOfChecklists);
+	}
+	for (var key in listItems) {
+	  	if (listItems.hasOwnProperty(key)) {
+	  		$( 'div.'+key ).remove(); 	    	
+	  	}
+	}
+	listItems = {};
+	console.log('Cleared checklist');
+}
+
+function loadChecklist(template) {
+	clearCurrentList();
+	// load template from local storage and render it
+	if( template ) { 
+		listItems = JSON.parse(template);
+		for (var key in listItems) {
+		  	if (listItems.hasOwnProperty(key)) {
+		    	console.log(key + " -> " + listItems[key]);
+		    	if( key.match("label") != null ) {
+		    		createExistingLabel(key, listItems[key]);
+		    	}
+		    	else if( key.match("checkbox") != null ) {
+		    		createExistingItem(key, listItems[key]);		    		
+		    	}		    	
+		  	}
+		}
+	}	
+
+	// transition to current checklist page
+
 }
 
 // jQuery
@@ -120,7 +197,7 @@ $(document).ready(function() {
 
 	$('.inputGrid').hide();	
 
-	$('#newItem').mouseup(function(){
+	$('#newItem').click(function(){
 		if( inputShown == false ) {
 			$('.inputGrid').show();
 			addingItem = true;
@@ -132,7 +209,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#newLabel').mouseup(function(){
+	$('#newLabel').click(function(){
 		$('.inputGrid').show();
 		if( inputShown == false ) {
 			$('.inputGrid').show();
@@ -146,38 +223,41 @@ $(document).ready(function() {
 	});
 
 	/* Delete the whole list */
-	$('#clear').mouseup(function(){
-		$.jStorage.set('untitled', null);
-		for (var key in listItems) {
-		  	if (listItems.hasOwnProperty(key)) {
-		  		$( 'div.'+key ).remove(); 	    	
-		  	}
-		}
-		listItems = {};
-		console.log('Cleared checklist');
+	$('#clear').click(function(){ 
+		clearCurrentList();
 	});
 
 	/* Save the list as a template */
-	$('#save').mouseup(function(){
-		var savedListName = $('#saveField').val();
-		if( savedListName == null ) return;
+	$('#save').click(function(){
+		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
 
-		$.jStorage.set(savedListName, JSON.stringify(listItems));
-		console.log("Saved list named: " + savedListName);
-		$.jStorage.set('untitled', null); // wipe untitled list, so current list name should be different from now on
+		// save the list into local storage
+		var savedListString = JSON.stringify(listItems);
+		$.jStorage.set(savedListName, savedListString);
+		console.log("Saved list named: " + savedListName + " and the list looks like this:\n" + savedListString);
+		$.jStorage.set('untitled', null); // wipe untitled list
 
-		$('#listOfChecklists').append('<li>'+savedListName+'</li>');
+		// save the templates into local storage
+		listOfChecklists[savedListName] = savedListString;
+		$.jStorage.set('listOfChecklists', listOfChecklists);
+
+		renderTemplates();
+	});
+
+	/* Template page template links */
+	$('#confirmLoadTemplate').click(function(){
+		loadChecklist(templateToLoad);
 	});
 
 	if( jStorageTesting == true ) {
 		/* Testing only */
-		$('#testStore').mouseup(function(){
+		$('#testStore').click(function(){
 			$('.inputGrid').show();
 			addingItem = false;	
 			storing = true;	
 		});
 
-		$('#testRetrieve').mouseup(function(){
+		$('#testRetrieve').click(function(){
 			$('.inputGrid').show();
 			addingItem = false;	
 			storing = false;	
@@ -185,7 +265,7 @@ $(document).ready(function() {
 		/**/
 	}
 
-	$('#inputButton').mouseup(function() {
+	$('#inputButton').click(function() {
 		if( addingItem == true ) {
 			createListItem();
 		}
@@ -211,21 +291,12 @@ $(document).ready(function() {
 
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
-	if( existingChecklist ) { // does an untitled checklist exist?
-		listItems = JSON.parse(existingChecklist);
-		for (var key in listItems) {
-		  	if (listItems.hasOwnProperty(key)) {
-		    	console.log(key + " -> " + listItems[key]);
-		    	if( key.match("label") != null ) {
-		    		createExistingLabel(key, listItems[key]);
-		    	}
-		    	else if( key.match("checkbox") != null ) {
-		    		createExistingItem(key, listItems[key]);		    		
-		    	}		    	
-		  	}
-		}
-	}
-
+	loadChecklist(existingChecklist);
+	
 	$('[type="checkbox"]').checkboxradio();
+
+	// load the template page
+	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
+	renderTemplates();
 
 });

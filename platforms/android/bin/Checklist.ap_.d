@@ -28,6 +28,7 @@
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/jquery/jquery.mobile-1.4.0.css \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/jquery/jquery.mobile-1.4.0.min.js \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/js/app.js \
+/Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/js/energize.js \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/js/index.js \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/js/json2.js \
 /Users/garytse/workspace/checklist-cordova/platforms/android/assets/www/js/jstorage.js \
