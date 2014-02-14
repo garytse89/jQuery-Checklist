@@ -78,6 +78,19 @@
                 <fieldset data-role="controlgroup">
                     <ul data-role="listview" id="listOfChecklists">
                     </ul>
+
+
+
+                    <div data-role="popup" id="confirmDelete" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                        <div data-role="header" data-theme="a" class="ui-corner-top">
+                            <h1>Delete unsaved checklist?</h1>
+                        </div>
+                    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                        <h3 class="ui-title">Untitled checklist needs to be saved</h3>
+                        <a href="#" id="clear" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Confirm</a>
+                        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>            
+                        </div>
+                    </div>
                 </fieldset>
             </div>
         </div>

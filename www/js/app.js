@@ -105,14 +105,28 @@ function testRetrieve() {
 	alert('retrieved the value (hopefully = someValue): ' + $.jStorage.get($('#inputField').val()));
 }
 
+function confirmDelete() {
+	console.log(Object.keys(listItems).length);
+	var n = Object.keys(listItems).length; // if there is at least one item in the current checklist, confirm its deletion with user
+	if( n > 0 ) {
+		$("#confirmDelete").popup("open");
+	}
+}
+
 function renderTemplates() {
 	for (var key in listOfChecklists) {
 		if (listOfChecklists.hasOwnProperty(key)) {
 			if( key != "untitled" ) { // load untitled checklist in other page
-		 		$('#listOfChecklists').append('<li>'+key+'</li>');	
+		 		//$('#listOfChecklists').append('<li><a href="#confirmDelete" data-rel="popup" data-position-to="window">'+key+'</a></li>');	
+		 		$('#listOfChecklists').append('<li id="listTemplate"><a href="#">'+key+'</a></li>');	
 		 	}    	
 		}
 	}
+
+ 	$("#listTemplate").mouseup(function(){
+ 		confirmDelete();
+ 	})
+
 }
 
 // jQuery
