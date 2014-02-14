@@ -3,6 +3,8 @@
 /* jshint strict: false */
 // declares to jshint that $ is a variable
 
+var listOfChecklists = {};
+
 var jStorageTesting = false;
 var listItems = {};
 var i=1; // one existing item so current counter starts off at 2
@@ -103,6 +105,16 @@ function testRetrieve() {
 	alert('retrieved the value (hopefully = someValue): ' + $.jStorage.get($('#inputField').val()));
 }
 
+function renderTemplates() {
+	for (var key in listOfChecklists) {
+		if (listOfChecklists.hasOwnProperty(key)) {
+			if( key != "untitled" ) { // load untitled checklist in other page
+		 		$('#listOfChecklists').append('<li>'+key+'</li>');	
+		 	}    	
+		}
+	}
+}
+
 // jQuery
 $(document).ready(function() {	
 	
@@ -162,11 +174,17 @@ $(document).ready(function() {
 		var savedListName = $('#saveField').val();
 		if( savedListName == null ) return;
 
-		$.jStorage.set(savedListName, JSON.stringify(listItems));
-		console.log("Saved list named: " + savedListName);
-		$.jStorage.set('untitled', null); // wipe untitled list, so current list name should be different from now on
+		// save the list into local storage
+		var savedListString = JSON.stringify(listItems);
+		$.jStorage.set(savedListName, savedListString);
+		console.log("Saved list named: " + savedListName + " and the list looks like this:\n" + savedListString);
+		$.jStorage.set('untitled', null); // wipe untitled list
 
-		$('#listOfChecklists').append('<li>'+savedListName+'</li>');
+		// save the templates into local storage
+		listOfChecklists[savedListName] = savedListString;
+		$.jStorage.set('listOfChecklists', listOfChecklists);
+
+		renderTemplates();
 	});
 
 	if( jStorageTesting == true ) {
@@ -227,5 +245,9 @@ $(document).ready(function() {
 	}
 
 	$('[type="checkbox"]').checkboxradio();
+
+	// load the template page
+	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
+	renderTemplates();
 
 });
