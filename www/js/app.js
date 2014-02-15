@@ -182,7 +182,7 @@ function loadChecklist(template) {
 
 // jQuery
 $(document).ready(function() {	
-	
+
 	var db = openDatabase ("Test", "1.0", "Test", 65535); // local storage
 	var addingItem = true;
 	var storing = true; // for testing only
@@ -205,8 +205,10 @@ $(document).ready(function() {
 		}
 		else {
 			$('.inputGrid').hide();
-			inputShown = false;
+			inputShown = false;					
 		}
+		$('#newItem').children('a').removeClass('ui-btn-active');
+		$('#newItem').children('a').trigger('create');
 	});
 
 	$('#newLabel').on('vclick', function(){
@@ -222,12 +224,30 @@ $(document).ready(function() {
 		}	
 	});
 
+	$('#templatesLink').on('vclick', function(){
+		// load page manually instead of using the a href link, which uses the default slow click
+		$.mobile.changePage('#templates', {transition: 'slide'});
+	});
+
+	$('#homeLink').on('vclick', function(){
+		// load page manually instead of using the a href link, which uses the default slow click
+		$.mobile.changePage('#home', {transition: 'slide', reverse: true});
+	});
+
 	/* Delete the whole list */
+	$('#clearDialogLaunch').on('vclick', function(){ 
+		$('#clearDialog').popup("open");
+	});
+
 	$('#clear').on('vclick', function(){ 
 		clearCurrentList();
 	});
 
 	/* Save the list as a template */
+	$('#saveDialogLaunch').on('vclick', function(){ 
+		$('#saveDialog').popup("open");
+	});
+
 	$('#save').on('vclick', function(){
 		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
 

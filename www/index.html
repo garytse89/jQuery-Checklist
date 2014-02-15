@@ -19,7 +19,11 @@
 <body>
 	<div data-role="page" id="home">
 		<header data-role="header">
-			<h1>Home</h1>
+			<div data-role="header">
+                <a href="#" id="templatesLink" data-icon="grid" data-iconpos="notext" data-transition="slide"></a>
+                <h1>Home</h1>
+                <a href="#" id="saveDialogLaunch" data-rel="popup" data-position-to="window">Save</a>
+            </div>
 		</header>
 		<div data-role="content">   
          <div data-role="fieldcontain">
@@ -58,9 +62,7 @@
 				<ul>
 					<li id="newItem"><a href="#" data-icon="plus">New Item</a></li>
 					<li id="newLabel"><a href="#" data-icon="plus">New Label</a></li>
-                    <li><a href="#templates" data-icon="grid">Templates</a></li>
-                    <li id="clearList"><a href="#clearDialog" data-icon="delete" data-rel="popup" data-position-to="window">Clear List</a></li>
-                    <li id="saveList"><a href="#saveDialog" data-icon="grid" data-rel="popup" data-position-to="window">Save as Template</a></li>
+                    <li id="clearDialogLaunch"><a href="#" data-icon="delete" data-rel="popup" data-position-to="window">Clear List</a></li>
                     <!-- for testing purposes
                     <li id="testStore"><a href="#" data-icon="grid">Store</a></li>
                     <li id="testRetrieve"><a href="#" data-icon="grid">Get</a></li>
@@ -72,16 +74,16 @@
 	
 	<div data-role="page" id="templates">
 		<header data-role="header">
-			<h1>Templates</h1>
-			<a href="#home" data-icon="home" data-iconpos="notext">Home</a>
+			<div data-role="header">
+                <a href="#" id="homeLink" data-icon="home" data-iconpos="notext" data-transition="slide">Home</a>
+                <h1>Templates</h1>
+            </div>
 		</header>	
         <div data-role="content"> 
             <div data-role="fieldcontain">
                 <fieldset data-role="controlgroup" id="templateGroup">
                     <ul data-role="listview" id="listOfChecklists">
                     </ul>
-
-
 
                     <div data-role="popup" id="confirmDelete" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
                         <div data-role="header" data-theme="a" class="ui-corner-top">
