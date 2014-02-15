@@ -129,7 +129,7 @@ function renderTemplates() {
 		}
 	}
 
- 	$('#'+key).click(function(){
+ 	$('#'+key).on('vclick', function(){
  		currentChecklist = key;
  		console.log("Load checklist from TEMPLATE called " + currentChecklist);		
  		confirmDelete();
@@ -197,7 +197,7 @@ $(document).ready(function() {
 
 	$('.inputGrid').hide();	
 
-	$('#newItem').click(function(){
+	$('#newItem').on('vclick', function(){
 		if( inputShown == false ) {
 			$('.inputGrid').show();
 			addingItem = true;
@@ -209,7 +209,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#newLabel').click(function(){
+	$('#newLabel').on('vclick', function(){
 		$('.inputGrid').show();
 		if( inputShown == false ) {
 			$('.inputGrid').show();
@@ -223,12 +223,12 @@ $(document).ready(function() {
 	});
 
 	/* Delete the whole list */
-	$('#clear').click(function(){ 
+	$('#clear').on('vclick', function(){ 
 		clearCurrentList();
 	});
 
 	/* Save the list as a template */
-	$('#save').click(function(){
+	$('#save').on('vclick', function(){
 		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
 
 		// save the list into local storage
@@ -245,19 +245,19 @@ $(document).ready(function() {
 	});
 
 	/* Template page template links */
-	$('#confirmLoadTemplate').click(function(){
+	$('#confirmLoadTemplate').on('vclick', function(){
 		loadChecklist(templateToLoad);
 	});
 
 	if( jStorageTesting == true ) {
 		/* Testing only */
-		$('#testStore').click(function(){
+		$('#testStore').on('vclick', function(){
 			$('.inputGrid').show();
 			addingItem = false;	
 			storing = true;	
 		});
 
-		$('#testRetrieve').click(function(){
+		$('#testRetrieve').on('vclick', function(){
 			$('.inputGrid').show();
 			addingItem = false;	
 			storing = false;	
@@ -265,7 +265,7 @@ $(document).ready(function() {
 		/**/
 	}
 
-	$('#inputButton').click(function() {
+	$('#inputButton').on('vclick', function() {
 		if( addingItem == true ) {
 			createListItem();
 		}
