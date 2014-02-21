@@ -7,7 +7,7 @@
        <div data-role="header">
            <a href="#templates" id="templatesLink" data-icon="grid" data-iconpos="notext" data-transition="slide"></a>
                 <h1>Home</h1>
-                <a href="#" id="saveDialogLaunch" data-rel="popup" data-position-to="window">Save</a>
+                <a href="#saveDialog" id="saveDialogPopup" data-rel="popup" data-position-to="window">Save</a>
         </div>
 
         <div data-role="content">   
@@ -30,6 +30,18 @@
                     -->             
                 </ul>
             </nav>  
+        </div>
+
+        <div data-role="popup" id="saveDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Save</h1>
+            </div>
+            <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                <h3 class="ui-title">What name do you want to save this list as?</h3>
+                <input type="text" id="saveField" />
+                <a href="#" id="save" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Save</a>
+                <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>
+            </div>
         </div>
     </script>
     

@@ -5,6 +5,15 @@ window.HomeView = Backbone.View.extend({
 	// I assume this uses the Underscore.js feature to get the id=home <script> template in index.html
 	template: _.template($('#home').html()),
 
+	events: {
+		'click #saveDialogPopup': 'openPopUp' // or else will launch index.html#saveDialog
+	},
+
+	openPopUp: function(e) {
+		e.preventDefault();
+		$("#saveDialog").popup("open");
+	},
+
 	render:function(eventName) { // every view needs a render function
 		$(this.el).html(this.template()); // set top level element to use id=home's template html
 		return this;
