@@ -1,5 +1,9 @@
 // main.js, based off https://github.com/ccoenraets/backbone-jquerymobile
 
+var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
+var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
+var inputShown = false;
+
 window.HomeView = Backbone.View.extend({
 
 	// I assume this uses the Underscore.js feature to get the id=home <script> template in index.html
@@ -8,8 +12,13 @@ window.HomeView = Backbone.View.extend({
 	events: {
 		'click #saveDialogPopup': 'openSavePopUp', // or else will launch index.html#saveDialog
 		'click #clearDialogPopup': 'openClearPopUp',
-		'click #newItem': 'createNewItem',
-		'click #newLabel': 'createNewLabel',
+		//'click #newItem': 'createNewItem',
+		//'click #newLabel': 'createNewLabel',
+		//'click #inputButton': 'createNewItem',
+	},
+
+	initialize: function() {
+		this.listenTo(checklist, 'add', this.renderItem); // what???
 	},
 
 	openSavePopUp: function(e) {
@@ -22,12 +31,28 @@ window.HomeView = Backbone.View.extend({
 		$("#clearDialog").popup("open");
 	},
 
-	createNewItem: function(e) {
+	// Create a new item and add it to the checklist collection. This results in an 'add' event, thus firing off the addItem() function
+	createNewItem: function(e, val) {
 		e.preventDefault();
-		listItem = new ListItem();
-		$(this.el).find('.list').append('<li><input type="checkbox" id="1"/>\
-			<label for="1">Hey</label></li>');
-		$('[type="checkbox"]').checkboxradio();
+		console.log('val' + val);
+		var item = new ListItem({title: 'substitute!'});
+		checklist.add(item);		
+	},
+
+	renderItem: function(listItem) {
+		var idToAdd = 'item' + checklist.length;
+
+		console.log("Add " + idToAdd);
+
+		var itemView = new ListItemView({model: listItem, id: idToAdd});
+
+		// html to append
+		var htmlToAppend = '<input type="checkbox" id="' + idToAdd + '"/>\
+		<label for="'+ idToAdd + '">' + listItem.get('title') + '</label>';
+
+		$(this.el).find('.list').append(htmlToAppend);
+	
+		$('[type="checkbox"]').checkboxradio(); // jQuery re-render
 	},
 
 	createNewLabel: function(e) {
@@ -99,10 +124,55 @@ var AppRouter = Backbone.Router.extend({ // what is this for...?
 $(document).ready(function() {
 	console.log('Document loaded');
 	app = new AppRouter();
-	Backbone.history.start();
+	Backbone.history.start();	
 
-	// load current checklist
-	var checklist = new Checklist;
+
+	// prepend text field to footer
+	$('.inputGrid').append(inputField);
+	$('.inputGrid').append(inputButton);
+	// jquery mobile re-style
+	$('[type="text"]').textinput();
+	$('[type="button"]').button();
+
+	$('.inputGrid').hide();	
+
+	$('#newItem').on('vclick', function(){
+		if( inputShown == false ) {
+			$('.inputGrid').show();
+			addingItem = true;
+			inputShown = true;
+		}
+		else {
+			$('.inputGrid').hide();
+			inputShown = false;					
+		}
+		$('#newItem').children('a').removeClass('ui-btn-active');
+		$('#newItem').children('a').trigger('create');
+	});
+
+	$('#newLabel').on('vclick', function(){
+		$('.inputGrid').show();
+		if( inputShown == false ) {
+			$('.inputGrid').show();
+			addingItem = false;
+			inputShown = true;
+		}
+		else {
+			$('.inputGrid').hide();
+			inputShown = false;
+		}	
+	});
+
+	$('#inputButton').on('vclick', function() {
+		createNewItem($('#inputField').val());
+		$('#inputField').val('');
+		$('.inputGrid').hide();
+		inputShown = false;
+		
+		$(this).stopPropagation();
+	});	
+
+
 });
 
 

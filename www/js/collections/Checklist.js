@@ -1,7 +1,7 @@
 var Checklist = Backbone.Collection.extend({
-	model: ListItem, ListLabel,
+	model: ListItem,
 
-	localStorage: new Backbone.LocalStorage("todos-backbone"),
+	// localStorage: new Backbone.LocalStorage("todos-backbone"),
 
 	done: function() {
 	return this.where({checked:true});
@@ -13,9 +13,11 @@ var Checklist = Backbone.Collection.extend({
 
 	nextOrder: function() {
 		if(!this.length) return 1;
-		return this.last().get('order') + 1;
+		return this.last().get('order');
 	},
 
 	comparator: 'order' // ?
 
 });
+
+var checklist = new Checklist;

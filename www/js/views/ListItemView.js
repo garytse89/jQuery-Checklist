@@ -2,7 +2,7 @@ var ListItemView = Backbone.View.extend({
 	
 	tagName: "li",
 
-	template: _.template($('#item-template').html()),
+	//template: _.template($('#listitem-template').html()),
 
 	events: {
 		"click .toggle" : "toggleCheck",
@@ -17,7 +17,7 @@ var ListItemView = Backbone.View.extend({
 	},
 
 	render: function() {
-		this.$el.html(this.template(this.model.toJSON())); // this code assumes the model is in JSON format; in my prototype I used a plain JS object
+		//this.$el.html(this.template(this.model.toJSON())); // this code assumes the model is in JSON format; in my prototype I used a plain JS object
 		this.$el.toggleClass('checked', this.model.get('checked'));
 		this.input = this.$('edit');
 		return this;
