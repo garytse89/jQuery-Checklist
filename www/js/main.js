@@ -6,12 +6,18 @@ window.HomeView = Backbone.View.extend({
 	template: _.template($('#home').html()),
 
 	events: {
-		'click #saveDialogPopup': 'openPopUp' // or else will launch index.html#saveDialog
+		'click #saveDialogPopup': 'openSavePopUp', // or else will launch index.html#saveDialog
+		'click #clearDialogPopup': 'openClearPopUp'
 	},
 
-	openPopUp: function(e) {
+	openSavePopUp: function(e) {
 		e.preventDefault();
 		$("#saveDialog").popup("open");
+	},
+
+	openClearPopUp: function(e) {
+		e.preventDefault();
+		$("#clearDialog").popup("open");
 	},
 
 	render:function(eventName) { // every view needs a render function

@@ -7,7 +7,7 @@
        <div data-role="header">
            <a href="#templates" id="templatesLink" data-icon="grid" data-iconpos="notext" data-transition="slide"></a>
                 <h1>Home</h1>
-                <a href="#saveDialog" id="saveDialogPopup" data-rel="popup" data-position-to="window">Save</a>
+                <a href="#" id="saveDialogPopup" data-rel="popup" data-position-to="window">Save</a>
         </div>
 
         <div data-role="content">   
@@ -23,7 +23,7 @@
                 <ul>
                     <li id="newItem"><a href="#" data-icon="plus">New Item</a></li>
                     <li id="newLabel"><a href="#" data-icon="plus">New Label</a></li>
-                    <li id="clearDialogLaunch"><a href="#" data-icon="delete" data-rel="popup" data-position-to="window">Clear List</a></li>
+                    <li id="clearDialogPopup"><a href="#" data-icon="delete" data-rel="popup" data-position-to="window">Clear List</a></li>
                     <!-- for testing purposes
                     <li id="testStore"><a href="#" data-icon="grid">Store</a></li>
                     <li id="testRetrieve"><a href="#" data-icon="grid">Get</a></li>
@@ -41,6 +41,18 @@
                 <input type="text" id="saveField" />
                 <a href="#" id="save" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Save</a>
                 <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>
+            </div>
+        </div>
+
+        <div data-role="popup" id="clearDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+            <div data-role="header" data-theme="a" class="ui-corner-top">
+                <h1>Clear</h1>
+            </div>
+            <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                <h3 class="ui-title">Are you sure you want to clear this list? Templates will not be deleted.</h3>
+                <a href="#" id="clear" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Clear</a>
+                <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>            
+                </div>
             </div>
         </div>
     </script>
