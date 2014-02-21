@@ -7,7 +7,9 @@ window.HomeView = Backbone.View.extend({
 
 	events: {
 		'click #saveDialogPopup': 'openSavePopUp', // or else will launch index.html#saveDialog
-		'click #clearDialogPopup': 'openClearPopUp'
+		'click #clearDialogPopup': 'openClearPopUp',
+		'click #newItem': 'createNewItem',
+		'click #newLabel': 'createNewLabel',
 	},
 
 	openSavePopUp: function(e) {
@@ -18,6 +20,20 @@ window.HomeView = Backbone.View.extend({
 	openClearPopUp: function(e) {
 		e.preventDefault();
 		$("#clearDialog").popup("open");
+	},
+
+	createNewItem: function(e) {
+		e.preventDefault();
+		listItem = new ListItem();
+		$(this.el).find('.list').append('<li><input type="checkbox" id="1"/>\
+			<label for="1">Hey</label></li>');
+		$('[type="checkbox"]').checkboxradio();
+	},
+
+	createNewLabel: function(e) {
+		e.preventDefault();
+		listLabel = new ListLabel();
+		$(this.el).append('Chickens');
 	},
 
 	render:function(eventName) { // every view needs a render function
