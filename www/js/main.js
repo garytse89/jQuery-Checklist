@@ -3,6 +3,7 @@
 var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
 var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
 var inputShown = false;
+var addingItem = false;
 
 window.HomeView = Backbone.View.extend({
 
@@ -14,11 +15,12 @@ window.HomeView = Backbone.View.extend({
 		'click #clearDialogPopup': 'openClearPopUp',
 		//'click #newItem': 'createNewItem',
 		//'click #newLabel': 'createNewLabel',
-		//'click #inputButton': 'createNewItem',
+		'click #inputButton': 'createNewItem',
 	},
 
 	initialize: function() {
-		this.listenTo(checklist, 'add', this.renderItem); // what???
+		this.listenTo(checklist, 'add', this.renderItem); // runs renderItem() when model is added to checklist
+		this.listenTo(checklist, 'add', this.renderLabel); 
 	},
 
 	openSavePopUp: function(e) {
@@ -34,16 +36,15 @@ window.HomeView = Backbone.View.extend({
 	// Create a new item and add it to the checklist collection. This results in an 'add' event, thus firing off the addItem() function
 	createNewItem: function(e, val) {
 		e.preventDefault();
-		console.log('val' + val);
-		var item = new ListItem({title: 'substitute!'});
+		var item = new ListItem({title: $('#inputField').val()});
 		checklist.add(item);		
 	},
 
 	renderItem: function(listItem) {
+		if( !addingItem ) return;
+
 		var idToAdd = 'item' + checklist.length;
-
 		console.log("Add " + idToAdd);
-
 		var itemView = new ListItemView({model: listItem, id: idToAdd});
 
 		// html to append
@@ -57,8 +58,20 @@ window.HomeView = Backbone.View.extend({
 
 	createNewLabel: function(e) {
 		e.preventDefault();
-		listLabel = new ListLabel();
-		$(this.el).append('Chickens');
+		var label = new ListLabel({title: $('#inputField').val()});
+		checklist.add(label);
+	},
+
+	renderLabel: function(listLabel) {
+		if( addingItem ) return;
+
+		var idToAdd = 'item' + checklist.length;
+		var labelView = new ListLabelView({model: listLabel, id: idToAdd});
+
+		var htmlToAppend = '<span id="' + idToAdd + '">' + $('#inputField').val() + '</span>';
+
+		$(this.el).find('.list').append(htmlToAppend);
+
 	},
 
 	render:function(eventName) { // every view needs a render function
@@ -164,11 +177,9 @@ $(document).ready(function() {
 	});
 
 	$('#inputButton').on('vclick', function() {
-		createNewItem($('#inputField').val());
 		$('#inputField').val('');
 		$('.inputGrid').hide();
-		inputShown = false;
-		
+		inputShown = false;		
 		$(this).stopPropagation();
 	});	
 
