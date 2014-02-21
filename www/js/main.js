@@ -100,6 +100,9 @@ $(document).ready(function() {
 	console.log('Document loaded');
 	app = new AppRouter();
 	Backbone.history.start();
+
+	// load current checklist
+	var checklist = new Checklist;
 });
 
 

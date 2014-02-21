@@ -3,7 +3,7 @@ window.ListItem = Backbone.Model.extend({
     defaults: function() {
         return {
             title: "empty list item",
-            // order: Todos.nextOrder(),
+            order: checklist.nextOrder(), // refers to an instance of the Checklist collection
             checked: false
         };
     },

@@ -1,6 +1,9 @@
 window.ListLabel = Backbone.Model.extend({
     
-    defaults: {
+    defaults: function() {
+    	return {
+    		title: "empty list label",
+    	};
     },
 
     initialize:function () {
