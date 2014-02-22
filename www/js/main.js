@@ -21,6 +21,8 @@ window.HomeView = Backbone.View.extend({
 	initialize: function() {
 		this.listenTo(checklist, 'add', this.renderItem); // runs renderItem() when model is added to checklist
 		this.listenTo(checklist, 'add', this.renderLabel); 
+
+		checklist.fetch();
 	},
 
 	openSavePopUp: function(e) {
@@ -37,7 +39,8 @@ window.HomeView = Backbone.View.extend({
 	createNewItem: function(e, val) {
 		e.preventDefault();
 		var item = new ListItem({title: $('#inputField').val()});
-		checklist.add(item);		
+		checklist.add(item);
+		item.save();		
 	},
 
 	renderItem: function(listItem) {
@@ -60,6 +63,7 @@ window.HomeView = Backbone.View.extend({
 		e.preventDefault();
 		var label = new ListLabel({title: $('#inputField').val()});
 		checklist.add(label);
+		label.save();
 	},
 
 	renderLabel: function(listLabel) {
