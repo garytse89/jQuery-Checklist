@@ -1,10 +1,8 @@
 var Checklist = Backbone.Collection.extend({
 	model: ListItem,
 
-	localStorage: new Backbone.LocalStorage("checklist-backbone"),
-
 	done: function() {
-	return this.where({checked:true});
+		return this.where({checked:true});
 	},
 
 	remaining: function() {

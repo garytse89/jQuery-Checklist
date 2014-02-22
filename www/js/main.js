@@ -21,7 +21,7 @@ window.HomeView = Backbone.View.extend({
 	initialize: function() {
 		this.listenTo(checklist, 'add', this.renderItem); // runs renderItem() when model is added to checklist
 		this.listenTo(checklist, 'add', this.renderLabel); 
-
+		checklist.localStorage = new Backbone.LocalStorage("checklist-backbone");
 		checklist.fetch();
 	},
 
@@ -36,7 +36,7 @@ window.HomeView = Backbone.View.extend({
 	},
 
 	// Create a new item and add it to the checklist collection. This results in an 'add' event, thus firing off the addItem() function
-	createNewItem: function(e, val) {
+	createNewItem: function(e) {
 		e.preventDefault();
 		var item = new ListItem({title: $('#inputField').val()});
 		checklist.add(item);
@@ -44,17 +44,26 @@ window.HomeView = Backbone.View.extend({
 	},
 
 	renderItem: function(listItem) {
+		$(this.el).find('.list').append('<div>'+listItem.get('title')+'</div>');
+		if(listItem.existing) {
+			//$(this.el).find('.list').append('<div>'+listItem.get('title')+'</div>');
+			return;
+		}
+
 		if( !addingItem ) return;
 
-		var idToAdd = 'item' + checklist.length;
-		console.log("Add " + idToAdd);
-		var itemView = new ListItemView({model: listItem, id: idToAdd});
+		listItem.id = 'item' + checklist.length;
+		var itemView = new ListItemView({model: listItem, id: listItem.id});
 
 		// html to append
-		var htmlToAppend = '<input type="checkbox" id="' + idToAdd + '"/>\
-		<label for="'+ idToAdd + '">' + listItem.get('title') + '</label>';
+		listItem.htmlToAppend = '<input type="checkbox" id="' + listItem.id+ '"/>\
+		<label for="'+ listItem.id + '">' + listItem.get('title') + '</label>';
 
-		$(this.el).find('.list').append(htmlToAppend);
+		$(this.el).find('.list').append(listItem.htmlToAppend);
+
+		listItem.existing = true;
+
+		console.log(listItem.existing);
 	
 		$('[type="checkbox"]').checkboxradio(); // jQuery re-render
 	},
