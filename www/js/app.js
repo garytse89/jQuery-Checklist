@@ -319,4 +319,16 @@ $(document).ready(function() {
 	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
 	renderTemplates();
 
+	// listen for custom URL
+	document.addEventListener('deviceready', onDeviceready, true);
+
+	function onDeviceready() {  
+	    window.plugins.webintent.getUri(function(url) {
+	      if(url !== "") {
+	        // url is the url the intent was launched with
+	         alert (url);
+	      }
+	    });
+	}
+
 });

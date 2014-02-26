@@ -9,4 +9,8 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <plugin name="WebIntent" value="com.borismus.webintent.WebIntent" /> 
+    <gap:plugin name="com.borismus.webintent" />
 </widget>
+
+
