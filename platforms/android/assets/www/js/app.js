@@ -161,6 +161,13 @@ function clearCurrentList() {
 	console.log('Cleared checklist');
 }
 
+function decodeURIandLoad(cl){
+	cl = cl.replace("http://checklist/", "");
+	var decodedChecklist = decodeURIComponent(cl);
+	console.log(decodedChecklist);
+	loadChecklist(decodedChecklist);
+}
+
 function loadChecklist(template) {
 	clearCurrentList();
 	// load template from local storage and render it
@@ -246,6 +253,14 @@ $(document).ready(function() {
 		clearCurrentList();
 	});
 
+	/* Share the list */
+	$('#shareDialogLaunch').on('vclick', function(){
+		console.log(JSON.stringify(listItems));
+		var encodedURL = 'http://checklist/' + encodeURIComponent(JSON.stringify(listItems));
+		console.log("Send out this URL: " + encodedURL);
+		window.plugins.socialsharing.share(null, null, null, encodedURL);
+	});
+
 	/* Save the list as a template */
 	$('#saveDialogLaunch').on('vclick', function(){ 
 		$('#saveDialog').popup("open");
@@ -315,11 +330,10 @@ $(document).ready(function() {
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
 	loadChecklist(existingChecklist);
-	
+
 	$('[type="checkbox"]').checkboxradio();
 
 	// load the template page
 	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
 	renderTemplates();
-
 });

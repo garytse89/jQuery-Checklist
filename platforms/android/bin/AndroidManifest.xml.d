@@ -1,2 +1,2 @@
-/Users/garytse/workspace/tester/platforms/android/bin/AndroidManifest.xml : \
-/Users/garytse/workspace/tester/platforms/android/AndroidManifest.xml \
+/Users/garytse/workspace/checklist-cordova/platforms/android/bin/AndroidManifest.xml : \
+/Users/garytse/workspace/checklist-cordova/platforms/android/AndroidManifest.xml \

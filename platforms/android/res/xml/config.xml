@@ -17,4 +17,7 @@
     <content src="index.html" />
     <access origin="*" />
     <plugin name="WebIntent" value="com.borismus.webintent.WebIntent" />
+    <feature name="SocialSharing">
+        <param name="android-package" value="nl.xservices.plugins.SocialSharing" />
+    </feature>
 </widget>
