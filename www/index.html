@@ -22,20 +22,18 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     </head>
     <body>
     <div data-role="page" id="home">
         <header data-role="header">
             <div data-role="header">
-                <a href="#" id="templatesLink" data-icon="grid" data-iconpos="notext" data-transition="slide"></a>
-                <h1>Home</h1>
+                <a href="#" id="templatesLink" data-inline="true" data-icon="grid" data-iconpos="notext" data-transition="slide"></a>
+                <h1>Home</h1>                
                 <a href="#" id="shareDialogLaunch" data-rel="popup" data-position-to="window">Share</a>
-                <a href="#" id="saveDialogLaunch" data-rel="popup" data-position-to="window">Save</a>
             </div>
         </header>
         <div data-role="content">  
-        <h1>Test</h1><div id="test"></div> 
          <div data-role="fieldcontain">
              <ul class = "list">
               </ul>
@@ -66,13 +64,14 @@
 
         </div>
         <footer data-role="footer" data-position="fixed">
-            <div class="inputGrid">               
+            <div id="inputGrid" class="ui-grid-a" >
             </div>
             <nav data-role="navbar">
                 <ul>
                     <li id="newItem"><a href="#" data-icon="plus">New Item</a></li>
                     <li id="newLabel"><a href="#" data-icon="plus">New Label</a></li>
                     <li id="clearDialogLaunch"><a href="#" data-icon="delete" data-rel="popup" data-position-to="window">Clear List</a></li>
+                    <li id="saveDialogLaunch"><a href = "#" data-role="button" data-inline="true" data-icon="check">Save</a>   
                     <!-- for testing purposes
                     <li id="testStore"><a href="#" data-icon="grid">Store</a></li>
                     <li id="testRetrieve"><a href="#" data-icon="grid">Get</a></li>
@@ -102,7 +101,7 @@
                     <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
                         <h3 class="ui-title">Untitled checklist needs to be saved</h3>
                         <a href="#" id="confirmLoadTemplate" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Confirm</a>
-                        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>            
+                        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>                                 
                         </div>
                     </div>
                 </fieldset>
@@ -112,6 +111,7 @@
     
     </div>
         <link rel="stylesheet" href="jquery/jquery.mobile-1.4.0.css" />
+        
         <script src="jquery/jquery-1.9.1.min.js"></script>
         <script src="jquery/jquery.mobile-1.4.0.min.js"></script>  
         <script src="js/json2.js"></script>

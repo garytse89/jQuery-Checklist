@@ -11,8 +11,8 @@ var currentChecklist = 'untitled'; // string name for list
 var templateToLoad = null; // JSON string
 var i=1; // one existing item so current counter starts off at 2
 
-var inputField = '<span><input type="text" name="name" id="inputField" placeholder="Enter list item" /></span>';
-var inputButton = '<span><input type="button" value="Submit" id="inputButton"/></span>';
+var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
+var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
 
 function createListItem() {
 	if( !$('#inputField').val() ) return;
@@ -199,22 +199,22 @@ $(document).ready(function() {
 	var inputShown = false;
 
 	// prepend text field to footer
-	$('.inputGrid').append(inputField);
-	$('.inputGrid').append(inputButton);
+	$('#inputGrid').append(inputField);
+	$('#inputGrid').append(inputButton);
 	// jquery mobile re-style
 	$('[type="text"]').textinput();
 	$('[type="button"]').button();
 
-	$('.inputGrid').hide();	
+	$('#inputGrid').hide();	
 
 	$('#newItem').on('vclick', function(){
 		if( inputShown == false ) {
-			$('.inputGrid').show();
+			$('#inputGrid').show();
 			addingItem = true;
 			inputShown = true;
 		}
 		else {
-			$('.inputGrid').hide();
+			$('#inputGrid').hide();
 			inputShown = false;					
 		}
 		$('#newItem').children('a').removeClass('ui-btn-active');
@@ -222,14 +222,14 @@ $(document).ready(function() {
 	});
 
 	$('#newLabel').on('vclick', function(){
-		$('.inputGrid').show();
+		$('#inputGrid').show();
 		if( inputShown == false ) {
-			$('.inputGrid').show();
+			$('#inputGrid').show();
 			addingItem = false;
 			inputShown = true;
 		}
 		else {
-			$('.inputGrid').hide();
+			$('#inputGrid').hide();
 			inputShown = false;
 		}	
 	});
@@ -290,13 +290,13 @@ $(document).ready(function() {
 	if( jStorageTesting == true ) {
 		/* Testing only */
 		$('#testStore').on('vclick', function(){
-			$('.inputGrid').show();
+			$('#inputGrid').show();
 			addingItem = false;	
 			storing = true;	
 		});
 
 		$('#testRetrieve').on('vclick', function(){
-			$('.inputGrid').show();
+			$('#inputGrid').show();
 			addingItem = false;	
 			storing = false;	
 		});
@@ -321,8 +321,8 @@ $(document).ready(function() {
 		}
 
 		$('#inputField').val('');
-		$('.inputGrid').hide();
-		inputShown = false;
+		// $('#inputGrid').hide();
+		// inputShown = false;
 		
 		$(this).stopPropagation();
 	});	

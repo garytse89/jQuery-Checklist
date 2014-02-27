@@ -2581,6 +2581,14 @@ li.ui-block-e {
 	/* margin-right: -.5px; BB5 */
 	width: 50%;
 }
+
+.ui-grid-a > .ui-block-a.main {
+	width: 80%;
+}
+.ui-grid-a > .ui-block-b.main {
+	width: 20%;
+}
+
 .ui-grid-b > .ui-block-a,
 .ui-grid-b > .ui-block-b,
 .ui-grid-b > .ui-block-c {
