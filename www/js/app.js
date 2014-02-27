@@ -211,14 +211,15 @@ $(document).ready(function() {
 		if( inputShown == false ) {
 			$('#inputGrid').show();
 			addingItem = true;
-			inputShown = true;
+			inputShown = true;			
 		}
 		else {
 			$('#inputGrid').hide();
-			inputShown = false;					
-		}
-		$('#newItem').children('a').removeClass('ui-btn-active');
-		$('#newItem').children('a').trigger('create');
+			inputShown = false;		
+			setTimeout(function(){
+				$('#newItem').children('a').removeClass('ui-btn-active');
+			},0);			
+		}		
 	});
 
 	$('#newLabel').on('vclick', function(){
@@ -231,6 +232,9 @@ $(document).ready(function() {
 		else {
 			$('#inputGrid').hide();
 			inputShown = false;
+			setTimeout(function(){
+				$('#newLabel').children('a').removeClass('ui-btn-active');
+			},0);	
 		}	
 	});
 
