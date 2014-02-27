@@ -303,28 +303,52 @@ $(document).ready(function() {
 		/**/
 	}
 
-	$('#inputButton').on('vclick', function() {
+	$("#inputField").focus(function() {
+	    $(this).data("hasfocus", true);
+	});
+
+	$("#inputField").blur(function() {
+	    $(this).data("hasfocus", false);
+	});
+
+	$(document.body).keyup(function(ev) {
+	    // 13 is ENTER
+	    if (ev.which === 13 && $("#inputField").data("hasfocus")) {
+	        console.log("enter key");
+	        addItemOrLabel();
+	    }
+	});
+
+	function addItemOrLabel() {
 		if( addingItem == true ) {
 			createListItem();
 		}
-		else {
-			if( jStorageTesting == true ) {
-				/* Testing only */
-				if( storing == true ) {
-					testStore();
-				}
-				else {
-					testRetrieve();
-				}
-			}
-			createNewLabel();
-		}
-
 		$('#inputField').val('');
-		// $('#inputGrid').hide();
-		// inputShown = false;
+	}
+
+	$('#inputButton').on('vclick', function() {
+		// if( addingItem == true ) {
+		// 	createListItem();
+		// }
+		// else {
+		// 	if( jStorageTesting == true ) {
+		// 		/* Testing only */
+		// 		if( storing == true ) {
+		// 			testStore();
+		// 		}
+		// 		else {
+		// 			testRetrieve();
+		// 		}
+		// 	}
+		// 	createNewLabel();
+		// }
+
+		// $('#inputField').val('');
+		// // $('#inputGrid').hide();
+		// // inputShown = false;
 		
-		$(this).stopPropagation();
+		// $(this).stopPropagation();
+		addItemOrLabel();
 	});	
 
 	// load existing checklist
