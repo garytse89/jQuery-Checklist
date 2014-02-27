@@ -315,11 +315,19 @@ $(document).ready(function() {
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
 	loadChecklist(existingChecklist);
+
+	var encodedURL = encodeURIComponent(existingChecklist);
+	console.log(encodedURL);
+	console.log(decodeURIComponent(encodedURL));
 	
 	$('[type="checkbox"]').checkboxradio();
 
 	// load the template page
 	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
 	renderTemplates();
+
+	console.log(window.MyCls.getTelephoneNumber());
+
+	window.MyCls.shareChecklist();
 
 });
