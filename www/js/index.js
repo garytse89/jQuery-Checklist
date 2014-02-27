@@ -40,8 +40,9 @@ var app = {
         window.plugins.webintent.getUri(function(url){
             if(url !== ""){
                 console.log('hey I got something1');
-                console.log('URL was + ' + url);
-                $('#test').append(url);
+                //console.log('URL was + ' + url);
+                decodeURIandLoad(url);
+                //$('#test').append(url);
             }
             console.log('hey I got something2');
         });
