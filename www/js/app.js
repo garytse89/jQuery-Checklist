@@ -78,6 +78,14 @@ function createExistingItem(key,item) {
     	i--;
     });
 
+    $('#'+key).click( function(event) {
+    	if( $('#'+key).parent().children('label').hasClass('checked') ) {
+    		$('#'+key).parent().children('label').removeClass('checked');
+    	} else {
+    		$('#'+key).parent().children('label').addClass('checked');
+    	}   	    
+    });
+
     $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 
     //i++;	

@@ -1,3 +1,10 @@
 .ui-listview {
     margin: 20px !important;
 }
+
+.checked {
+    text-decoration: line-through;
+    color: grey !important;
+    font-weight: normal !important;
+    font-style: italic !important;
+}
