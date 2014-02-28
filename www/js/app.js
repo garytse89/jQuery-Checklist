@@ -191,9 +191,8 @@ function loadChecklist(template) {
 		  	}
 		}
 	}	
-
 	// transition to current checklist page
-
+	$.mobile.changePage('#home', {transition: 'slide', reverse: true});
 }
 
 // jQuery
@@ -277,6 +276,7 @@ $(document).ready(function() {
 	});
 
 	$('#save').on('vclick', function(){
+
 		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
 
 		// save the list into local storage
@@ -312,6 +312,17 @@ $(document).ready(function() {
 		});
 		/**/
 	}
+
+	/* Load a list as a template */
+	$('#loadDialogLaunch').on('vclick', function(){ 
+		$('#loadDialog').popup("open");
+	});
+
+	$('#load').on('vclick', function(){
+		decodeURIandLoad($('#loadField').val());
+	});
+
+	/* Input field for new items or labels */
 
 	$("#inputField").focus(function() {
 	    $(this).data("hasfocus", true);
