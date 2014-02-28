@@ -1,15 +1,10 @@
-/*global $:false */
-/*jshint multistr: true */
-/* jshint strict: false */
-// declares to jshint that $ is a variable
-
 var listOfChecklists = {};
 
-var jStorageTesting = false;
-var listItems = {};
-var currentChecklist = 'untitled'; // string name for list
-var templateToLoad = null; // JSON string
-var i=1; // one existing item so current counter starts off at 2
+var jStorageTesting = false; 
+var listItems = {}; // a list of items and labels in the current checklist
+var currentChecklist = 'untitled'; // string name of the current list
+var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
+var i=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
 
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
@@ -85,8 +80,6 @@ function createExistingItem(key,item) {
     });
     
     $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
-
-    //i++;	
 }
 
 function createExistingLabel(key,item) {
@@ -102,7 +95,6 @@ function createExistingLabel(key,item) {
     });
 
     $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
-    //i++;	
 }
 
 function testStore() {
@@ -124,10 +116,8 @@ function confirmDelete() {
 }
 
 function renderTemplates() {
-
 	$('#listOfChecklists').remove();
 	$('#templateGroup').append('<ul data-role="listview" id="listOfChecklists"></ul>');
-
 
 	for (var key in listOfChecklists) {
 		if (listOfChecklists.hasOwnProperty(key)) {
@@ -145,8 +135,6 @@ function renderTemplates() {
  		loadChecklist(listOfChecklists[currentChecklist], true);
  	});
  	
- 	// need a refresh for the list here
-
 }
 
 function clearCurrentList() {
@@ -356,27 +344,6 @@ $(document).ready(function() {
 	}
 
 	$('#inputButton').on('vclick', function() {
-		// if( addingItem == true ) {
-		// 	createNewItem();
-		// }
-		// else {
-		// 	if( jStorageTesting == true ) {
-		// 		/* Testing only */
-		// 		if( storing == true ) {
-		// 			testStore();
-		// 		}
-		// 		else {
-		// 			testRetrieve();
-		// 		}
-		// 	}
-		// 	createNewLabel();
-		// }
-
-		// $('#inputField').val('');
-		// // $('#inputGrid').hide();
-		// // inputShown = false;
-		
-		// $(this).stopPropagation();
 		addItemOrLabel();
 	});	
 
