@@ -30,7 +30,7 @@
             <div data-role="header">
                 <a href="#" id="templatesLink" data-inline="true" data-icon="grid" data-iconpos="notext" data-transition="slide"></a>
                 <h1>Home</h1>                
-                <a href="#" id="shareDialogLaunch" data-rel="popup" data-position-to="window">Share</a>
+                <a href="#" id="shareDialogLaunch" data-rel="popup" data-transition="pop" data-position-to="window">Share</a>
             </div>
         </header>
 
@@ -38,7 +38,7 @@
             <ul class = "list" data-role="listview" data-inset="true">
               </ul>
 
-             <div data-role="popup" id="saveDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+             <div data-role="popup" id="saveDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
             <div data-role="header" data-theme="a" class="ui-corner-top">
                 <h1>Save</h1>
             </div>
@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div data-role="popup" id="clearDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+            <div data-role="popup" id="clearDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" data-transition="pop" class="ui-corner-all">
             <div data-role="header" data-theme="a" class="ui-corner-top">
                 <h1>Clear</h1>
             </div>
@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-        
+
         <footer data-role="footer" data-position="fixed" data-tap-toggle="false">
             <div id="inputGrid" class="ui-grid-a" >
             </div>
@@ -69,7 +69,7 @@
                 <ul>
                     <li id="newItem"><a href="#" data-icon="plus">New Item</a></li>
                     <li id="newLabel"><a href="#" data-icon="plus">New Label</a></li>
-                    <li id="clearDialogLaunch"><a href="#" data-icon="delete" data-rel="popup" data-position-to="window">Clear List</a></li>
+                    <li id="clearDialogLaunch"><a href="#" data-icon="delete" data-rel="popup" data-position-to="window" data-transition="pop">Clear List</a></li>
                     <li id="saveDialogLaunch"><a href = "#" data-role="button" data-inline="true" data-icon="check">Save</a>   
                     <!-- for testing purposes
                     <li id="testStore"><a href="#" data-icon="grid">Store</a></li>
@@ -85,7 +85,7 @@
             <div data-role="header">
                 <a href="#" id="homeLink" data-icon="home" data-iconpos="notext" data-transition="slide">Home</a>
                 <h1>Templates</h1>               
-                <a href="#" id="loadDialogLaunch" data-rel="popup" data-icon="plus" data-position-to="window">Load Template</a>
+                <a href="#" id="loadDialogLaunch" data-rel="popup" data-transition="pop" data-icon="plus" data-position-to="window">Load Template</a>
             </div>
         </header>   
         <div data-role="content"> 
@@ -94,27 +94,31 @@
                     <ul data-role="listview" id="listOfChecklists">
                     </ul>
 
-                    <div data-role="popup" id="confirmDelete" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                    <div data-role="popup" id="confirmDelete" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
                         <div data-role="header" data-theme="a" class="ui-corner-top">
                             <h1>Delete unsaved checklist?</h1>
                         </div>
                     <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
                         <h3 class="ui-title">Untitled checklist needs to be saved</h3>
-                        <a href="#" id="confirmLoadTemplate" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Confirm</a>
+                        <a href="#" id="confirmLoadTemplate" data-role="button" data-inline="true" data-theme="b">Confirm</a>
                         <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>                                 
                         </div>
                     </div>
 
-                    <div data-role="popup" id="loadDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                    <div data-role="popup" id="loadDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
                     <div data-role="header" data-theme="a" class="ui-corner-top">
                         <h1>Load</h1>
                     </div>
                     <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
                         <h3 class="ui-title">Paste the URL of a shared checklist</h3>
                         <input type="text" id="loadField" />
-                        <a href="#" id="load" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Load</a>
+                        <a href="#" id="load" data-role="button" data-inline="true" data-theme="b">Load</a>
                         <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>            
                         </div>
+                    </div>
+
+                    <div data-role="popup" id="errorPopup" data-transition="pop">
+                        <p>Template was not valid</p>
                     </div>
                 </fieldset>
             </div>

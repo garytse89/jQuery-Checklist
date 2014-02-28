@@ -142,7 +142,7 @@ function renderTemplates() {
  		currentChecklist = key;
  		console.log("Load checklist from TEMPLATE called " + currentChecklist);		
  		confirmDelete();
- 		loadChecklist(listOfChecklists[currentChecklist]);
+ 		loadChecklist(listOfChecklists[currentChecklist], true);
  	});
  	
  	// need a refresh for the list here
@@ -171,13 +171,13 @@ function decodeURIandLoad(cl){
 	cl = cl.replace("http://checklist/", "");
 	var decodedChecklist = decodeURIComponent(cl);
 	console.log(decodedChecklist);
-	loadChecklist(decodedChecklist);
+	loadChecklist(decodedChecklist, true);
 }
 
-function loadChecklist(template) {
+function loadChecklist(template, transitionToHome) {
 	clearCurrentList();
 	// load template from local storage and render it
-	if( template ) { 
+	try {
 		listItems = JSON.parse(template);
 		for (var key in listItems) {
 		  	if (listItems.hasOwnProperty(key)) {
@@ -190,9 +190,14 @@ function loadChecklist(template) {
 		    	}		    	
 		  	}
 		}
+
+		// transition to current checklist page
+		if(transitionToHome == true) {
+			$.mobile.changePage('#home', {transition: 'slide', reverse: false});
+		}
+	} catch (err) {
+		console.log("Template was not valid");
 	}	
-	// transition to current checklist page
-	$.mobile.changePage('#home', {transition: 'slide', reverse: true});
 }
 
 // jQuery
@@ -294,7 +299,7 @@ $(document).ready(function() {
 
 	/* Template page template links */
 	$('#confirmLoadTemplate').on('vclick', function(){
-		loadChecklist(templateToLoad);
+		loadChecklist(templateToLoad, true);
 	});
 
 	if( jStorageTesting == true ) {
@@ -377,7 +382,7 @@ $(document).ready(function() {
 
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
-	loadChecklist(existingChecklist);
+	loadChecklist(existingChecklist, false);
 
 	$('[type="checkbox"]').checkboxradio();
 
