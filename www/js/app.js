@@ -79,6 +79,8 @@ function createExistingItem(key,item) {
     });
 
     $('#'+key).click( function(event) { 
+    	event.preventDefault();
+    	event.stopPropagation();
     	$('#'+key).parent().children('label').toggleClass('checked'); 
     });
     
