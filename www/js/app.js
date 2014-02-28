@@ -14,7 +14,7 @@ var i=1; // one existing item so current counter starts off at 2
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
 
-function createListItem() {
+function createNewItem() {
 	if( !$('#inputField').val() ) return;
 	
 	while(listItems['checkbox-'+i] != null){
@@ -331,14 +331,17 @@ $(document).ready(function() {
 
 	function addItemOrLabel() {
 		if( addingItem == true ) {
-			createListItem();
+			createNewItem();
+		}
+		else {
+			createNewLabel();
 		}
 		$('#inputField').val('');
 	}
 
 	$('#inputButton').on('vclick', function() {
 		// if( addingItem == true ) {
-		// 	createListItem();
+		// 	createNewItem();
 		// }
 		// else {
 		// 	if( jStorageTesting == true ) {
