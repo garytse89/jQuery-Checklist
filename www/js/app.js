@@ -1,7 +1,6 @@
 var listOfChecklists = {};
 
 var jStorageTesting = false; 
-var listItems = {}; // a list of items and labels in the current checklist
 var currentChecklist = 'untitled'; // string name of the current list
 var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
 var i=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
@@ -12,9 +11,14 @@ var inputButton = '<div class="ui-block-b main"><input type="button" value="Add"
 function createNewItem() {
 	if( !$('#inputField').val() ) return;
 	
-	while(listItems['checkbox-'+i] != null){
-		i++;
+	if(listItems) {
+		while(listItems['checkbox-'+i] != null){
+			i++;
+		}
+	} else {
+		listItems = {};
 	}
+
 	var itemNum = i;
 
 	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'" class="custom" />\
@@ -38,9 +42,14 @@ function createNewItem() {
 function createNewLabel() {
 	if( !$('#inputField').val() ) return;
 
-	while(listItems['checkbox-'+i] != null){
-		i++;
+	if(listItems) {
+		while(listItems['checkbox-'+i] != null){
+			i++;
+		}
+	} else {
+		listItems = {};
 	}
+	
 	var itemNum = i;
 
 	var newLabel = '<div class="label-'+itemNum+'"><span>' + $('#inputField').val() + '</span></div>';
@@ -163,6 +172,7 @@ function decodeURIandLoad(cl){
 }
 
 function loadChecklist(template, transitionToHome) {
+	listItems = {};
 	clearCurrentList();
 	// load template from local storage and render it
 	try {
