@@ -153,12 +153,7 @@ function clearCurrentList() {
 	if( currentChecklist == "untitled" ) {
 		$.jStorage.set('untitled', null);
 	}
-	else {
-  		// quicksave
-    	listOfChecklists[currentChecklist] = JSON.stringify(listItems);
-		$.jStorage.set('listOfChecklists', listOfChecklists);
-	}
-
+	
 	// remove HTML elements
 	for (var key in listItems) {
 	  	if (listItems.hasOwnProperty(key)) {
