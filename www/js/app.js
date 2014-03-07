@@ -5,6 +5,8 @@ var currentChecklist = 'untitled'; // string name of the current list
 var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
 var i=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
 
+listItems = {};
+
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
 
@@ -49,7 +51,7 @@ function createNewLabel() {
 	} else {
 		listItems = {};
 	}
-	
+
 	var itemNum = i;
 
 	var newLabel = '<div class="label-'+itemNum+'"><span>' + $('#inputField').val() + '</span></div>';
@@ -118,9 +120,11 @@ function testRetrieve() {
 }
 
 function confirmDelete() {
-	var n = Object.keys(listItems).length; // if there is at least one item in the current checklist, confirm its deletion with user
-	if( n > 0 && templateToLoad == "untitled" ) {
-		$("#confirmDelete").popup("open");
+	if(listItems){
+		var n = Object.keys(listItems).length; // if there is at least one item in the current checklist, confirm its deletion with user
+		if( n > 0 && templateToLoad == "untitled" ) {
+			$("#confirmDelete").popup("open");
+		}
 	}
 }
 
@@ -131,7 +135,6 @@ function renderTemplates() {
 	for (var key in listOfChecklists) {
 		if (listOfChecklists.hasOwnProperty(key)) {
 			if( key != "untitled" ) { // load untitled checklist in other page
-		 		//$('#listOfChecklists').append('<li><a href="#confirmDelete" data-rel="popup" data-position-to="window">'+key+'</a></li>');	
 		 		$('#listOfChecklists').append('<li id="listTemplate"><div id='+key+'><a href="#">'+key+'</a></div></li>');	
 		 	}    	
 		}
@@ -155,11 +158,15 @@ function clearCurrentList() {
     	listOfChecklists[currentChecklist] = JSON.stringify(listItems);
 		$.jStorage.set('listOfChecklists', listOfChecklists);
 	}
+
+	// remove HTML elements
 	for (var key in listItems) {
 	  	if (listItems.hasOwnProperty(key)) {
 	  		$( 'div.'+key ).remove(); 	    	
 	  	}
 	}
+
+	// remove the data structure containing the list elements
 	listItems = {};
 	console.log('Cleared checklist');
 }
@@ -172,9 +179,9 @@ function decodeURIandLoad(cl){
 }
 
 function loadChecklist(template, transitionToHome) {
-	listItems = {};
 	clearCurrentList();
 	// load template from local storage and render it
+	console.log("Loading template = " + template);
 	try {
 		listItems = JSON.parse(template);
 		for (var key in listItems) {
