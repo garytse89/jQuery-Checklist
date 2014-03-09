@@ -34,11 +34,10 @@
             </div>
         </header>
 
-        <div data-role="content">  
-            <ul id="sortable" class = "list" data-role="listview" data-inset="true">
-              </ul>
+        <div data-role="content"> 
 
-             <div data-role="popup" id="saveDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+            <ul id="checklist" class = "list" data-role="listview" data-inset="true">
+            <div data-role="popup" id="saveDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
             <div data-role="header" data-theme="a" class="ui-corner-top">
                 <h1>Save</h1>
             </div>
@@ -132,18 +131,25 @@
         <script src="jquery/jquery.mobile-1.4.0.min.js"></script>  
         <!-- (Start) Add the features of jQuery UI sortable -->
         <script src="jquery/jquery-ui.min.js"></script>
+        <script src="jquery/jquery.ui.touch-punch.min.js"></script>
+        <script src="jquery/jquery.mjs.nestedSortable.js"></script>
         <script>
           $(document).bind('pageinit', function() {
-            $( "#sortable" ).sortable();
-            $( "#sortable" ).disableSelection();
-            <!-- Refresh list to the end of sort to have a correct display -->
-            $( "#sortable" ).bind( "sortstop", function(event, ui) {
-              $('#sortable').listview('refresh');
+            // $( "#checklist" ).sortable();
+            $( "#checklist" ).disableSelection();
+            // <!-- Refresh list to the end of sort to have a correct display -->
+            // $( "#sortable" ).bind( "sortstop", function(event, ui) {
+            //   $('#sortable').listview('refresh');
+            // });
+
+            $('#checklist').nestedSortable({
+                handle: 'div',
+                items: 'li',
+                toleranceElement: '> div'
             });
           });
         </script>
-        <!-- (End) Add the features of jQuery UI sortable -->
-        <script src="jquery/jquery.ui.touch-punch.min.js"></script>
+        <!-- (End) Add the features of jQuery UI sortable -->        
         <script src="js/json2.js"></script>
         <script src="js/jstorage.js"></script> 
         <script type="text/javascript" src="cordova.js"></script>

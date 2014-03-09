@@ -23,7 +23,7 @@ function createNewItem() {
 
 	var itemNum = i;
 
-	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'" class="custom" />\
+	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'"  data-inline="true" class="custom" />\
                 <label for="checkbox-'+itemNum+'">' + $('#inputField').val() + '</label></div>';
    
     $('.list').append(newItem);
@@ -71,8 +71,8 @@ function createNewLabel() {
 }
 
 function createExistingItem(key,item) {
-	var newItem = '<div class="'+key+'"><input type="checkbox" name="'+key+'" id="'+key+'" class="custom" />\
-                <label for="'+key+'">' + item + '</label></div>';
+	var newItem = '<li><div class="'+key+'"><input type="checkbox" name="'+key+'" id="'+key+'" class="custom" />\
+                <label for="'+key+'">' + item + '</label></div></li>';
 
     $('.list').append(newItem);
     $('[type="checkbox"]').checkboxradio();
@@ -94,7 +94,7 @@ function createExistingItem(key,item) {
 }
 
 function createExistingLabel(key,item) {
-	var newLabel = '<div class="'+key+'">' + item + '</div>';
+	var newLabel = '<li><div class="'+key+'">' + item + '</div></li>';
 
     $('.list').append(newLabel);
 
