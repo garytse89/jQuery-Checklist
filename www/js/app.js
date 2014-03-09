@@ -29,12 +29,12 @@ function createNewItem() {
     $('.list').append(newItem);
     $('[type="checkbox"]').checkboxradio();
 
-    $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
-    	$("div.checkbox-"+itemNum).remove(); 
-    	delete listItems['checkbox-'+itemNum];
-    	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
-    	i--;
-    });
+    // $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
+    // 	$("div.checkbox-"+itemNum).remove(); 
+    // 	delete listItems['checkbox-'+itemNum];
+    // 	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
+    // 	i--;
+    // });
 
     i++;
     listItems['checkbox-'+itemNum] = $('#inputField').val();
@@ -58,12 +58,12 @@ function createNewLabel() {
 	
 	$('.list').append(newLabel);
 
-	$( "div.label-"+itemNum ).bind( "taphold", function(event) {
-    	$("div.label-"+itemNum).remove();
-    	delete listItems['label-'+itemNum];
-    	$.jStorage.set(templateToLoad, JSON.stringify(listItems));
-    	i--;
-    });
+	// $( "div.label-"+itemNum ).bind( "taphold", function(event) {
+ //    	$("div.label-"+itemNum).remove();
+ //    	delete listItems['label-'+itemNum];
+ //    	$.jStorage.set(templateToLoad, JSON.stringify(listItems));
+ //    	i--;
+ //    });
 
   	i++;	
   	listItems['label-'+itemNum] = $('#inputField').val();
@@ -77,12 +77,12 @@ function createExistingItem(key,item) {
     $('.list').append(newItem);
     $('[type="checkbox"]').checkboxradio();
 
-    $( 'div.'+key ).bind( "taphold", function(event) {
-    	$( 'div.'+key ).remove(); 
-    	delete listItems[key];
-    	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
-    	i--;
-    });
+    // $( 'div.'+key ).bind( "taphold", function(event) {
+    // 	$( 'div.'+key ).remove(); 
+    // 	delete listItems[key];
+    // 	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
+    // 	i--;
+    // });
 
     $('#'+key).click( function(event) { 
     	event.preventDefault();
@@ -98,12 +98,12 @@ function createExistingLabel(key,item) {
 
     $('.list').append(newLabel);
 
-    $( 'div.'+key ).bind( "taphold", function(event) {
-    	$( 'div.'+key ).remove(); 
-    	delete listItems[key];
-    	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
-    	i--;
-    });
+    // $( 'div.'+key ).bind( "taphold", function(event) {
+    // 	$( 'div.'+key ).remove(); 
+    // 	delete listItems[key];
+    // 	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
+    // 	i--;
+    // });
 
     $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 }
