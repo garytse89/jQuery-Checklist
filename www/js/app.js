@@ -27,14 +27,33 @@ function createNewItem() {
                 <label for="checkbox-'+itemNum+'">' + $('#inputField').val() + '</label></div>';
    
     $('.list').append(newItem);
-    $('[type="checkbox"]').checkboxradio();
-
+    
     // $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
     // 	$("div.checkbox-"+itemNum).remove(); 
     // 	delete listItems['checkbox-'+itemNum];
     // 	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
     // 	i--;
     // });
+
+	$('#checkbox'+itemNum).click( function(event) { 
+    	event.preventDefault();
+    	event.stopPropagation();
+    	$('#checkbox'+itemNum).parent().children('label').toggleClass('checked'); 
+
+    	// check off sub-items
+    	var sublist = $('#checkbox'+itemNum).parent().parent().next(); // returns a <ul> DOM object which is the sublist
+    	if( sublist != null ) {
+    		sublist.find('label').toggleClass('checked');
+    		if( sublist.find('label').hasClass('checked') ) { // check/uncheck based on conditions
+    			sublist.find('input[type=checkbox]').prop('checked', true).checkboxradio('refresh');
+    		} else {
+    			sublist.find('input[type=checkbox]').prop('checked', false).checkboxradio('refresh');
+    		}    		
+    	}
+
+    });
+
+    $('[type="checkbox"]').checkboxradio();
 
     i++;
     listItems['checkbox-'+itemNum] = $('#inputField').val();
@@ -88,6 +107,18 @@ function createExistingItem(key,item) {
     	event.preventDefault();
     	event.stopPropagation();
     	$('#'+key).parent().children('label').toggleClass('checked'); 
+
+    	// check off sub-items
+    	var sublist = $('#'+key).parent().parent().next(); // returns a <ul> DOM object which is the sublist
+    	if( sublist != null ) {
+    		sublist.find('label').toggleClass('checked');
+    		if( sublist.find('label').hasClass('checked') ) { // check/uncheck based on conditions
+    			sublist.find('input[type=checkbox]').prop('checked', true).checkboxradio('refresh');
+    		} else {
+    			sublist.find('input[type=checkbox]').prop('checked', false).checkboxradio('refresh');
+    		}    		
+    	}
+
     });
     
     $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
@@ -200,8 +231,18 @@ function loadChecklist(template, transitionToHome) {
 	}	
 }
 
-// jQuery
+function allowSortable() {
+	$( "#checklist" ).disableSelection();
+    $('#checklist').nestedSortable({
+        handle: 'div',
+        items: 'li',
+        toleranceElement: '> div'
+    });
+}
+
 $(document).ready(function() {	
+
+	allowSortable();
 
 	var db = openDatabase ("Test", "1.0", "Test", 65535); // local storage
 	var addingItem = true;

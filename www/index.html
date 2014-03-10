@@ -133,22 +133,22 @@
         <script src="jquery/jquery-ui.min.js"></script>
         <script src="jquery/jquery.ui.touch-punch.min.js"></script>
         <script src="jquery/jquery.mjs.nestedSortable.js"></script>
-        <script>
-          $(document).bind('pageinit', function() {
-            // $( "#checklist" ).sortable();
-            $( "#checklist" ).disableSelection();
-            // <!-- Refresh list to the end of sort to have a correct display -->
-            // $( "#sortable" ).bind( "sortstop", function(event, ui) {
-            //   $('#sortable').listview('refresh');
-            // });
+        // <script>
+        //   $(document).bind('pageinit', function() {
+        //     // $( "#checklist" ).sortable();
+        //     $( "#checklist" ).disableSelection();
+        //     // <!-- Refresh list to the end of sort to have a correct display -->
+        //     // $( "#sortable" ).bind( "sortstop", function(event, ui) {
+        //     //   $('#sortable').listview('refresh');
+        //     // });
 
-            $('#checklist').nestedSortable({
-                handle: 'div',
-                items: 'li',
-                toleranceElement: '> div'
-            });
-          });
-        </script>
+        //     $('#checklist').nestedSortable({
+        //         handle: 'div',
+        //         items: 'li',
+        //         toleranceElement: '> div'
+        //     });
+        //   });
+        // </script>
         <!-- (End) Add the features of jQuery UI sortable -->        
         <script src="js/json2.js"></script>
         <script src="js/jstorage.js"></script> 
