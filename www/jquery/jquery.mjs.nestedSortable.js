@@ -238,6 +238,8 @@
 
 			$.ui.sortable.prototype._mouseStop.apply(this, arguments);
 
+			resave();
+
 		},
 
 		serialize: function(options) {

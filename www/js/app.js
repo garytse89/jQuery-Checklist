@@ -208,6 +208,18 @@ function loadChecklist(template, transitionToHome) {
 	}	
 }
 
+function resave(){
+	// iterate through ul list
+	var count = 1;
+	$('ul#checklist > li').each(function() {
+		//console.log($(this).find('label').text());
+		listItems['checkbox-'+count] = $(this).find('label').text();
+		count++;
+	})
+
+	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
+}
+
 function allowSortable() {
 	console.log('allow sortable');
 
@@ -215,15 +227,15 @@ function allowSortable() {
         handle: 'div',
         items: 'li',
         toleranceElement: '> div'
-    });
-
-    //$('#checklist').sortable();
-    
+    });    
 }
 
 $(document).ready(function() {	
 
 	allowSortable();
+
+	// $('#checklist').on('mouseleave', sayHi); // triggers every time a dragged item passes by another one
+	// for a 'finished-dragging' event, refer to mouseStop() in nestedSortable.js
 
 	var db = openDatabase ("Test", "1.0", "Test", 65535); // local storage
 	var addingItem = true;
