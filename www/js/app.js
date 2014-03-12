@@ -1,3 +1,8 @@
+/* Notes:
+To use default jQuery Mobile styling, remove checkbox class tag
+and run $('[type="checkbox"]').checkboxradio(); everytime a new checkbox is rendered
+*/
+
 var listOfChecklists = {};
 
 var jStorageTesting = false; 
@@ -23,25 +28,16 @@ function createNewItem() {
 
 	var itemNum = i;
 
-	var newItem = '<div class="checkbox-'+itemNum+'"><input type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'"  data-inline="true" class="custom" />\
-                <label for="checkbox-'+itemNum+'">' + $('#inputField').val() + '</label></div>';
+	var newItem = '<div class="checkbox-'+itemNum+'""><input class="css-checkbox" data-role="none" type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'"  data-inline="true" />\
+                <label for="checkbox-'+itemNum+'" class="css-label">' + $('#inputField').val() + '</label></div>';
    
     $('.list').append(newItem);
-    
-    // $( "div.checkbox-"+itemNum ).bind( "taphold", function(event) {
-    // 	$("div.checkbox-"+itemNum).remove(); 
-    // 	delete listItems['checkbox-'+itemNum];
-    // 	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
-    // 	i--;
-    // });
 
 	$('#checkbox'+itemNum).click( function(event) { 
-    	event.preventDefault();
-    	event.stopPropagation();
     	$('#checkbox'+itemNum).parent().children('label').toggleClass('checked'); 
 
     	// check off sub-items
-    	var sublist = $('#checkbox'+itemNum).parent().parent().next(); // returns a <ul> DOM object which is the sublist
+    	var sublist = $('#checkbox'+itemNum).parent().next(); // returns a <ul> DOM object which is the sublist
     	if( sublist != null ) {
     		sublist.find('label').toggleClass('checked');
     		if( sublist.find('label').hasClass('checked') ) { // check/uncheck based on conditions
@@ -51,9 +47,9 @@ function createNewItem() {
     		}    		
     	}
 
-    });
+    });    
 
-    $('[type="checkbox"]').checkboxradio();
+    //$('checkbox-'+itemNum).removeClass('ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off');
 
     i++;
     listItems['checkbox-'+itemNum] = $('#inputField').val();
@@ -73,16 +69,9 @@ function createNewLabel() {
 
 	var itemNum = i;
 
-	var newLabel = '<div class="label-'+itemNum+'"><span>' + $('#inputField').val() + '</span></div>';
+	var newLabel = '<div class="label-'+itemNum+' checklist-label"><span>' + $('#inputField').val() + '</span></div>';
 	
 	$('.list').append(newLabel);
-
-	// $( "div.label-"+itemNum ).bind( "taphold", function(event) {
- //    	$("div.label-"+itemNum).remove();
- //    	delete listItems['label-'+itemNum];
- //    	$.jStorage.set(templateToLoad, JSON.stringify(listItems));
- //    	i--;
- //    });
 
   	i++;	
   	listItems['label-'+itemNum] = $('#inputField').val();
@@ -90,32 +79,22 @@ function createNewLabel() {
 }
 
 function createExistingItem(key,item) {
-	var newItem = '<li><div class="'+key+'"><input type="checkbox" name="'+key+'" id="'+key+'" class="custom" />\
-                <label for="'+key+'">' + item + '</label></div></li>';
+	var newItem = '<li><div class="'+key+'""><input class="css-checkbox" data-role="none" type="checkbox" name="'+key+'" id="'+key+'"/>\
+                <label for="'+key+'" class="css-label">' + item + '</label></div></li>';
 
     $('.list').append(newItem);
-    $('[type="checkbox"]').checkboxradio();
-
-    // $( 'div.'+key ).bind( "taphold", function(event) {
-    // 	$( 'div.'+key ).remove(); 
-    // 	delete listItems[key];
-    // 	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
-    // 	i--;
-    // });
 
     $('#'+key).click( function(event) { 
-    	event.preventDefault();
-    	event.stopPropagation();
     	$('#'+key).parent().children('label').toggleClass('checked'); 
 
     	// check off sub-items
-    	var sublist = $('#'+key).parent().parent().next(); // returns a <ul> DOM object which is the sublist
+    	var sublist = $('#'+key).parent().next(); // returns a <ul> DOM object which is the sublist
     	if( sublist != null ) {
     		sublist.find('label').toggleClass('checked');
     		if( sublist.find('label').hasClass('checked') ) { // check/uncheck based on conditions
-    			sublist.find('input[type=checkbox]').prop('checked', true).checkboxradio('refresh');
+    			sublist.find('input[type=checkbox]').prop('checked', true);//.checkboxradio('refresh');
     		} else {
-    			sublist.find('input[type=checkbox]').prop('checked', false).checkboxradio('refresh');
+    			sublist.find('input[type=checkbox]').prop('checked', false);//.checkboxradio('refresh');
     		}    		
     	}
 
@@ -125,7 +104,7 @@ function createExistingItem(key,item) {
 }
 
 function createExistingLabel(key,item) {
-	var newLabel = '<li><div class="'+key+'">' + item + '</div></li>';
+	var newLabel = '<li><div class="'+key+' checklist-label">' + item + '</div></li>';
 
     $('.list').append(newLabel);
 
@@ -403,8 +382,6 @@ $(document).ready(function() {
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
 	loadChecklist(existingChecklist, false);
-
-	$('[type="checkbox"]').checkboxradio();
 
 	// load the template page
 	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
