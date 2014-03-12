@@ -13,6 +13,10 @@
 	font-size:26px;
 }
 
+.list {
+	list-style: none !important;
+}
+
 input[type=checkbox].css-checkbox {
 	display:none;
 }
