@@ -18,10 +18,12 @@
 }
 
 input[type=checkbox].css-checkbox {
-	display:none;
+	display: none;
+	left:0px;
 }
 
 input[type=checkbox].css-checkbox + label.css-label {
+	left:0px;
 	padding-left:31px;
 	height:26px; 
 	display:inline-block;

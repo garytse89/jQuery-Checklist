@@ -163,15 +163,17 @@ function clearCurrentList() {
 	}
 	
 	// remove HTML elements
-	for (var key in listItems) {
-	  	if (listItems.hasOwnProperty(key)) {
-	  		$( 'div.'+key ).remove(); 	    	
-	  	}
-	}
+	// for (var key in listItems) {
+	//   	if (listItems.hasOwnProperty(key)) {
+	//   		$( 'div.'+key ).remove(); 	    	
+	//   	}
+	// }
+
+	$('#checklist').empty();
 
 	// remove the data structure containing the list elements
 	listItems = {};
-	console.log('Cleared checklist');
+	console.log('Cleared checklist, should be nothing here: ' + $('#checklist').html());
 }
 
 function decodeURIandLoad(cl){
@@ -212,7 +214,19 @@ function resave(){
 	// iterate through ul list
 	var count = 1;
 	$('ul#checklist > li').each(function() {
-		//console.log($(this).find('label').text());
+		console.log($(this).children('div').children('label').text());
+		var sublistLength = $(this).children('ul').length;
+    	if( sublistLength != 0 ) {
+    		console.log("Length of sublist = " + sublistLength);
+    		console.log("This element has a sublist " + $(this).children('ul').html());
+
+    		var subCount = 1;
+    		$(this).children('ul').each(function() {
+    			listItems['checkbox-'+count+'-sub-'+subCount] = $(this).find('label').text();
+    			subCount++;
+    		})
+    		
+    	}
 		listItems['checkbox-'+count] = $(this).find('label').text();
 		count++;
 	})
