@@ -51,7 +51,8 @@ function createNewItem() {
 
     i++;
     listItems['checkbox-'+itemNum] = $('#inputField').val();
-    $.jStorage.set(currentChecklist, JSON.stringify(listItems)); 
+    $.jStorage.set(currentChecklist, $('#checklist').html());
+    //$.jStorage.set(currentChecklist, JSON.stringify(listItems)); 
 }
 
 function createNewLabel() {
@@ -73,7 +74,8 @@ function createNewLabel() {
 
   	i++;	
   	listItems['label-'+itemNum] = $('#inputField').val();
-  	$.jStorage.set(currentChecklist, JSON.stringify(listItems));	
+  	$.jStorage.set(currentChecklist, $('#checklist').html());
+  	//$.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 }
 
 function createExistingItem(key,item) {
@@ -183,6 +185,10 @@ function decodeURIandLoad(cl){
 	loadChecklist(decodedChecklist, true);
 }
 
+function loadChecklistFromHTML(html) {
+	$('#checklist').append(html);
+}
+
 function loadChecklist(template, transitionToHome) {
 	clearCurrentList();
 	// load template from local storage and render it
@@ -212,6 +218,8 @@ function loadChecklist(template, transitionToHome) {
 
 function resave(){
 	// iterate through ul list
+	listItems = {};
+
 	var count = 1;
 	$('ul#checklist > li').each(function() {
 		console.log($(this).children('div').children('label').text());
@@ -227,11 +235,12 @@ function resave(){
     		})
     		
     	}
-		listItems['checkbox-'+count] = $(this).find('label').text();
+		listItems['checkbox-'+count] = $(this).children('div').children('label').text();
 		count++;
 	})
 
-	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
+	$.jStorage.set(currentChecklist, $('#checklist').html());
+	//$.jStorage.set(currentChecklist, JSON.stringify(listItems));
 }
 
 function allowSortable() {
@@ -409,7 +418,8 @@ $(document).ready(function() {
 
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
-	loadChecklist(existingChecklist, false);
+	//loadChecklist(existingChecklist, false);
+	loadChecklistFromHTML(existingChecklist);
 
 	// load the template page
 	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
