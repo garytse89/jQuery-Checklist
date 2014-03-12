@@ -28,8 +28,8 @@ function createNewItem() {
 
 	var itemNum = i;
 
-	var newItem = '<div class="checkbox-'+itemNum+'""><input class="css-checkbox" data-role="none" type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'"  data-inline="true" />\
-                <label for="checkbox-'+itemNum+'" class="css-label">' + $('#inputField').val() + '</label></div>';
+	var newItem = '<li><div class="checkbox-'+itemNum+'""><input class="css-checkbox" data-role="none" type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'"  data-inline="true" />\
+                <label for="checkbox-'+itemNum+'" class="css-label">' + $('#inputField').val() + '</label></div></li>';
    
     $('.list').append(newItem);
 
@@ -49,8 +49,6 @@ function createNewItem() {
 
     });    
 
-    //$('checkbox-'+itemNum).removeClass('ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off');
-
     i++;
     listItems['checkbox-'+itemNum] = $('#inputField').val();
     $.jStorage.set(currentChecklist, JSON.stringify(listItems)); 
@@ -69,7 +67,7 @@ function createNewLabel() {
 
 	var itemNum = i;
 
-	var newLabel = '<div class="label-'+itemNum+' checklist-label"><span>' + $('#inputField').val() + '</span></div>';
+	var newLabel = '<li><div class="label-'+itemNum+' checklist-label"><span>' + $('#inputField').val() + '</span></div></li>';
 	
 	$('.list').append(newLabel);
 
@@ -211,12 +209,16 @@ function loadChecklist(template, transitionToHome) {
 }
 
 function allowSortable() {
-	$( "#checklist" ).disableSelection();
+	console.log('allow sortable');
+
     $('#checklist').nestedSortable({
         handle: 'div',
         items: 'li',
         toleranceElement: '> div'
     });
+
+    //$('#checklist').sortable();
+    
 }
 
 $(document).ready(function() {	
