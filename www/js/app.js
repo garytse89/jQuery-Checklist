@@ -225,11 +225,13 @@ function resave(){
     		// if sublist no longer exists, remove the (+) button
     		console.log('remove (+) button');
 			$(this).children('div').children('a').remove();
-    	} else if( typeof $(this).children('ul').html() != "undefined" ){ // cannot be undefined
+    	} else if( typeof $(this).children('ul').html() != "undefined" && $(this).children('div').children('a').length == 0 ){ // cannot be undefined
+    		// collapsable button is only added if it didn't exist already (jQuery selector for it should have length of 0 then)
     		console.log("we're adding a (+) button due to this html: " + $(this).children('ul').html());
-    		var expandButton = '<a href="#">(+)</a>';
-    		$(this).children('div').append(expandButton); // append '+' button 
-    	}
+    		var expandButton = '<a href="#" id="collapseButton">(-)</a>';
+    		$(this).children('div').append(expandButton); // append '+' button   
+    		allowCollapsableSublists();  		
+    	}    	
 	})
 
 	$.jStorage.set(currentChecklist, $('#checklist').html());
@@ -244,6 +246,23 @@ function allowSortable() {
         items: 'li',
         toleranceElement: '> div'
     });    
+}
+
+function allowCollapsableSublists() {
+	// this function is run on a nestedSortable->mouseStop(), since a new collapsable button is created and needs to have a listener
+	// it is also run on the page loading to attach listeners to all existing collapsable buttons
+	$('#collapseButton').on('vclick', function(){
+		console.log("Collapse button is working");
+		$(this).parent().parent().children('ul').toggle('fast');
+		$(this).toggleClass('collapsed');
+		if( $(this).hasClass('collapsed') ) {
+			// if collapsed, the button should become '+'
+			$(this).text("(+)");
+		}
+		else {
+			$(this).text("(-)");
+		}
+	});
 }
 
 $(document).ready(function() {	
@@ -417,4 +436,6 @@ $(document).ready(function() {
 	// load the template page
 	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
 	renderTemplates();
+
+	allowCollapsableSublists();
 });
