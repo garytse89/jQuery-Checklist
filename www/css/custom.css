@@ -8,6 +8,7 @@
 
 .list {
 	list-style: none !important;
+	display: inline-block;
 }
 
 input[type=checkbox].css-checkbox {
