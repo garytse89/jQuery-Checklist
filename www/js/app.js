@@ -218,27 +218,8 @@ function loadChecklist(template, transitionToHome) {
 
 function resave(){
 	// iterate through ul list
-	listItems = {};
 
-	var count = 1;
 	$('ul#checklist > li').each(function() {
-		// var sublistLength = $(this).children('ul').length;
-		// console.log("Length of sublist of [" + $(this).children('div').children('label').text() + "] = " + sublistLength);
-		// console.log("It has collapsable class = " + $(this).children('div').hasClass('collapsable'));
-  //   	if( sublistLength != 0 && !($(this).children('div').hasClass('collapsable')) ) {
-  //   		$(this).children('div').toggleClass('collapsable');
-
-  //   		console.log("This element has a sublist " + $(this).children('ul').html());
-
-  //   		var expandButton = '<a href="#">(+)</a>';
-  //   		$(this).children('div').append(expandButton); // append '+' button 
-
-  //   		// var subCount = 1;
-  //   		// $(this).children('ul').each(function() {
-  //   		// 	listItems['checkbox-'+count+'-sub-'+subCount] = $(this).find('label').text();
-  //   		// 	subCount++;
-  //   		// })	
-  //   	}
 
     	if( $(this).children('ul').html() == '' ) { 
     		// if sublist no longer exists, remove the (+) button
@@ -249,9 +230,6 @@ function resave(){
     		var expandButton = '<a href="#">(+)</a>';
     		$(this).children('div').append(expandButton); // append '+' button 
     	}
-
-		listItems['checkbox-'+count] = $(this).children('div').children('label').text();
-		count++;
 	})
 
 	$.jStorage.set(currentChecklist, $('#checklist').html());
