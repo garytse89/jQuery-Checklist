@@ -17,14 +17,6 @@ var inputButton = '<div class="ui-block-b main"><input type="button" value="Add"
 
 function createNewItem() {
 	if( !$('#inputField').val() ) return;
-	
-	if(listItems) {
-		while(listItems['checkbox-'+i] != null){
-			i++;
-		}
-	} else {
-		listItems = {};
-	}
 
 	var itemNum = i;
 
@@ -44,21 +36,12 @@ function createNewItem() {
     });    
 
     i++;
-    listItems['checkbox-'+itemNum] = $('#inputField').val();
-    $.jStorage.set(currentChecklist, $('#checklist').html());
-    //$.jStorage.set(currentChecklist, JSON.stringify(listItems)); 
+
+    $.jStorage.set(currentChecklist, $('#checklist').html()); 
 }
 
 function createNewLabel() {
 	if( !$('#inputField').val() ) return;
-
-	if(listItems) {
-		while(listItems['checkbox-'+i] != null){
-			i++;
-		}
-	} else {
-		listItems = {};
-	}
 
 	var itemNum = i;
 
@@ -69,7 +52,6 @@ function createNewLabel() {
   	i++;	
   	listItems['label-'+itemNum] = $('#inputField').val();
   	$.jStorage.set(currentChecklist, $('#checklist').html());
-  	//$.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 }
 
 function createExistingItem(key,item) {
@@ -85,6 +67,8 @@ function createExistingItem(key,item) {
 			return !val;
 		});
     });  
+
+    i++;
     
     $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 }
@@ -100,6 +84,8 @@ function createExistingLabel(key,item) {
     // 	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
     // 	i--;
     // });
+
+	i++;
 
     $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 }
@@ -149,18 +135,8 @@ function clearCurrentList() {
 	if( currentChecklist == "untitled" ) {
 		$.jStorage.set('untitled', null);
 	}
-	
-	// remove HTML elements
-	// for (var key in listItems) {
-	//   	if (listItems.hasOwnProperty(key)) {
-	//   		$( 'div.'+key ).remove(); 	    	
-	//   	}
-	// }
 
 	$('#checklist').empty();
-
-	// remove the data structure containing the list elements
-	listItems = {};
 	console.log('Cleared checklist, should be nothing here: ' + $('#checklist').html());
 }
 
@@ -173,6 +149,10 @@ function decodeURIandLoad(cl){
 
 function loadChecklistFromHTML(html) {
 	$('#checklist').append(html);
+
+	// calculate variable i (counter of current checkboxes) based on highest number found to avoid duplicates (or else wrong ones will be checked off)
+	i = $('#checklist').children('li').length;
+	console.log('Existing items = ' + i);
 }
 
 function loadChecklist(template, transitionToHome) {
