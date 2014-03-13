@@ -33,19 +33,13 @@ function createNewItem() {
    
     $('.list').append(newItem);
 
-	$('#checkbox'+itemNum).click( function(event) { 
-    	$('#checkbox'+itemNum).parent().children('label').toggleClass('checked'); 
-
-    	// check off sub-items
-    	var sublist = $('#checkbox'+itemNum).parent().next(); // returns a <ul> DOM object which is the sublist
-    	if( sublist != null ) {
-    		sublist.find('label').toggleClass('checked');
-    		if( sublist.find('label').hasClass('checked') ) { // check/uncheck based on conditions
-    			sublist.find('input[type=checkbox]').prop('checked', true).checkboxradio('refresh');
-    		} else {
-    			sublist.find('input[type=checkbox]').prop('checked', false).checkboxradio('refresh');
-    		}    		
-    	}
+	$('#checkbox-'+itemNum).change( function(event) { 
+		console.log('check');
+    	
+    	$('#checkbox-'+itemNum).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
+    		console.log(val);
+		    return !val;
+		});
 
     });    
 
@@ -84,21 +78,13 @@ function createExistingItem(key,item) {
 
     $('.list').append(newItem);
 
-    $('#'+key).click( function(event) { 
-    	$('#'+key).parent().children('label').toggleClass('checked'); 
-
-    	// check off sub-items
-    	var sublist = $('#'+key).parent().next(); // returns a <ul> DOM object which is the sublist
-    	if( sublist != null ) {
-    		sublist.find('label').toggleClass('checked');
-    		if( sublist.find('label').hasClass('checked') ) { // check/uncheck based on conditions
-    			sublist.find('input[type=checkbox]').prop('checked', true);//.checkboxradio('refresh');
-    		} else {
-    			sublist.find('input[type=checkbox]').prop('checked', false);//.checkboxradio('refresh');
-    		}    		
-    	}
-
-    });
+    $('#'+key).change( function(event) { 
+		console.log('check');
+    	
+    	$('#'+key).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
+			return !val;
+		});
+    });  
     
     $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 }
