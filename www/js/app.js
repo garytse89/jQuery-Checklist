@@ -222,19 +222,34 @@ function resave(){
 
 	var count = 1;
 	$('ul#checklist > li').each(function() {
-		console.log($(this).children('div').children('label').text());
-		var sublistLength = $(this).children('ul').length;
-    	if( sublistLength != 0 ) {
-    		console.log("Length of sublist = " + sublistLength);
-    		console.log("This element has a sublist " + $(this).children('ul').html());
+		// var sublistLength = $(this).children('ul').length;
+		// console.log("Length of sublist of [" + $(this).children('div').children('label').text() + "] = " + sublistLength);
+		// console.log("It has collapsable class = " + $(this).children('div').hasClass('collapsable'));
+  //   	if( sublistLength != 0 && !($(this).children('div').hasClass('collapsable')) ) {
+  //   		$(this).children('div').toggleClass('collapsable');
 
-    		var subCount = 1;
-    		$(this).children('ul').each(function() {
-    			listItems['checkbox-'+count+'-sub-'+subCount] = $(this).find('label').text();
-    			subCount++;
-    		})
-    		
+  //   		console.log("This element has a sublist " + $(this).children('ul').html());
+
+  //   		var expandButton = '<a href="#">(+)</a>';
+  //   		$(this).children('div').append(expandButton); // append '+' button 
+
+  //   		// var subCount = 1;
+  //   		// $(this).children('ul').each(function() {
+  //   		// 	listItems['checkbox-'+count+'-sub-'+subCount] = $(this).find('label').text();
+  //   		// 	subCount++;
+  //   		// })	
+  //   	}
+
+    	if( $(this).children('ul').html() == '' ) { 
+    		// if sublist no longer exists, remove the (+) button
+    		console.log('remove (+) button');
+			$(this).children('div').children('a').remove();
+    	} else if( typeof $(this).children('ul').html() != "undefined" ){ // cannot be undefined
+    		console.log("we're adding a (+) button due to this html: " + $(this).children('ul').html());
+    		var expandButton = '<a href="#">(+)</a>';
+    		$(this).children('div').append(expandButton); // append '+' button 
     	}
+
 		listItems['checkbox-'+count] = $(this).children('div').children('label').text();
 		count++;
 	})
