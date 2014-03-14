@@ -150,8 +150,18 @@ function decodeURIandLoad(cl){
 function loadChecklistFromHTML(html) {
 	$('#checklist').append(html);
 
-	// calculate variable i (counter of current checkboxes) based on highest number found to avoid duplicates (or else wrong ones will be checked off)
-	i = $('#checklist').children('li').length;
+	// reattach check listeners (to check all sublist items) to each existing item created from HTML
+	eachListItem = $('#checklist').children('li').each( function() {
+		$(this).children('div').children('input[type=checkbox]').change( function(event) { 
+			console.log('check');
+	    	$(this).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
+	    		console.log(val);
+			    return !val;
+			});
+	    }); 
+		i++;
+	});
+
 	console.log('Existing items = ' + i);
 }
 
