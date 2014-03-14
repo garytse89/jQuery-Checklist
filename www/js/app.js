@@ -26,12 +26,36 @@ function createNewItem() {
     $('.list').append(newItem);
 
 	$('#checkbox-'+itemNum).change( function(event) { 
-		console.log('This checkbox is now checked or not? ' + $(this).is(':checked'));
-		var parentChecked = $(this).is(':checked');
-    	
-    	$('#checkbox-'+itemNum).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
-  			return parentChecked;
-		});
+		console.log('Is this a sublist item?');
+		console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
+
+		// if this is a sublist item
+		if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
+			console.log('yes');
+
+			var otherItemsChecked = true;
+
+			$(this).parent().parent().parent().children('li').each( function() {
+				otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
+				console.log("are other items checked? " + otherItemsChecked);
+			});
+
+			if( otherItemsChecked == true ) {
+				console.log("So also check the parent");
+				// check the parent as well
+				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", true);
+			}
+		}
+
+		else {
+
+			var parentChecked = $(this).is(':checked');
+	    	
+	    	$('#checkbox-'+itemNum).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
+	  			return parentChecked;
+			});
+
+	    }
 
     });    
 
@@ -156,10 +180,36 @@ function loadChecklistFromHTML(html) {
 	// reattach check listeners (to check all sublist items) to each existing item created from HTML
 	eachListItem = $('#checklist').children('li').each( function() {
 		$(this).children('div').children('input[type=checkbox]').change( function(event) { 
-			var parentChecked = $(this).is(':checked');
-	    	$(this).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
-	    		return parentChecked;
-			});
+			console.log('Is this a sublist item?');
+			console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
+
+			// if this is a sublist item
+			if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
+				console.log('yes');
+
+				var otherItemsChecked = true;
+
+				$(this).parent().parent().parent().children('li').each( function() {
+					otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
+					console.log("are other items checked? " + otherItemsChecked);
+				});
+
+				if( otherItemsChecked == true ) {
+					console.log("So also check the parent");
+					// check the parent as well
+					$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", true);
+				}
+			}
+
+			else {
+
+				var parentChecked = $(this).is(':checked');
+		    	
+		    	$('#checkbox-'+itemNum).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
+		  			return parentChecked;
+				});
+
+		    }
 	    }); 
 
 		console.log('does this item have sublist? => ' + $(this).children('ul').length );
@@ -167,6 +217,7 @@ function loadChecklistFromHTML(html) {
 	 		i += $(this).children('ul').length;
 	 	}
 		i++;
+
 	});
 
 	console.log('Existing items = ' + i);
