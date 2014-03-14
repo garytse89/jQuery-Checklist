@@ -41,9 +41,11 @@ function createNewItem() {
 			});
 
 			if( otherItemsChecked == true ) {
-				console.log("So also check the parent");
 				// check the parent as well
 				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", true);
+			} else if( otherItemsChecked == false )  {
+				// if one sublist item is unchecked, uncheck the parent
+				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", false);
 			}
 		}
 
@@ -195,9 +197,11 @@ function loadChecklistFromHTML(html) {
 				});
 
 				if( otherItemsChecked == true ) {
-					console.log("So also check the parent");
 					// check the parent as well
 					$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", true);
+				} else if( otherItemsChecked == false )  {
+					// if one sublist item is unchecked, uncheck the parent
+					$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", false);
 				}
 			}
 
@@ -205,7 +209,7 @@ function loadChecklistFromHTML(html) {
 
 				var parentChecked = $(this).is(':checked');
 		    	
-		    	$('#checkbox-'+itemNum).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
+		    	$(this).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
 		  			return parentChecked;
 				});
 
