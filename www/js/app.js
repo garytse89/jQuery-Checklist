@@ -26,11 +26,11 @@ function createNewItem() {
     $('.list').append(newItem);
 
 	$('#checkbox-'+itemNum).change( function(event) { 
-		console.log('check');
+		console.log('This checkbox is now checked or not? ' + $(this).is(':checked'));
+		var parentChecked = $(this).is(':checked');
     	
     	$('#checkbox-'+itemNum).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
-    		console.log(val);
-		    return !val;
+  			return parentChecked;
 		});
 
     });    
@@ -148,17 +148,22 @@ function decodeURIandLoad(cl){
 }
 
 function loadChecklistFromHTML(html) {
-	$('#checklist').append(html);
+	$('#checklist').append(html); 
 
 	// reattach check listeners (to check all sublist items) to each existing item created from HTML
 	eachListItem = $('#checklist').children('li').each( function() {
 		$(this).children('div').children('input[type=checkbox]').change( function(event) { 
-			console.log('check');
+			var parentChecked = $(this).is(':checked');
 	    	$(this).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
-	    		console.log(val);
-			    return !val;
+	    		return parentChecked;
 			});
 	    }); 
+
+		console.log('does this item have sublist? => ' + $(this).children('ul').length );
+	 	if( $(this).children('ul').length != 0 ) {
+	 		i += $(this).children('ul').length;
+	 	}
+
 		i++;
 	});
 
