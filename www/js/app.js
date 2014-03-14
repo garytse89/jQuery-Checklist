@@ -10,8 +10,6 @@ var currentChecklist = 'untitled'; // string name of the current list
 var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
 var i=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
 
-listItems = [];
-
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
 
@@ -155,40 +153,93 @@ function decodeURIandLoad(cl){
 	loadChecklist(decodedChecklist, true);
 }
 
+function isChildItem() {
+
+}
+
+function isParentItem(selector){
+	// is this checkbox selector a parent item?
+	if( selector.children('ul').length != 0 ) 
+		return true;
+	else 
+		return false;
+}
+
+function listToArray(){
+	var start = window.performance.now();
+
+	listItems = [];
+	eachListItem = $('#checklist').children('li').each( function() {
+
+		// add checkbox-item or label to current checklist array
+		//console.log("is this a checkbox? " + $(this).children('div').is('[class^="label"]'));
+
+		// each selector corresponds to the wrapping <div>
+		if( $(this).children('div').is('[class^="label"]') == true ) {
+			listItems.push( {
+		    	"selector" : $(this).children('div'), // to test: console.log($(this).children('div').html());
+		    	"value" : $(this).children('div').children('span').text(),
+		    	"checkbox" : false, // label would be false
+		    	"checked" : false,
+		    	"order" : i, // probably not needed....
+		    });
+
+		    i++;
+		} else {			
+
+			if( isParentItem($(this)) == true ) {
+				// push each sublist item into sublist
+				var sublistObject = [];
+				var counter = 1;
+
+				$(this).children('ul').children('li').each( function() {
+					sublistObject.push( {
+						"selector" : $(this).children('div'),
+				    	"label" : $(this).children('div').children('label').text(),
+				    	"checkbox" : true, // label would be false
+				    	"checked" : false,
+				    	"order" : counter, // probably not needed....
+					});
+					counter++;
+				});
+
+				listItems.push( {
+			    	"selector" : $(this).children('div'),
+			    	"label" : $(this).children('div').children('label').text(),
+			    	"checkbox" : true, // label would be false
+			    	"checked" : false,
+			    	"order" : i, // probably not needed....
+			    	"sublist" : sublistObject,
+			    });		    	
+
+			    i++;
+
+			} else {
+
+				listItems.push( {
+			    	"selector" : $(this).children('div'), // <input class="css-checkbox"....><label>...
+			    	"label" : $(this).children('div').children('label').text(),
+			    	"checkbox" : true, // label would be false
+			    	"checked" : false,
+			    	"order" : i, // probably not needed....
+			    });			    
+
+			    i++;
+			}
+		}
+	});
+
+	var end = window.performance.now();
+	var time = end - start;
+	console.log('Execution time (in milliseconds) ' + time);
+}
+
 function loadChecklistFromHTML(html) {
 	$('#checklist').append(html); 
 
 	// reattach check listeners (to check all sublist items) to each existing item created from HTML
 	// for each item, 1) add it to current checklist array, and 2) attach event listener (based on checkbox changes)
 	eachListItem = $('#checklist').children('li').each( function() {
-
-		// add checkbox-item or label to current checklist array
-		//console.log("is this a checkbox? " + $(this).children('div').is('[class^="label"]'));
-		if( $(this).children('div').is('[class^="label"]') == true ) {
-			listItems.push( {
-		    	"selector" : $('label-'+i),
-		    	"value" : $(this).children('div').children('span').text(),
-		    	"checkbox" : false, // label would be false
-		    	"checked" : false,
-		    	"order" : i, // probably not needed....
-		    });
-		} else {
-			listItems.push( {
-		    	"selector" : $('checkbox-'+i),
-		    	"label" : $(this).children('div').children('label').text(),
-		    	"checkbox" : true, // label would be false
-		    	"checked" : false,
-		    	"order" : i, // probably not needed....
-		    });
-		}
-
-	    // listItems.push( {
-	    // 	"selector" : $('checkbox-'+itemNum),
-	    // 	"checkbox" : true, // label would be false
-	    // 	"checked" : false,
-	    // 	"order" : itemNum, // probably not needed....
-	    // });
-
 
 		$(this).children('div').children('input[type=checkbox]').change( function(event) { 
 			console.log('Is this a sublist item?');
@@ -225,13 +276,9 @@ function loadChecklistFromHTML(html) {
 		    }
 	    }); 
 
-		console.log('does this item have sublist? => ' + $(this).children('ul').length );
-	 	if( $(this).children('ul').length != 0 ) {
-	 		i += $(this).children('ul').length;
-	 	}
-		i++;
-
 	});
+
+	listToArray();
 
 	console.log('Existing items = ' + i);
 }
@@ -280,6 +327,8 @@ function resave(){
     		allowCollapsableSublists();  		
     	}    	
 	})
+
+	listToArray();
 
 	$.jStorage.set(currentChecklist, $('#checklist').html());
 	//$.jStorage.set(currentChecklist, JSON.stringify(listItems));
