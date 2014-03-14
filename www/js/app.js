@@ -10,7 +10,7 @@ var currentChecklist = 'untitled'; // string name of the current list
 var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
 var i=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
 
-listItems = {};
+listItems = [];
 
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
@@ -24,6 +24,14 @@ function createNewItem() {
                 <label for="checkbox-'+itemNum+'" class="css-label">' + $('#inputField').val() + '</label></div></li>';
    
     $('.list').append(newItem);
+
+    // add this new checkbox to the array, in the format of {jQuery selector, checkbox, checked, label, order}
+    listItems.push( {
+    	"selector" : $('checkbox-'+itemNum),
+    	"checkbox" : true, // label would be false
+    	"checked" : false,
+    	"order" : itemNum, // probably not needed....
+    });
 
 	$('#checkbox-'+itemNum).change( function(event) { 
 		console.log('Is this a sublist item?');
@@ -75,45 +83,16 @@ function createNewLabel() {
 	
 	$('.list').append(newLabel);
 
+	// add this new checkbox to the array, in the format of {jQuery selector, checkbox, checked, label, order}
+    listItems.push( {
+    	"selector" : $('label-'+itemNum),
+    	"checkbox" : false, // label would be false
+    	"checked" : false, 
+    	"order" : itemNum, // probably not needed....
+    });
+
   	i++;	
-  	listItems['label-'+itemNum] = $('#inputField').val();
   	$.jStorage.set(currentChecklist, $('#checklist').html());
-}
-
-function createExistingItem(key,item) {
-	var newItem = '<li><div class="'+key+'"><input class="css-checkbox" data-role="none" type="checkbox" name="'+key+'" id="'+key+'"/>\
-                <label for="'+key+'" class="css-label">' + item + '</label></div></li>';
-
-    $('.list').append(newItem);
-
-    $('#'+key).change( function(event) { 
-		console.log('check');
-    	
-    	$('#'+key).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
-			return !val;
-		});
-    });  
-
-    i++;
-    
-    $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
-}
-
-function createExistingLabel(key,item) {
-	var newLabel = '<li><div class="'+key+' checklist-label">' + item + '</div></li>';
-
-    $('.list').append(newLabel);
-
-    // $( 'div.'+key ).bind( "taphold", function(event) {
-    // 	$( 'div.'+key ).remove(); 
-    // 	delete listItems[key];
-    // 	$.jStorage.set(currentChecklist, JSON.stringify(listItems));
-    // 	i--;
-    // });
-
-	i++;
-
-    $.jStorage.set(currentChecklist, JSON.stringify(listItems));	
 }
 
 function testStore() {
@@ -180,7 +159,37 @@ function loadChecklistFromHTML(html) {
 	$('#checklist').append(html); 
 
 	// reattach check listeners (to check all sublist items) to each existing item created from HTML
+	// for each item, 1) add it to current checklist array, and 2) attach event listener (based on checkbox changes)
 	eachListItem = $('#checklist').children('li').each( function() {
+
+		// add checkbox-item or label to current checklist array
+		//console.log("is this a checkbox? " + $(this).children('div').is('[class^="label"]'));
+		if( $(this).children('div').is('[class^="label"]') == true ) {
+			listItems.push( {
+		    	"selector" : $('label-'+i),
+		    	"value" : $(this).children('div').children('span').text(),
+		    	"checkbox" : false, // label would be false
+		    	"checked" : false,
+		    	"order" : i, // probably not needed....
+		    });
+		} else {
+			listItems.push( {
+		    	"selector" : $('checkbox-'+i),
+		    	"label" : $(this).children('div').children('label').text(),
+		    	"checkbox" : true, // label would be false
+		    	"checked" : false,
+		    	"order" : i, // probably not needed....
+		    });
+		}
+
+	    // listItems.push( {
+	    // 	"selector" : $('checkbox-'+itemNum),
+	    // 	"checkbox" : true, // label would be false
+	    // 	"checked" : false,
+	    // 	"order" : itemNum, // probably not needed....
+	    // });
+
+
 		$(this).children('div').children('input[type=checkbox]').change( function(event) { 
 			console.log('Is this a sublist item?');
 			console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
@@ -208,7 +217,7 @@ function loadChecklistFromHTML(html) {
 			else {
 
 				var parentChecked = $(this).is(':checked');
-		    	
+
 		    	$(this).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
 		  			return parentChecked;
 				});
