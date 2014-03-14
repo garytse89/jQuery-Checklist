@@ -165,6 +165,43 @@ function isParentItem(selector){
 		return false;
 }
 
+function listToBareArray() {
+	// like list to array but it only contains the values
+
+	bareListArray = [];
+	eachListItem = $('#checklist').children('li').each( function() {
+
+		if( $(this).children('div').is('[class^="label"]') == true ) {
+			bareListArray.push( {
+		    	"label-text" : $(this).children('div').children('span').text(),
+		    });
+		} else {
+			if( isParentItem($(this)) == true ) {
+				var sublistObject = [];
+				$(this).children('ul').children('li').each( function() {
+					sublistObject.push( {
+				    	"sublist-checkbox-label" : $(this).children('div').children('label').text(),
+					});
+				});
+
+				bareListArray.push( {
+			    	"checkbox-label" : $(this).children('div').children('label').text(),
+			    	"sublist" : sublistObject,
+			    });		
+
+			} else {
+				bareListArray.push( {
+					"checkbox-label" : $(this).children('div').children('label').text(),
+			    });	
+			}
+		}
+
+	});
+
+	console.log(JSON.stringify(bareListArray));
+
+}
+
 function listToArray(){
 	var start = window.performance.now();
 
@@ -279,6 +316,7 @@ function loadChecklistFromHTML(html) {
 	});
 
 	listToArray();
+	listToBareArray();
 
 	console.log('Existing items = ' + i);
 }
@@ -329,6 +367,7 @@ function resave(){
 	})
 
 	listToArray();
+	listToBareArray();
 
 	$.jStorage.set(currentChecklist, $('#checklist').html());
 	//$.jStorage.set(currentChecklist, JSON.stringify(listItems));
