@@ -137,6 +137,9 @@ function clearCurrentList() {
 	}
 
 	$('#checklist').empty();
+
+	i = 1;
+
 	console.log('Cleared checklist, should be nothing here: ' + $('#checklist').html());
 }
 
@@ -163,7 +166,6 @@ function loadChecklistFromHTML(html) {
 	 	if( $(this).children('ul').length != 0 ) {
 	 		i += $(this).children('ul').length;
 	 	}
-
 		i++;
 	});
 
