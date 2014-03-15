@@ -37,6 +37,10 @@ var app = {
     onDeviceReady: function() {
         console.log("now please say something");
 
+        console.log('request file system');
+        //request the persistent file system
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFSSuccess, onError);
+
         // window.plugins.webintent.getUri(function(url){
         //     if(url !== ""){
         //         console.log('hey I got something1');

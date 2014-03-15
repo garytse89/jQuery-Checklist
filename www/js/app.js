@@ -203,7 +203,7 @@ function listToBareArray() {
 }
 
 function listToArray(){
-	var start = window.performance.now();
+	//var start = window.performance.now();
 
 	listItems = [];
 	eachListItem = $('#checklist').children('li').each( function() {
@@ -266,9 +266,9 @@ function listToArray(){
 		}
 	});
 
-	var end = window.performance.now();
-	var time = end - start;
-	console.log('Execution time (in milliseconds) ' + time);
+	//var end = window.performance.now();
+	//var time = end - start;
+	//console.log('Execution time (in milliseconds) ' + time);
 }
 
 function loadChecklistFromHTML(html) {
@@ -472,11 +472,14 @@ $(document).ready(function() {
 	});
 
 	/* Share the list */
+	// as JSON URI
 	$('#shareDialogLaunch').on('vclick', function(){
-		console.log(JSON.stringify(listItems));
-		var encodedURL = 'http://checklist/' + encodeURIComponent(JSON.stringify(listItems));
-		console.log("Send out this URL: " + encodedURL);
-		window.plugins.socialsharing.share(null, null, null, encodedURL);
+		console.log("share");
+		doAppendFile();
+		// console.log(JSON.stringify(listItems));
+		// var encodedURL = 'http://checklist/' + encodeURIComponent(JSON.stringify(listItems));
+		// console.log("Send out this URL: " + encodedURL);
+		// window.plugins.socialsharing.share(null, null, null, encodedURL);
 	});
 
 	/* Save the list as a template */
