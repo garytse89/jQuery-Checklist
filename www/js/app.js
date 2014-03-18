@@ -330,6 +330,21 @@ function loadChecklistFromHTML(html) {
 		    }
 	    }); 
 
+		$(this).children('div').bind( "taphold", function(event) {
+	    	console.log("Rename, cut off click or mouseup for now");
+	    	$('#inputGrid').hide(); // if input grid was visible, hide it now
+	    	$('#renameGrid').show();
+	    	$('#renameField').val($(this).children('label').text());
+
+	    	checkboxBeingRenamed = $(this).children('div').children('input[type=checkbox]');
+
+	    	$(this).children('div').children('input[type=checkbox]').on('click mouseup', function(e) {
+		    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
+		    	e.stopPropagation();
+		    	e.preventDefault();
+		    });
+	    });  
+
 	});
 
 	listToArray();
@@ -423,6 +438,8 @@ function changeName() {
 
 	$('#renameGrid').hide();
 	checkboxBeingRenamed.off('click mouseup');
+
+	$.jStorage.set(currentChecklist, $('#checklist').html()); 
 }
 
 $(document).ready(function() {	
@@ -601,7 +618,7 @@ $(document).ready(function() {
 			console.log('rebind checkbox');
 			checkboxBeingRenamed.off('click mouseup');
 		}
-		$('#renameField').hide();
+		$('#renameGrid').hide();
 	});	
 
 	// load existing checklist
