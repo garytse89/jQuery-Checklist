@@ -13,6 +13,8 @@ var i=1; // enumeration counter for each list item or label; one existing item s
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
 
+$.event.special.tap.emitTapOnTaphold = false;
+
 function createNewItem() {
 	if( !$('#inputField').val() ) return;
 
@@ -65,7 +67,22 @@ function createNewItem() {
 
 	    }
 
-    });    
+    }); 
+
+    $( 'div.checkbox-'+itemNum ).bind( "taphold", function(event) {
+    	console.log("Rename, cut off click or mouseup for now");
+    	$('#inputGrid').hide(); // if input grid was visible, hide it now
+    	$('#renameGrid').show();
+    	$('#renameField').val($(this).children('label').text());
+
+    	checkboxBeingRenamed = $('#checkbox-'+itemNum);
+
+    	$('#checkbox-'+itemNum).on('click mouseup', function(e) {
+	    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
+	    	e.stopPropagation();
+	    	e.preventDefault();
+	    });
+    });  
 
     i++;
 
@@ -400,6 +417,14 @@ function allowCollapsableSublists() {
 	});
 }
 
+function changeName() {
+	console.log("lets try renaming");
+	checkboxBeingRenamed.next('label').text($('#renameField').val());
+
+	$('#renameGrid').hide();
+	checkboxBeingRenamed.off('click mouseup');
+}
+
 $(document).ready(function() {	
 
 	allowSortable();
@@ -413,13 +438,14 @@ $(document).ready(function() {
 	var inputShown = false;
 
 	// prepend text field to footer
-	$('#inputGrid').append(inputField);
-	$('#inputGrid').append(inputButton);
+	// $('#inputGrid').append(inputField);
+	// $('#inputGrid').append(inputButton);
 	// jquery mobile re-style
 	$('[type="text"]').textinput();
 	$('[type="button"]').button();
 
 	$('#inputGrid').hide();	
+	$('#renameGrid').hide();	
 
 	$('#newItem').on('vclick', function(){
 		if( inputShown == false ) {
@@ -564,6 +590,18 @@ $(document).ready(function() {
 
 	$('#inputButton').on('vclick', function() {
 		addItemOrLabel();
+	});	
+
+	$('#renameButton').on('vclick', function() {
+		changeName();
+	});	
+
+	$('#cancelRenameButton').on('vclick', function() {
+		if( checkboxBeingRenamed ) {
+			console.log('rebind checkbox');
+			checkboxBeingRenamed.off('click mouseup');
+		}
+		$('#renameField').hide();
 	});	
 
 	// load existing checklist
