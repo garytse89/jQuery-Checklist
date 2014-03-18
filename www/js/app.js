@@ -336,9 +336,9 @@ function loadChecklistFromHTML(html) {
 	    	$('#renameGrid').show();
 	    	$('#renameField').val($(this).children('label').text());
 
-	    	checkboxBeingRenamed = $(this).children('div').children('input[type=checkbox]');
+	    	checkboxBeingRenamed = $(this).children('input[type=checkbox]');
 
-	    	$(this).children('div').children('input[type=checkbox]').on('click mouseup', function(e) {
+	    	$(this).children('input[type=checkbox]').on('click mouseup', function(e) {
 		    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
 		    	e.stopPropagation();
 		    	e.preventDefault();
