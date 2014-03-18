@@ -46,6 +46,8 @@
 
 		_mouseDrag: function(event) {
 
+			mouseDragDetected();
+
 			//Compute the helpers position
 			this.position = this._generatePosition(event);
 			this.positionAbs = this._convertPositionTo("absolute");

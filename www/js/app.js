@@ -404,7 +404,31 @@ function loadChecklist(template, transitionToHome) {
 }
 
 function resave(){
-	// iterate through ul list
+	// mouse drag finished, add back taphold listeners for renaming
+	eachListItem = $('#checklist').children('li').each( function() {
+		$(this).children('div').bind( "taphold", function(event) {
+	    	console.log("Rename, cut off click or mouseup for now");
+	    	$('#inputGrid').hide(); // if input grid was visible, hide it now
+	    	$('#renameGrid').show();
+	    	if( $(this).children('label').text() ) {
+	    		$('#renameField').val($(this).children('label').text()); // if item
+	    		checkboxBeingRenamed = $(this).children('input[type=checkbox]');
+
+	    		$(this).toggleClass('rename');
+
+	    		$(this).children('input[type=checkbox]').on('click mouseup', function(e) {
+			    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
+			    	e.stopPropagation();
+			    	e.preventDefault();
+			    });
+	    	} else {
+	    		$(this).toggleClass('rename');
+	    		$('#renameField').val($(this).children('span').text()); // if label, not item
+	    		labelBeingRenamed = $(this).children('span');
+	    		checkboxBeingRenamed = undefined;	    		
+	    	}		    	
+	    });
+	});
 
 	$('ul#checklist > li').each(function() {
 
@@ -480,6 +504,14 @@ function cancelRename() {
 		labelBeingRenamed.parent().toggleClass('rename');
 	}
 	$('#renameGrid').hide();
+}
+
+function mouseDragDetected() {
+	// disable taphold for all items
+	console.log("Mouse drag detected, disable rename");
+	eachListItem = $('#checklist').children('li').each( function() {
+		$(this).children('div').off('taphold');
+	});
 }
 
 $(document).ready(function() {	
