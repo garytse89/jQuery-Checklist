@@ -21,7 +21,7 @@
 			errorClass: 'mjs-nestedSortable-error',
 			doNotClear: false,
 			listType: 'ul',
-			maxLevels: 0,
+			maxLevels: 2,
 			protectRoot: false,
 			rootID: null,
 			rtl: false,

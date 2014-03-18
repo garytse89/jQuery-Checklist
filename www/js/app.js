@@ -97,7 +97,7 @@ function createNewLabel() {
 
 	var itemNum = i;
 
-	var newLabel = '<li><div class="label-'+itemNum+' checklist-label"><span>' + $('#inputField').val() + '</span></div></li>';
+	var newLabel = '<li class = "mjs-nestedSortable-no-nesting"><div class="label-'+itemNum+' checklist-label"><span>' + $('#inputField').val() + '</span></div></li>';
 	
 	$('.list').append(newLabel);
 
