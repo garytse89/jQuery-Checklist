@@ -14,6 +14,8 @@ var inputField = '<div class="ui-block-a main"><input type="text" name="name" id
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
 
 $.event.special.tap.emitTapOnTaphold = false;
+var checkboxBeingRenamed = undefined;
+var labelBeingRenamed = undefined;
 
 function createNewItem() {
 	if( !$('#inputField').val() ) return;
@@ -360,7 +362,7 @@ function loadChecklistFromHTML(html) {
 			    	e.stopPropagation();
 			    	e.preventDefault();
 			    });
-	    	} else {
+	    	} else if( labelBeingRenamed != undefined ) {
 	    		$(this).toggleClass('rename');
 	    		$('#renameField').val($(this).children('span').text()); // if label, not item
 	    		labelBeingRenamed = $(this).children('span');
@@ -404,6 +406,7 @@ function loadChecklist(template, transitionToHome) {
 }
 
 function resave(){
+	
 	// mouse drag finished, add back taphold listeners for renaming
 	eachListItem = $('#checklist').children('li').each( function() {
 		$(this).children('div').bind( "taphold", function(event) {
@@ -429,6 +432,9 @@ function resave(){
 	    	}		    	
 	    });
 	});
+
+	// if item or label was also being renamed and then dragged, cancel that
+	cancelRename();
 
 	$('ul#checklist > li').each(function() {
 
@@ -485,7 +491,7 @@ function changeName() {
 		checkboxBeingRenamed.next('label').text($('#renameField').val());
 		checkboxBeingRenamed.off('click mouseup');
 		checkboxBeingRenamed.parent().toggleClass('rename');
-	} else {
+	} else if( labelBeingRenamed != undefined ) { 
 		labelBeingRenamed.text($('#renameField').val());
 		labelBeingRenamed.parent().toggleClass('rename');
 	}
@@ -499,10 +505,11 @@ function cancelRename() {
 	if( checkboxBeingRenamed != undefined ) {
 		console.log('rebind checkbox');
 		checkboxBeingRenamed.off('click mouseup');
-		checkboxBeingRenamed.parent().toggleClass('rename');
-	} else {
-		labelBeingRenamed.parent().toggleClass('rename');
+		checkboxBeingRenamed.parent().removeClass('rename');
+	} else if( labelBeingRenamed != undefined ) { 
+		labelBeingRenamed.parent().removeClass('rename');
 	}
+
 	$('#renameGrid').hide();
 }
 
