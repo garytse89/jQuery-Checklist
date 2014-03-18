@@ -16,6 +16,11 @@ input[type=checkbox].css-checkbox {
 	left:0px;
 }
 
+.rename {
+	font-style: bold !important;
+	color: grey !important;
+}
+
 input[type=checkbox].css-checkbox + label.css-label {
 	left:0px;
 	padding-left:31px;

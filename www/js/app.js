@@ -77,6 +77,9 @@ function createNewItem() {
 
     	checkboxBeingRenamed = $('#checkbox-'+itemNum);
 
+    	// add class to indicate renaming
+    	$(this).toggleClass('rename');
+
     	$('#checkbox-'+itemNum).on('click mouseup', function(e) {
 	    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
 	    	e.stopPropagation();
@@ -113,7 +116,9 @@ function createNewLabel() {
     	$('#renameGrid').show();
     	$('#renameField').val($(this).children('span').text());
 
-    	labelBeingRenamed = $('#label-'+itemNum);
+    	$(this).toggleClass('rename');
+    	checkboxBeingRenamed = undefined;
+    	labelBeingRenamed = $(this).children('span');
     }); 
 
   	i++;	
@@ -348,15 +353,18 @@ function loadChecklistFromHTML(html) {
 	    		$('#renameField').val($(this).children('label').text()); // if item
 	    		checkboxBeingRenamed = $(this).children('input[type=checkbox]');
 
+	    		$(this).toggleClass('rename');
+
 	    		$(this).children('input[type=checkbox]').on('click mouseup', function(e) {
 			    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
 			    	e.stopPropagation();
 			    	e.preventDefault();
 			    });
 	    	} else {
+	    		$(this).toggleClass('rename');
 	    		$('#renameField').val($(this).children('span').text()); // if label, not item
 	    		labelBeingRenamed = $(this).children('span');
-	    		checkboxBeingRenamed = undefined;
+	    		checkboxBeingRenamed = undefined;	    		
 	    	}		    	
 	    });  
 
@@ -452,13 +460,26 @@ function changeName() {
 	if(checkboxBeingRenamed != undefined) {
 		checkboxBeingRenamed.next('label').text($('#renameField').val());
 		checkboxBeingRenamed.off('click mouseup');
+		checkboxBeingRenamed.parent().toggleClass('rename');
 	} else {
 		labelBeingRenamed.text($('#renameField').val());
+		labelBeingRenamed.parent().toggleClass('rename');
 	}
 
 	$('#renameGrid').hide();
 
 	$.jStorage.set(currentChecklist, $('#checklist').html()); 
+}
+
+function cancelRename() {
+	if( checkboxBeingRenamed != undefined ) {
+		console.log('rebind checkbox');
+		checkboxBeingRenamed.off('click mouseup');
+		checkboxBeingRenamed.parent().toggleClass('rename');
+	} else {
+		labelBeingRenamed.parent().toggleClass('rename');
+	}
+	$('#renameGrid').hide();
 }
 
 $(document).ready(function() {	
@@ -633,11 +654,7 @@ $(document).ready(function() {
 	});	
 
 	$('#cancelRenameButton').on('vclick', function() {
-		if( checkboxBeingRenamed ) {
-			console.log('rebind checkbox');
-			checkboxBeingRenamed.off('click mouseup');
-		}
-		$('#renameGrid').hide();
+		cancelRename();
 	});	
 
 	// load existing checklist
