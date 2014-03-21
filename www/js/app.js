@@ -8,7 +8,7 @@ var listOfChecklists = {};
 var jStorageTesting = false; 
 var currentChecklist = 'untitled'; // string name of the current list
 var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
-var i=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
+orderCount=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
 
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
@@ -20,7 +20,7 @@ var labelBeingRenamed = undefined;
 function createNewItem() {
 	if( !$('#inputField').val() ) return;
 
-	var itemNum = i;
+	var itemNum = orderCount;
 
 	var newItem = '<li><div class="checkbox-'+itemNum+'"><input class="css-checkbox" data-role="none" type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'"  data-inline="true" />\
                 <label for="checkbox-'+itemNum+'" class="css-label">' + $('#inputField').val() + '</label></div></li>';
@@ -37,8 +37,8 @@ function createNewItem() {
     });
 
 	$('#checkbox-'+itemNum).change( function(event) { 
-		console.log('Is this a sublist item?');
-		console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
+		//console.log('Is this a sublist item?');
+		//console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
 
 		// if this is a sublist item
 		if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
@@ -99,9 +99,10 @@ function createNewItem() {
 	    	e.preventDefault();
 	    });
     });  
-    i++;
 
-    //checkForCollapsableSection();
+    orderCount++;
+
+    checkForCollapsableSection();
 
     $.jStorage.set(currentChecklist, $('#checklist').html()); 
 }
@@ -109,7 +110,7 @@ function createNewItem() {
 function createNewLabel() {
 	if( !$('#inputField').val() ) return;
 
-	var itemNum = i;
+	var itemNum = orderCount;
 
 	var newLabel = '<li class = "mjs-nestedSortable-no-nesting"><div class="label-'+itemNum+' checklist-label"><span>' + $('#inputField').val() + '</span></div></li>';
 	
@@ -136,14 +137,14 @@ function createNewLabel() {
     	labelBeingRenamed = $(this).children('span');
     }); 
 
-  	i++;	
+  	orderCount++;	
   	$.jStorage.set(currentChecklist, $('#checklist').html());
 }
 
 function checkForCollapsableSection() {
 	for( i=0; i<listItems.length; i++ ) {
 		// find a label, which is means checkbox attribute = false
-		if( listItems[i].checkbox == false ) {
+		if( listItems[i].checkbox == false && listItems[i].added == false ) {
 			var j = i+1;
 			var beginningElement = j;
 			var allItemsChecked = true;
@@ -181,6 +182,8 @@ function checkForCollapsableSection() {
 				console.log("Label no longer has all ticked checkboxes, remove +/- button");
 				listItems[beginningElement-1].selector.children('a').remove();
 			}
+
+			listItems[i].added = true; // do not allow this section to be added again
 
 			i=j; // continue searching for next label in for-loop
 		}
@@ -320,7 +323,7 @@ function listToArray(){
 		    	"order" : i, // probably not needed....
 		    });
 
-		    i++;
+		    orderCount++;
 		} else {			
 
 			if( isParentItem($(this)) == true ) {
@@ -348,7 +351,7 @@ function listToArray(){
 			    	"sublist" : sublistObject,
 			    });		    	
 
-			    i++;
+			    orderCount++;
 
 			} else {
 
@@ -360,7 +363,7 @@ function listToArray(){
 			    	"order" : i, // probably not needed....
 			    });			    
 
-			    i++;
+			    orderCount++;
 			}
 		}
 	});
@@ -451,8 +454,6 @@ function loadChecklistFromHTML(html) {
 
 	listToArray();
 	listToBareArray();
-
-	console.log('Existing items = ' + i);
 }
 
 function loadChecklist(template, transitionToHome) {
