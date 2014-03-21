@@ -282,7 +282,7 @@ function clearCurrentList() {
 
 	$('#checklist').empty();
 
-	i = 1;
+	orderCount = 1;
 
 	console.log('Cleared checklist, should be nothing here: ' + $('#checklist').html());
 }
@@ -359,7 +359,7 @@ function listToArray(){
 		    	"value" : $(this).children('div').children('span').text(),
 		    	"checkbox" : false, // label would be false
 		    	"checked" : false,
-		    	"order" : orderCount, // probably not needed....
+		    	"order" : $(this).children('div').attr('class').replace('label-',''),
 		    	"sectioned" : false,
 		    });
 
@@ -387,7 +387,7 @@ function listToArray(){
 			    	"label" : $(this).children('div').children('label').text(),
 			    	"checkbox" : true, // label would be false
 			    	"checked" : false,
-			    	"order" : orderCount, // probably not needed....
+			    	"order" : $(this).children('div').attr('class').replace('checkbox-',''),
 			    	"sublist" : sublistObject,
 			    });		    	
 
@@ -400,7 +400,7 @@ function listToArray(){
 			    	"label" : $(this).children('div').children('label').text(),
 			    	"checkbox" : true, // label would be false
 			    	"checked" : false,
-			    	"order" : orderCount, // probably not needed....
+			    	"order" : $(this).children('div').attr('class').replace('checkbox-',''),
 			    });			    
 
 			    orderCount++;
@@ -459,6 +459,7 @@ function loadChecklistFromHTML(html) {
 				var checkboxNum = $(this).parent().attr('class').replace('checkbox-','');
 				listItems.forEach(function(element) {					
 			    	if( element.order == checkboxNum ) {
+			    		console.log("WORKS?");
 			    		element.checked = parentChecked;
 			    	}
 			    });
