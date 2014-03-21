@@ -5,6 +5,8 @@ and run $('[type="checkbox"]').checkboxradio(); everytime a new checkbox is rend
 
 var listOfChecklists = {};
 
+var readOnly = false;
+
 var jStorageTesting = false; 
 var currentChecklist = 'untitled'; // string name of the current list
 var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
@@ -17,20 +19,22 @@ $.event.special.tap.emitTapOnTaphold = false;
 var checkboxBeingRenamed = undefined;
 var labelBeingRenamed = undefined;
 
-function createNewItem() {
-	if( !$('#inputField').val() ) return;
+function createNewItem( fieldValue ) {
+	var inputValue = fieldValue;
+	if( !inputValue ) inputValue = $('#inputField').val();
+	if( !inputValue ) return;
 
 	var itemNum = orderCount;
 
 	var newItem = '<li><div class="checkbox-'+itemNum+'"><input class="css-checkbox" data-role="none" type="checkbox" name="checkbox-'+itemNum+'" id="checkbox-'+itemNum+'"  data-inline="true" />\
-                <label for="checkbox-'+itemNum+'" class="css-label">' + $('#inputField').val() + '</label></div></li>';
+                <label for="checkbox-'+itemNum+'" class="css-label">' + inputValue + '</label></div></li>';
    
     $('.list').append(newItem);
 
     // add this new checkbox to the array, in the format of {jQuery selector, checkbox, checked, label, order}
     listItems.push( {
     	"selector" : $('.checkbox-'+itemNum),
-    	"label" : $('#inputField').val(),
+    	"label" : inputValue,
     	"checkbox" : true, // label would be false
     	"checked" : false,
     	"order" : itemNum, // probably not needed....
@@ -100,26 +104,32 @@ function createNewItem() {
 	    });
     });  
 
-    addToCollapsableSection(); // forces a collapsed section list to show itself again 
+    // do not run this line if this is an item created from a template, or it will cause an infinite loop in loadChecklist()
+    if(!fieldValue) addToCollapsableSection(); // forces a collapsed section list to show itself again 
 
     orderCount++;
+
+    listToArray();
+	listToBareArray();
 
     $.jStorage.set(currentChecklist, $('#checklist').html()); 
 }
 
-function createNewLabel() {
-	if( !$('#inputField').val() ) return;
+function createNewLabel(fieldValue) {
+	var inputValue = fieldValue;
+	if( !inputValue ) inputValue = $('#inputField').val();
+	if( !inputValue ) return;
 
 	var itemNum = orderCount;
 
-	var newLabel = '<li class = "mjs-nestedSortable-no-nesting"><div class="label-'+itemNum+' checklist-label"><span>' + $('#inputField').val() + '</span></div></li>';
+	var newLabel = '<li class = "mjs-nestedSortable-no-nesting"><div class="label-'+itemNum+' checklist-label"><span>' + inputValue + '</span></div></li>';
 	
 	$('.list').append(newLabel);
 
 	// add this new checkbox to the array, in the format of {jQuery selector, checkbox, checked, label, order}
     listItems.push( {
     	"selector" : $('.label-'+itemNum),
-    	"value" : $('#inputField').val(),
+    	"value" : inputValue,
     	"checkbox" : false, // label would be false
     	"checked" : false, 
     	"order" : itemNum, // probably not needed....
@@ -139,6 +149,10 @@ function createNewLabel() {
     }); 
 
   	orderCount++;	
+
+  	listToArray();
+	listToBareArray();
+
   	$.jStorage.set(currentChecklist, $('#checklist').html());
 }
 
@@ -273,10 +287,9 @@ function renderTemplates() {
 	}
 
  	$('#'+key).on('vclick', function(){
- 		currentChecklist = key;
- 		console.log("Load checklist from TEMPLATE called " + currentChecklist);		
+ 		currentChecklist = key;	
  		confirmDelete();
- 		loadChecklist(listOfChecklists[currentChecklist], true);
+ 		loadChecklist(key, listOfChecklists[currentChecklist], true);
  	});
  	
 }
@@ -292,6 +305,9 @@ function clearCurrentList() {
 	}
 
 	$('#checklist').empty();
+
+	readOnly = false;
+	$('#homeTitle').text('New checklist (unsaved)');
 
 	orderCount = 1;
 
@@ -509,21 +525,23 @@ function loadChecklistFromHTML(html) {
 	listToBareArray();
 }
 
-function loadChecklist(template, transitionToHome) {
+function loadChecklist(nameOfTemplate, template, transitionToHome) {
 	clearCurrentList();
 	// load template from local storage and render it
 	console.log("Loading template = " + template);
+	var template = JSON.parse(template);
 	try {
-		listItems = JSON.parse(template);
-		for (var key in listItems) {
-		  	if (listItems.hasOwnProperty(key)) {
-		    	console.log(key + " -> " + listItems[key]);
-		    	if( key.match("label") != null ) {
-		    		createExistingLabel(key, listItems[key]);
+		for ( i=0; i<template.length; i++) {
+			for (var insideKey in template[i]) { // each insideKey = 'checkbox-label' or 'label-text'
+		  		if( insideKey.match("label-text") != null ) {
+		    		console.log("make new label");
+		    		createNewLabel(template[i][insideKey]);
 		    	}
-		    	else if( key.match("checkbox") != null ) {
-		    		createExistingItem(key, listItems[key]);		    		
-		    	}		    	
+		    	else if( insideKey.match("checkbox-label") != null ) {
+		    		console.log("make new checkbox");
+		    		createNewItem(template[i][insideKey]);	    		
+		    	}
+		    	console.log("loop through template[i]");		    	
 		  	}
 		}
 
@@ -531,8 +549,13 @@ function loadChecklist(template, transitionToHome) {
 		if(transitionToHome == true) {
 			$.mobile.changePage('#home', {transition: 'slide', reverse: false});
 		}
+
+		// change heading title of home page, restrict it to use-mode only
+		$('#homeTitle').text(nameOfTemplate);
+		readOnly = true;
+
 	} catch (err) {
-		console.log("Template was not valid");
+		console.log("Template was not valid, " + err);
 	}	
 }
 
@@ -784,7 +807,8 @@ $(document).ready(function() {
 		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
 
 		// save the list into local storage
-		var savedListString = JSON.stringify(listItems);
+		console.log(JSON.stringify(bareListArray));
+		var savedListString = JSON.stringify(bareListArray);
 		$.jStorage.set(savedListName, savedListString);
 		console.log("Saved list named: " + savedListName + " and the list looks like this:\n" + savedListString);
 		$.jStorage.set('untitled', null); // wipe untitled list
@@ -867,7 +891,6 @@ $(document).ready(function() {
 
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
-	//loadChecklist(existingChecklist, false);
 	loadChecklistFromHTML(existingChecklist);
 
 	// load the template page
