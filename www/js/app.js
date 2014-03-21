@@ -123,6 +123,7 @@ function createNewLabel() {
     	"checkbox" : false, // label would be false
     	"checked" : false, 
     	"order" : itemNum, // probably not needed....
+    	"sectioned" : false,
     });
 
     // allow renaming
@@ -144,7 +145,7 @@ function createNewLabel() {
 function checkForCollapsableSection() {
 	for( i=0; i<listItems.length; i++ ) {
 		// find a label, which is means checkbox attribute = false
-		if( listItems[i].checkbox == false && listItems[i].added == false ) {
+		if( listItems[i].checkbox == false && listItems[i].sectioned == false ) {
 			var j = i+1;
 			var beginningElement = j;
 			var allItemsChecked = true;
@@ -183,7 +184,7 @@ function checkForCollapsableSection() {
 				listItems[beginningElement-1].selector.children('a').remove();
 			}
 
-			listItems[i].added = true; // do not allow this section to be added again
+			listItems[i].sectioned = true; // do not allow this section to be added again
 
 			i=j; // continue searching for next label in for-loop
 		}
@@ -320,7 +321,8 @@ function listToArray(){
 		    	"value" : $(this).children('div').children('span').text(),
 		    	"checkbox" : false, // label would be false
 		    	"checked" : false,
-		    	"order" : i, // probably not needed....
+		    	"order" : orderCount, // probably not needed....
+		    	"sectioned" : false,
 		    });
 
 		    orderCount++;
@@ -347,7 +349,7 @@ function listToArray(){
 			    	"label" : $(this).children('div').children('label').text(),
 			    	"checkbox" : true, // label would be false
 			    	"checked" : false,
-			    	"order" : i, // probably not needed....
+			    	"order" : orderCount, // probably not needed....
 			    	"sublist" : sublistObject,
 			    });		    	
 
@@ -360,7 +362,7 @@ function listToArray(){
 			    	"label" : $(this).children('div').children('label').text(),
 			    	"checkbox" : true, // label would be false
 			    	"checked" : false,
-			    	"order" : i, // probably not needed....
+			    	"order" : orderCount, // probably not needed....
 			    });			    
 
 			    orderCount++;
