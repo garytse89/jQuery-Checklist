@@ -218,7 +218,8 @@
 		},
 
 		_mouseStop: function(event, noPropagation) {
-
+			if( readOnly == true ) return;
+			
 			// If the item is in a position not allowed, send it back
 			if (this.beyondMaxLevels) {
 
