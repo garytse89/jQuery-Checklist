@@ -801,7 +801,21 @@ $(document).ready(function() {
 	// as JSON URI
 	$('#shareDialogLaunch').on('vclick', function(){
 		console.log("share");
-		doAppendFile();
+		//doAppendFile();	
+		
+		// re-render
+		var currentBareListArray = bareListArray;
+		clearCurrentList();
+		loadChecklist(currentChecklist, JSON.stringify(currentBareListArray));
+
+		readOnly = !(readOnly);
+		if( readOnly == false )
+			$('#homeTitle').text(currentChecklist + ' (edit mode)');
+		else 
+			$('#homeTitle').text(currentChecklist + ' (read only mode)');
+
+
+		//-----
 		// console.log(JSON.stringify(listItems));
 		// var encodedURL = 'http://checklist/' + encodeURIComponent(JSON.stringify(listItems));
 		// console.log("Send out this URL: " + encodedURL);
