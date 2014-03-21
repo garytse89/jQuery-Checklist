@@ -183,7 +183,6 @@ function addToCollapsableSection() {
 function checkForCollapsableSection() {
 	for( i=0; i<listItems.length; i++ ) {
 		// add a label and its section into sectionedItems, then check whether or not its checkboxes are ticked
-		console.log('Trying to find label.., i = ' + i);
 		if( listItems[i].checkbox == false ) {
 			console.log('Label found');
 			var beginningElement = i+1;
@@ -314,6 +313,7 @@ function clearCurrentList() {
 
 	readOnly = false;
 	$('#homeTitle').text('New checklist (unsaved)');
+	$('#editDialogLaunch').hide();
 
 	orderCount = 1;
 
@@ -539,6 +539,8 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 
 	// change heading title of home page, restrict it to use-mode only
 	$('#homeTitle').text(nameOfTemplate + ' (checklist read-only mode)');
+	$('#editDialogLaunch').show();
+	$('#editDialogLaunch').text("Read Only Mode");
 	readOnly = true;
 
 	try {
@@ -802,24 +804,34 @@ $(document).ready(function() {
 	$('#shareDialogLaunch').on('vclick', function(){
 		console.log("share");
 		//doAppendFile();	
-		
-		// re-render
-		var currentBareListArray = bareListArray;
-		clearCurrentList();
-		loadChecklist(currentChecklist, JSON.stringify(currentBareListArray));
-
-		readOnly = !(readOnly);
-		if( readOnly == false )
-			$('#homeTitle').text(currentChecklist + ' (edit mode)');
-		else 
-			$('#homeTitle').text(currentChecklist + ' (read only mode)');
-
 
 		//-----
 		// console.log(JSON.stringify(listItems));
 		// var encodedURL = 'http://checklist/' + encodeURIComponent(JSON.stringify(listItems));
 		// console.log("Send out this URL: " + encodedURL);
 		// window.plugins.socialsharing.share(null, null, null, encodedURL);
+	});
+
+	$('#editDialogLaunch').on('vclick', function(){
+
+		var readOnlyTemp = readOnly; // because below methods will change readOnly's value,
+		// so we need to store what readOnly is before the methods and interpret that instead
+
+		// re-render
+		var currentBareListArray = bareListArray;
+		clearCurrentList();
+		loadChecklist(currentChecklist, JSON.stringify(currentBareListArray));
+
+		if( readOnlyTemp == false ) {
+			$('#homeTitle').text(currentChecklist + ' (edit mode)');
+			$(this).text("Read Only Mode");
+			readOnly = true;
+		}
+		else {
+			$('#homeTitle').text(currentChecklist + ' (read only mode)');
+			$(this).text("Edit Mode");
+			readOnly = false;
+		}
 	});
 
 	/* Save the list as a template */
@@ -924,6 +936,5 @@ $(document).ready(function() {
 
 	allowCollapsableSublists();
 
-	// temporary
-	sectionedItems = [];
+	$('#editDialogLaunch').hide();
 });
