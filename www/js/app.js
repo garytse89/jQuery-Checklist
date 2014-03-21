@@ -41,6 +41,8 @@ function createNewItem( fieldValue ) {
     });
 
 	$('#checkbox-'+itemNum).change( function(event) { 
+		if( readOnly == true ) return; // no changes allowed in readOnly
+
 		//console.log('Is this a sublist item?');
 		//console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
 
@@ -87,6 +89,8 @@ function createNewItem( fieldValue ) {
     }); 
 
     $( 'div.checkbox-'+itemNum ).bind( "taphold", function(event) {
+    	if( readOnly == true ) return; // no changes allowed in readOnly
+
     	console.log("Rename, cut off click or mouseup for now");
     	$('#inputGrid').hide(); // if input grid was visible, hide it now
     	$('#renameGrid').show();
@@ -138,6 +142,8 @@ function createNewLabel(fieldValue) {
 
     // allow renaming
     $( 'div.label-'+itemNum ).bind( "taphold", function(event) {
+    	if( readOnly == true ) return; // no changes allowed in readOnly
+
     	console.log("Rename, cut off click or mouseup for now");
     	$('#inputGrid').hide(); // if input grid was visible, hide it now
     	$('#renameGrid').show();
@@ -530,6 +536,11 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 	// load template from local storage and render it
 	console.log("Loading template = " + template);
 	var template = JSON.parse(template);
+
+	// change heading title of home page, restrict it to use-mode only
+	$('#homeTitle').text(nameOfTemplate + ' (checklist read-only mode)');
+	readOnly = true;
+
 	try {
 		for ( i=0; i<template.length; i++) {
 			for (var insideKey in template[i]) { // each insideKey = 'checkbox-label' or 'label-text'
@@ -548,11 +559,7 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 		// transition to current checklist page
 		if(transitionToHome == true) {
 			$.mobile.changePage('#home', {transition: 'slide', reverse: false});
-		}
-
-		// change heading title of home page, restrict it to use-mode only
-		$('#homeTitle').text(nameOfTemplate);
-		readOnly = true;
+		}		
 
 	} catch (err) {
 		console.log("Template was not valid, " + err);
@@ -737,6 +744,8 @@ $(document).ready(function() {
 	$('#renameGrid').hide();	
 
 	$('#newItem').on('vclick', function(){
+		if( readOnly == true ) return; // no changes allowed in readOnly
+
 		if( inputShown == false ) {
 			$('#inputGrid').show();
 			addingItem = true;
@@ -752,6 +761,8 @@ $(document).ready(function() {
 	});
 
 	$('#newLabel').on('vclick', function(){
+		if( readOnly == true ) return; // no changes allowed in readOnly
+
 		$('#inputGrid').show();
 		if( inputShown == false ) {
 			$('#inputGrid').show();

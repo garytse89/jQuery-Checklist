@@ -46,6 +46,8 @@
 
 		_mouseDrag: function(event) {
 
+			if( readOnly == true ) return; // no changes allowed in readOnly
+
 			//Compute the helpers position
 			this.position = this._generatePosition(event);
 			this.positionAbs = this._convertPositionTo("absolute");
