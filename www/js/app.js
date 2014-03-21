@@ -30,6 +30,7 @@ function createNewItem() {
     // add this new checkbox to the array, in the format of {jQuery selector, checkbox, checked, label, order}
     listItems.push( {
     	"selector" : $('.checkbox-'+itemNum),
+    	"label" : $('#inputField').val(),
     	"checkbox" : true, // label would be false
     	"checked" : false,
     	"order" : itemNum, // probably not needed....
@@ -67,6 +68,8 @@ function createNewItem() {
 	  		    return parentChecked;
 			});			
 
+			console.log("turned a checkbox into->" + parentChecked);
+
 			// the following code is for collapsing each labelled section - we only care if the parent is checked or not
 		   	// since if a section's sublist item is unchecked, its parent will not be checked regardless
 			listItems.forEach(function(element) {
@@ -98,6 +101,8 @@ function createNewItem() {
     });  
     i++;
 
+    //checkForCollapsableSection();
+
     $.jStorage.set(currentChecklist, $('#checklist').html()); 
 }
 
@@ -113,6 +118,7 @@ function createNewLabel() {
 	// add this new checkbox to the array, in the format of {jQuery selector, checkbox, checked, label, order}
     listItems.push( {
     	"selector" : $('.label-'+itemNum),
+    	"value" : $('#inputField').val(),
     	"checkbox" : false, // label would be false
     	"checked" : false, 
     	"order" : itemNum, // probably not needed....
@@ -142,7 +148,7 @@ function checkForCollapsableSection() {
 			var beginningElement = j;
 			var allItemsChecked = true;
 			while( j<listItems.length && listItems[j].checkbox == true ) {
-				console.log("Check if this item is checked: " + listItems[j].checked); // check if each checkbox is checked
+				console.log("Check if this item is checked: " + listItems[j].label + " = " + listItems[j].checked); // check if each checkbox is checked
 				allItemsChecked = allItemsChecked & listItems[j].checked;
 				if(allItemsChecked == false) break;
 				j++;
