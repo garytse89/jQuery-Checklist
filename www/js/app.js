@@ -29,7 +29,7 @@ function createNewItem() {
 
     // add this new checkbox to the array, in the format of {jQuery selector, checkbox, checked, label, order}
     listItems.push( {
-    	"selector" : $('checkbox-'+itemNum),
+    	"selector" : $('.checkbox-'+itemNum),
     	"checkbox" : true, // label would be false
     	"checked" : false,
     	"order" : itemNum, // probably not needed....
@@ -112,7 +112,7 @@ function createNewLabel() {
 
 	// add this new checkbox to the array, in the format of {jQuery selector, checkbox, checked, label, order}
     listItems.push( {
-    	"selector" : $('label-'+itemNum),
+    	"selector" : $('.label-'+itemNum),
     	"checkbox" : false, // label would be false
     	"checked" : false, 
     	"order" : itemNum, // probably not needed....
@@ -150,10 +150,30 @@ function checkForCollapsableSection() {
 			console.log("are all items under the label checked? " + allItemsChecked);
 
 			// allow section to collapse
+			/* 
+			beginningElement-1 is the index in the listItems array corresponding to the label
+			beginningElement is the index of the first checkbox item
+			*/
+
 			if( allItemsChecked == true ) {
+				var newSection = [];
+				newSection.push(listItems[beginningElement-1].selector);
+
 				for( k = beginningElement; k<j; k++ ) {
-					listItems[k].selector.hide();
+					listItems[k].selector.hide('slow');
+					newSection.push(listItems[k].selector);
 				}
+
+				sectionedItems.push(newSection);
+
+				var expandButton = '<a href="#" id="collapseSectionButton">(+)</a>'; // start off by collapsing, so display (+)
+    			listItems[beginningElement-1].selector.append(expandButton); // append '+' button   
+    			allowCollapsableSections();  
+
+    			console.log("Dynamically add collapse/expand button to section label denoted by listItems[" + (beginningElement-1) + "]");
+			} else {
+				console.log("Label no longer has all ticked checkboxes, remove +/- button");
+				listItems[beginningElement-1].selector.children('a').remove();
 			}
 
 			i=j; // continue searching for next label in for-loop
@@ -206,6 +226,7 @@ function clearCurrentList() {
 
 	listItems = [];
 	bareListArray = [];
+	sectionedItems = [];
 
 	if( currentChecklist == "untitled" ) {
 		$.jStorage.set('untitled', null);
@@ -351,8 +372,8 @@ function loadChecklistFromHTML(html) {
 	eachListItem = $('#checklist').children('li').each( function() {
 
 		$(this).children('div').children('input[type=checkbox]').change( function(event) { 
-			console.log('Is this a sublist item?');
-			console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
+			//console.log('Is this a sublist item?');
+			//console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
 
 			// if this is a sublist item
 			if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
@@ -516,6 +537,33 @@ function allowSortable() {
         items: 'li',
         toleranceElement: '> div'
     });    
+}
+
+function allowCollapsableSections() {
+	// this function is run on a nestedSortable->mouseStop(), since a new collapsable button is created and needs to have a listener
+	// it is also run on the page loading to attach listeners to all existing collapsable buttons
+	$('#collapseSectionButton').on('vclick', function(){
+
+		for( j=0; j<sectionedItems.length; j++ ) {
+			for( i=0; i<listItems.length; i++ ) {
+				if( sectionedItems[j][0] == listItems[i].selector ) {
+					console.log("section label found!");
+					for( k=1; k<sectionedItems[j].length; k++ ) {
+						sectionedItems[j][k].toggle('slow');
+					}
+				}
+			}
+		}
+
+		$(this).toggleClass('collapsed');
+		if( $(this).hasClass('collapsed') ) {
+			// if collapsed, the button should become '+'
+			$(this).text("(-)");
+		}
+		else {
+			$(this).text("(+)");
+		}
+	});
 }
 
 function allowCollapsableSublists() {
@@ -726,7 +774,6 @@ $(document).ready(function() {
 	$(document.body).keyup(function(ev) {
 	    // 13 is ENTER
 	    if (ev.which === 13 && $("#inputField").data("hasfocus")) {
-	        console.log("enter key");
 	        addItemOrLabel();
 	    }
 	});
@@ -763,4 +810,7 @@ $(document).ready(function() {
 	renderTemplates();
 
 	allowCollapsableSublists();
+
+	// temporary
+	sectionedItems = [];
 });
