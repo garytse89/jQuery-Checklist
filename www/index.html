@@ -38,6 +38,7 @@
 
             <ul id="checklist" class = "list" data-role="none" data-inset="true">
             </ul>
+
             <div data-role="popup" id="saveDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
             <div data-role="header" data-theme="a" class="ui-corner-top">
                 <h1>Save</h1>
@@ -124,12 +125,33 @@
                         </div>
                     </div>
 
+                    <div data-role="popup" id="shareTemplateDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                        <div data-role="header" data-theme="a" class="ui-corner-top">
+                            <h1>Choose a template to share</h1>
+                        </div>
+                        <div data-role="content" id="shareTemplateDialogList" data-theme="d" class="ui-corner-bottom ui-content">
+                            <h3 class="ui-title">Choose a template to share</h3>
+                            <ul data-role="listview" data-inset="true" id="listOfTemplates">
+                            <!-- append list of templates here in code -->
+                            </ul>
+                            <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>            
+                        </div>
+                    </div>
+
                     <div data-role="popup" id="errorPopup" data-transition="pop">
                         <p>Template was not valid</p>
                     </div>
                 </fieldset>
             </div>
         </div>
+
+        <footer data-role="footer" data-position="fixed" data-tap-toggle="false">
+            <nav data-role="navbar">
+                <ul>
+                    <li id="shareDialogLaunch"><a href="#" data-icon="plus">Share A Template</a></li>
+                </ul>
+            </nav>
+        </footer>
     </div> <!-- one page -->
     
     </div>

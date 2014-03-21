@@ -274,19 +274,19 @@ function confirmDelete() {
 	if(listItems){
 		var n = Object.keys(listItems).length; // if there is at least one item in the current checklist, confirm its deletion with user
 		if( n > 0 && templateToLoad == "untitled" ) {
-			$("#confirmDelete").popup("open");
+			$("#confirmDelete").popup("open", { overlayTheme: "a" });
 		}
 	}
 }
 
 function renderTemplates() {
 	$('#listOfChecklists').remove();
-	$('#templateGroup').append('<ul data-role="listview" id="listOfChecklists"></ul>');
+	$('#templateGroup').append('<ul data-role="listview" data-filter="true" data-inset="true" id="listOfChecklists"></ul>');
 
 	for (var key in listOfChecklists) {
 		if (listOfChecklists.hasOwnProperty(key)) {
 			if( key != "untitled" ) { // load untitled checklist in other page
-		 		$('#listOfChecklists').append('<li id="listTemplate"><div id='+key+'><a href="#">'+key+'</a></div></li>');	
+		 		$('#listOfChecklists').append('<li id="listTemplate"><a href="#" id='+key+'>'+key+'</a></li>');	
 		 	}    	
 		}
 	}
@@ -792,7 +792,7 @@ $(document).ready(function() {
 
 	/* Delete the whole list */
 	$('#clearDialogLaunch').on('vclick', function(){ 
-		$('#clearDialog').popup("open");
+		$('#clearDialog').popup("open", { overlayTheme: "a" });
 	});
 
 	$('#clear').on('vclick', function(){ 
@@ -803,6 +803,11 @@ $(document).ready(function() {
 	// as JSON URI
 	$('#shareDialogLaunch').on('vclick', function(){
 		console.log("share");
+
+		// append list of checklists to this popup window
+		$('#listOfTemplates').empty();
+		$('#listOfTemplates').append($('#listOfChecklists').html());
+		$('#shareTemplateDialog').popup("open", { overlayTheme: "a" });
 		//doAppendFile();	
 
 		//-----
@@ -836,7 +841,7 @@ $(document).ready(function() {
 
 	/* Save the list as a template */
 	$('#saveDialogLaunch').on('vclick', function(){ 
-		$('#saveDialog').popup("open");
+		$('#saveDialog').popup("open", { overlayTheme: "a" });
 	});
 
 	$('#save').on('vclick', function(){
@@ -880,7 +885,7 @@ $(document).ready(function() {
 
 	/* Load a list as a template */
 	$('#loadDialogLaunch').on('vclick', function(){ 
-		$('#loadDialog').popup("open");
+		$('#loadDialog').popup("open", { overlayTheme: "a" });
 	});
 
 	$('#load').on('vclick', function(){
@@ -937,4 +942,10 @@ $(document).ready(function() {
 	allowCollapsableSublists();
 
 	$('#editDialogLaunch').hide();
+
+
+	/*------- For templates page --------*/
+	$('#shareTemplate').on('vclick', function(event){
+
+	});
 });
