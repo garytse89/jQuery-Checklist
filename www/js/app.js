@@ -296,6 +296,8 @@ function renderTemplates() {
  		confirmDelete();
  		loadChecklist(key, listOfChecklists[currentChecklist], true);
  	});
+
+ 	$('#listOfChecklists:visible').listview('refresh');
  	
 }
 
@@ -324,7 +326,7 @@ function decodeURIandLoad(cl){
 	cl = cl.replace("http://checklist/", "");
 	var decodedChecklist = decodeURIComponent(cl);
 	console.log(decodedChecklist);
-	loadChecklist(decodedChecklist, true);
+	loadChecklist(null, decodedChecklist, true);
 }
 
 function isChildItem() {
@@ -533,9 +535,20 @@ function loadChecklistFromHTML(html) {
 
 function loadChecklist(nameOfTemplate, template, transitionToHome) {
 	clearCurrentList();
-	// load template from local storage and render it
-	console.log("Loading template = " + template);
+
 	var template = JSON.parse(template);
+
+	templatechecker = template;
+
+	if(!nameOfTemplate) { // when we load from a URI link
+		for( i=0; i<template.length; i++ ) {
+			for( var key in template[i] ) {
+				if( key.match("name") ) {
+					nameOfTemplate = template[i][key];
+				}
+			}
+		}
+	}
 
 	// change heading title of home page, restrict it to use-mode only
 	$('#homeTitle').text(nameOfTemplate + ' (checklist read-only mode)');
@@ -802,20 +815,26 @@ $(document).ready(function() {
 	/* Share the list */
 	// as JSON URI
 	$('#shareDialogLaunch').on('vclick', function(){
-		console.log("share");
 
 		// append list of checklists to this popup window
 		$('#listOfTemplates').empty();
 		$('#listOfTemplates').append($('#listOfChecklists').html());
 		$('#shareTemplateDialog').popup("open", { overlayTheme: "a" });
-		//doAppendFile();	
 
-		//-----
-		// console.log(JSON.stringify(listItems));
-		// var encodedURL = 'http://checklist/' + encodeURIComponent(JSON.stringify(listItems));
-		// console.log("Send out this URL: " + encodedURL);
-		// window.plugins.socialsharing.share(null, null, null, encodedURL);
-	});
+		eachTemplate = $('#listOfTemplates').children('li').each( function() {
+			$(this).children('a').attr('id', 'sharableTemplate');
+		});
+
+		$('#sharableTemplate').on('vclick', function(e){
+			templateToShare = $(this).text();
+			console.log("Sharing template called " + templateToShare);
+			//doAppendFile(); // automatically outputs to file directory in Android as fileIO.js line 59's test.txt
+			//-----
+			var encodedURL = 'http://checklist/' + encodeURIComponent(JSON.stringify(bareListArray));
+			console.log("Send out this URL: " + encodedURL);
+			window.plugins.socialsharing.share(null, null, null, encodedURL);
+		});		
+	});	
 
 	$('#editDialogLaunch').on('vclick', function(){
 
@@ -848,6 +867,8 @@ $(document).ready(function() {
 
 		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
 
+		bareListArray.push( { "name" : savedListName } ); // bareListArray.name or ["name"] = savedListName; won't be seen or stringified
+	
 		// save the list into local storage
 		console.log(JSON.stringify(bareListArray));
 		var savedListString = JSON.stringify(bareListArray);
@@ -864,7 +885,7 @@ $(document).ready(function() {
 
 	/* Template page template links */
 	$('#confirmLoadTemplate').on('vclick', function(){
-		loadChecklist(templateToLoad, true);
+		loadChecklist(null, templateToLoad, true);
 	});
 
 	if( jStorageTesting == true ) {
