@@ -100,7 +100,7 @@ function createNewItem() {
 	    });
     });  
 
-    addToCollapsableSection();
+    addToCollapsableSection(); // forces a collapsed section list to show itself again 
 
     orderCount++;
 
@@ -155,6 +155,7 @@ function addToCollapsableSection() {
 				// unhide (show) all the collapsed elements 
 				listItems[k].selector.show('slow');
 			}
+			break; // only remove +/- button and hide for newest section label, not the sections before it
 		}
 	}
 }
@@ -162,15 +163,23 @@ function addToCollapsableSection() {
 function checkForCollapsableSection() {
 	for( i=0; i<listItems.length; i++ ) {
 		// add a label and its section into sectionedItems, then check whether or not its checkboxes are ticked
+		console.log('Trying to find label.., i = ' + i);
 		if( listItems[i].checkbox == false ) {
-			var j = i+1;
-			var beginningElement = j;
+			console.log('Label found');
+			var beginningElement = i+1;
 			var allItemsChecked = true;
-			while( j<listItems.length && listItems[j].checkbox == true ) {
-				console.log("Check if this item is checked: " + listItems[j].label + " = " + listItems[j].checked); // check if each checkbox is checked
-				allItemsChecked = allItemsChecked & listItems[j].checked;
-				if(allItemsChecked == false) break;
-				j++;
+			var currentSectionCounter = i+1;
+
+			var nextLabelFound = false;
+			for( j=i+1; j<listItems.length; j++ ) {
+				if( listItems[j].checkbox == true && nextLabelFound == false ) {
+					//console.log("Check if this item is checked: " + listItems[j].label + " = " + listItems[j].checked); // check if each checkbox is checked
+					allItemsChecked = allItemsChecked & listItems[j].checked;
+					//if(allItemsChecked == false) break;
+					currentSectionCounter++;
+				} else {
+					nextLabelFound = true;
+				}
 			}
 			
 			// allow section to collapse
@@ -179,34 +188,36 @@ function checkForCollapsableSection() {
 			beginningElement is the index of the first checkbox item
 			*/
 
+			console.log("If this section has ALL ITEMS CHECKED!..Enable (-) : " + allItemsChecked);
+
 			if( allItemsChecked == true ) {
 
-				var addNewSection = true;
+				// var addNewSection = true;
 
-				for( i=0; i<sectionedItems.length; i++ ) {
-					if( sectionedItems[i][0] == listItems[beginningElement-1].selector ) 
-						addNewSection = false;
-				}
+				// for( i=0; i<sectionedItems.length; i++ ) {
+				// 	if( sectionedItems[i][0] == listItems[beginningElement-1].selector ) 
+				// 		addNewSection = false;
+				// }
 
-				if( addNewSection == true ) { 
-					var newSection = [];
-					newSection.push(listItems[beginningElement-1].selector);
+				// if( addNewSection == true ) { 
+				// 	var newSection = [];
+				// 	newSection.push(listItems[beginningElement-1].selector);
 
-					for( k = beginningElement; k<j; k++ ) {
-						listItems[k].selector.hide('slow');
-						newSection.push(listItems[k].selector);
-					}
+				// 	for( k = beginningElement; k<currentSectionCounter; k++ ) {
+				// 		listItems[k].selector.hide('slow');
+				// 		newSection.push(listItems[k].selector);
+				// 	}
 
-					sectionedItems.push(newSection);
-				}
+				// 	sectionedItems.push(newSection);
+				// }
 
 				if( listItems[beginningElement-1].selector.children('a').length == 0 ) {
-					var expandButton = '<a href="#" id="collapseSectionButton">(+)</a>'; // start off by collapsing, so display (+)
+					var expandButton = '<a href="#" id="collapseSectionButton">(-)</a>'; // start off by collapsing, so display (+)
 	    			listItems[beginningElement-1].selector.append(expandButton); // append '+' button   
 	    			allowCollapsableSections();
 
-	    			for( k = beginningElement; k<j; k++ ) {
-						listItems[k].selector.hide('slow');
+	    			for( k = beginningElement; k<currentSectionCounter; k++ ) {
+						//listItems[k].selector.hide('slow');
 					}
 
 	    		} else { 
@@ -219,12 +230,12 @@ function checkForCollapsableSection() {
 				console.log("Label no longer has all ticked checkboxes, remove +/- button");
 				listItems[beginningElement-1].selector.children('a').remove();
 
-				for( k = beginningElement; k<j; k++ ) {
+				for( k = beginningElement; k<currentSectionCounter; k++ ) {
 					listItems[k].selector.show('slow');
 				}
 			}
 
-			i=j; // continue searching for next label in for-loop
+			i=currentSectionCounter-1; // continue searching for next label in for-loop, where next i will be a label
 		}
 	}
 }
@@ -459,7 +470,6 @@ function loadChecklistFromHTML(html) {
 				var checkboxNum = $(this).parent().attr('class').replace('checkbox-','');
 				listItems.forEach(function(element) {					
 			    	if( element.order == checkboxNum ) {
-			    		console.log("WORKS?");
 			    		element.checked = parentChecked;
 			    	}
 			    });
@@ -490,6 +500,8 @@ function loadChecklistFromHTML(html) {
 	    		checkboxBeingRenamed = undefined;	    		
 	    	}		    	
 	    });  
+
+	    $(this).children('div').removeAttr("style"); // some checkboxes become hidden on refresh
 
 	});
 
@@ -591,6 +603,7 @@ function allowCollapsableSections() {
 	// this function is run on a nestedSortable->mouseStop(), since a new collapsable button is created and needs to have a listener
 	// it is also run on the page loading to attach listeners to all existing collapsable buttons
 	$('#collapseSectionButton').on('vclick', function(){
+		console.log("collapse section button pressed");
 
 		// identify current section first by getting selector for <div> of the related label
 		var currentLabel = $(this).parent();
