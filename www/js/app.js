@@ -64,11 +64,19 @@ function createNewItem() {
 			var parentChecked = $(this).is(':checked');
 	    	
 	    	$('#checkbox-'+itemNum).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
-	  			return parentChecked;
-			});
+	  		    return parentChecked;
+			});			
 
+			// the following code is for collapsing each labelled section - we only care if the parent is checked or not
+		   	// since if a section's sublist item is unchecked, its parent will not be checked regardless
+			listItems.forEach(function(element) {
+		    	if( element.order == itemNum ) {
+		    		element.checked = parentChecked;
+		    	}
+		    });
+
+		    checkForCollapsableSection();
 	    }
-
     }); 
 
     $( 'div.checkbox-'+itemNum ).bind( "taphold", function(event) {
@@ -88,7 +96,6 @@ function createNewItem() {
 	    	e.preventDefault();
 	    });
     });  
-
     i++;
 
     $.jStorage.set(currentChecklist, $('#checklist').html()); 
@@ -125,6 +132,33 @@ function createNewLabel() {
 
   	i++;	
   	$.jStorage.set(currentChecklist, $('#checklist').html());
+}
+
+function checkForCollapsableSection() {
+	for( i=0; i<listItems.length; i++ ) {
+		// find a label, which is means checkbox attribute = false
+		if( listItems[i].checkbox == false ) {
+			var j = i+1;
+			var beginningElement = j;
+			var allItemsChecked = true;
+			while( j<listItems.length && listItems[j].checkbox == true ) {
+				console.log("Check if this item is checked: " + listItems[j].checked); // check if each checkbox is checked
+				allItemsChecked = allItemsChecked & listItems[j].checked;
+				if(allItemsChecked == false) break;
+				j++;
+			}
+			console.log("are all items under the label checked? " + allItemsChecked);
+
+			// allow section to collapse
+			if( allItemsChecked == true ) {
+				for( k = beginningElement; k<j; k++ ) {
+					listItems[k].selector.hide();
+				}
+			}
+
+			i=j; // continue searching for next label in for-loop
+		}
+	}
 }
 
 function testStore() {
@@ -169,6 +203,10 @@ function renderTemplates() {
 }
 
 function clearCurrentList() {
+
+	listItems = [];
+	bareListArray = [];
+
 	if( currentChecklist == "untitled" ) {
 		$.jStorage.set('untitled', null);
 	}
@@ -340,11 +378,23 @@ function loadChecklistFromHTML(html) {
 
 				var parentChecked = $(this).is(':checked');
 
-		    	$(this).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
+			   	$(this).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
 		  			return parentChecked;
 				});
 
-		    }
+			   	// the following code is for collapsing each labelled section - we only care if the parent is checked or not
+			   	// since if a section's sublist item is unchecked, its parent will not be checked regardless
+				//console.log($(this).parent().attr('class').replace('checkbox-','')); // to get the '4' in 'checkbox-4', we get the checkbox's
+				// parent (div), its class ('checkbox-4'), then take out the 'checkbox-' string
+				var checkboxNum = $(this).parent().attr('class').replace('checkbox-','');
+				listItems.forEach(function(element) {					
+			    	if( element.order == checkboxNum ) {
+			    		element.checked = parentChecked;
+			    	}
+			    });
+
+			    checkForCollapsableSection();
+		    }		    
 	    }); 
 
 		$(this).children('div').bind( "taphold", function(event) {
@@ -513,12 +563,19 @@ function cancelRename() {
 	$('#renameGrid').hide();
 }
 
-function mouseDragDetected() {
+function mouseDragDetected(sth, pos) {
 	// disable taphold for all items
-	console.log("Mouse drag detected, disable rename");
+	console.log("Mouse drag detected, disable rename, moved = " + pos);
 	eachListItem = $('#checklist').children('li').each( function() {
 		$(this).children('div').off('taphold');
 	});
+
+	something = sth;
+
+	if( pos < -20 ) {
+		// treat as a swipe left delete
+		console.log('remove ');
+	}
 }
 
 $(document).ready(function() {	
