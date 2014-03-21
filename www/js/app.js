@@ -560,14 +560,11 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 		for ( i=0; i<template.length; i++) {
 			for (var insideKey in template[i]) { // each insideKey = 'checkbox-label' or 'label-text'
 		  		if( insideKey.match("label-text") != null ) {
-		    		console.log("make new label");
 		    		createNewLabel(template[i][insideKey]);
 		    	}
 		    	else if( insideKey.match("checkbox-label") != null ) {
-		    		console.log("make new checkbox");
 		    		createNewItem(template[i][insideKey]);	    		
-		    	}
-		    	console.log("loop through template[i]");		    	
+		    	}		    	
 		  	}
 		}
 
@@ -881,6 +878,8 @@ $(document).ready(function() {
 		$.jStorage.set('listOfChecklists', listOfChecklists);
 
 		renderTemplates();
+
+		$('#homeTitle').text(savedListName + ' (saved)');
 	});
 
 	/* Template page template links */
