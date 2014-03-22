@@ -748,19 +748,24 @@ function cancelRename() {
 	$('#renameGrid').hide();
 }
 
-function mouseDragDetected(sth, pos) {
+function deleteDetected(item, pos) {
 	// disable taphold for all items
 	console.log("Mouse drag detected, disable rename, moved = " + pos);
 	eachListItem = $('#checklist').children('li').each( function() {
 		$(this).children('div').off('taphold');
 	});
 
-	something = sth;
+	something = item; // for debug
 
 	if( pos < -20 ) {
 		// treat as a swipe left delete
-		console.log('remove ');
-	}
+		console.log('remove');		
+		item.remove();
+
+		// update data arrays
+		listToBareArray();
+		listToArray();
+	}	
 }
 
 $(document).ready(function() {	

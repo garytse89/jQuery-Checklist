@@ -52,7 +52,7 @@
 			this.position = this._generatePosition(event);
 			this.positionAbs = this._convertPositionTo("absolute");
 
-			mouseDragDetected( this, this.position.left );
+			deleteDetected( this.currentItem[0], this.position.left );
 
 			if (!this.lastPositionAbs) {
 				this.lastPositionAbs = this.positionAbs;
