@@ -11,6 +11,7 @@ var jStorageTesting = false;
 var currentChecklist = 'untitled'; // string name of the current list
 var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
 orderCount=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
+subOrderCount=1;
 
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
@@ -18,6 +19,25 @@ var inputButton = '<div class="ui-block-b main"><input type="button" value="Add"
 $.event.special.tap.emitTapOnTaphold = false;
 var checkboxBeingRenamed = undefined;
 var labelBeingRenamed = undefined;
+
+function createNewSublistItem( fieldValue ) {
+	var inputValue = fieldValue;
+
+	console.log("make sublist item");
+
+	// find the last item in the current checklist HTML, insert an <ul> if it doesnt exist, and then append the sublist item to the <ul>
+	if($('#checklist').children('li').last().children('ul').length == 0 ) {
+		$('#checklist').children('li').last().append('<ul></ul>');
+		subOrderCount = 1;
+	}
+
+	var newSublistItem = '<li><div class="sublist-checkbox-'+subOrderCount+'"><input class="css-checkbox" data-role="none" type="checkbox" name="sublist-checkbox-'+subOrderCount+'" id="sublist-checkbox-'+subOrderCount+'"  data-inline="true" />\
+                <label for="sublist-checkbox-'+subOrderCount+'" class="css-label">' + inputValue + '</label></div></li>';
+
+    $('#checklist').children('li').last().children('ul').append(newSublistItem);
+
+    subOrderCount++;
+}
 
 function createNewItem( fieldValue ) {
 	var inputValue = fieldValue;
@@ -538,8 +558,6 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 
 	var template = JSON.parse(template);
 
-	templatechecker = template;
-
 	if(!nameOfTemplate) { // when we load from a URI link
 		for( i=0; i<template.length; i++ ) {
 			for( var key in template[i] ) {
@@ -556,6 +574,8 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 	$('#editDialogLaunch').text("Read Only Mode");
 	readOnly = true;
 
+	templatechecker = template;
+
 	try {
 		for ( i=0; i<template.length; i++) {
 			for (var insideKey in template[i]) { // each insideKey = 'checkbox-label' or 'label-text'
@@ -563,8 +583,15 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 		    		createNewLabel(template[i][insideKey]);
 		    	}
 		    	else if( insideKey.match("checkbox-label") != null ) {
-		    		createNewItem(template[i][insideKey]);	    		
-		    	}		    	
+		    		createNewItem(template[i][insideKey]);
+		    	}
+		    	else if( insideKey.match("sublist") != null ) {
+		    		console.log("does this even work");
+		    		for( k=0; k<template[i]['sublist'].length; k++ ) { // traverse through the sublist array of a checkbox item
+		    			console.log("***" + template[i]['sublist'][k]["sublist-checkbox-label"]);
+		    			createNewSublistItem(template[i]['sublist'][k]["sublist-checkbox-label"]); 
+		    		}
+		    	}	    	
 		  	}
 		}
 
