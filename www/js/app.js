@@ -16,6 +16,8 @@ subOrderCount=1;
 var inputField = '<div class="ui-block-a main"><input type="text" name="name" id="inputField" placeholder="Enter list item" /></div>';
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
 
+var deleting = false;
+
 $.event.special.tap.emitTapOnTaphold = false;
 var checkboxBeingRenamed = undefined;
 var labelBeingRenamed = undefined;
@@ -757,12 +759,35 @@ function deleteDetected(item, pos) {
 
 	something = item; // for debug
 
-	if( pos < -20 ) {
+	if( pos < -20 && deleting == false) {
+		deleting = true;
 		// treat as a swipe left delete
-		console.log('remove');		
-		item.remove();
+		console.log('removeeeeee');		
+		//item.remove();
 
-		resave();
+		var confirmDeleteButton = '<a href="#" id="confirmDeleteItem" data-mini="true" data-role="button" data-inline="true">Delete</a>';
+		var undoDeleteButton = '<a href="#" id="undoDeleteItem" data-mini="true" data-role="button" data-inline="true">Undo</a>';
+
+		$(item).hide('slow');
+		$(item).after(confirmDeleteButton);
+		$(item).after(undoDeleteButton);
+
+		$('#undoDeleteItem').on('vclick', function(e) {
+			$(item).show('slow');
+			deleting = false;
+			$('#undoDeleteItem').remove();
+			$('#confirmDeleteItem').remove();
+		});
+
+		$('#confirmDeleteItem').on('vclick', function(e) {
+			$(item).remove();
+			deleting = false;
+			$('#undoDeleteItem').remove();
+			$('#confirmDeleteItem').remove();
+			resave();	
+		});
+
+		$('[type="button"]').button();			
 	}	
 }
 
@@ -772,7 +797,7 @@ $(document).ready(function() {
 
 	// $('#checklist').on('mouseleave', sayHi); // triggers every time a dragged item passes by another one
 	// for a 'finished-dragging' event, refer to mouseStop() in nestedSortable.js=
-	
+
 	var addingItem = true;
 	var storing = true; // for testing only
 	var inputShown = false;
