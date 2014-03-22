@@ -309,15 +309,13 @@ function renderTemplates() {
 		 		$('#listOfChecklists').append('<li id="listTemplate"><a href="#" id='+key+'>'+key+'</a></li>');	
 		 	}    	
 		}
-	}
-
- 	$('#'+key).on('vclick', function(){
- 		currentChecklist = key;	
- 		confirmDelete();
- 		loadChecklist(key, listOfChecklists[currentChecklist], true);
- 	});
-
- 	$('#listOfChecklists:visible').listview('refresh');
+		$('#'+key).on('vclick', function(){
+	 		currentChecklist = key;	
+	 		confirmDelete();
+	 		loadChecklist(key, listOfChecklists[currentChecklist], true);
+	 	});
+	 	$('#listOfChecklists:visible').listview('refresh');
+	} 	 	
  	
 }
 
@@ -854,7 +852,11 @@ $(document).ready(function() {
 				console.log("Sharing template called " + templateToShare);
 				//doAppendFile(); // automatically outputs to file directory in Android as fileIO.js line 59's test.txt
 				//-----
-				var encodedURL = 'http://checklist/' + encodeURIComponent(JSON.stringify(listOfChecklists[templateToShare]));
+				console.log("Stringified: " + listOfChecklists[templateToShare] );
+				stringifiedTemplate = listOfChecklists[templateToShare].replace(/[|]|\//, '');
+				console.log("Stringified and replaced: " + stringifiedTemplate);
+
+				var encodedURL = 'http://checklist/' + encodeURIComponent(stringifiedTemplate);
 				console.log("Send out this URL: " + encodedURL);
 				window.plugins.socialsharing.share(null, null, null, encodedURL);
 			});	
