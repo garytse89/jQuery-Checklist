@@ -640,7 +640,7 @@ function resave(){
 	cancelRename();
 
 	$('ul#checklist > li').each(function() {
-
+		console.log("does this happen a few times after delete");
     	if( $(this).children('ul').html() == '' ) { 
     		// if sublist no longer exists, remove the (+) button
     		console.log('remove (+) button');
@@ -762,9 +762,7 @@ function deleteDetected(item, pos) {
 		console.log('remove');		
 		item.remove();
 
-		// update data arrays
-		listToBareArray();
-		listToArray();
+		resave();
 	}	
 }
 
