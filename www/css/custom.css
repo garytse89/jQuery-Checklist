@@ -1,9 +1,10 @@
 .ui-listview {
-    margin: 20px !important;
+    margin-left: 20px !important;
+    margin-right:0px !important;
 }
 
 .checklist-label {
-	font-size:26px;
+	font-size:20px;
 }
 
 .list {
@@ -44,7 +45,7 @@ input[type=checkbox].css-checkbox:checked + label.css-label {
 }
 
 label.css-label {
-	background-image:url(../img/checkbox.png);
+	background-image:url(checkbox.png);
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
