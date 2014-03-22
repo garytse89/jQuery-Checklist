@@ -771,9 +771,8 @@ $(document).ready(function() {
 	allowSortable();
 
 	// $('#checklist').on('mouseleave', sayHi); // triggers every time a dragged item passes by another one
-	// for a 'finished-dragging' event, refer to mouseStop() in nestedSortable.js
-
-	var db = openDatabase ("Test", "1.0", "Test", 65535); // local storage
+	// for a 'finished-dragging' event, refer to mouseStop() in nestedSortable.js=
+	
 	var addingItem = true;
 	var storing = true; // for testing only
 	var inputShown = false;
