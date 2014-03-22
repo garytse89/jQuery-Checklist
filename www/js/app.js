@@ -307,13 +307,19 @@ function renderTemplates() {
 		if (listOfChecklists.hasOwnProperty(key)) {
 			if( key != "untitled" ) { // load untitled checklist in other page
 		 		$('#listOfChecklists').append('<li id="listTemplate"><a href="#" id='+key+'>'+key+'</a></li>');	
+
+		 		$('#'+key).on('vclick', function(){
+					console.log("you have clicked on the template link : " + $(this).attr('id'));
+			 		currentChecklist = $(this).attr('id');
+			 		confirmDelete();
+			 		console.log("loading this checklist: " + listOfChecklists[currentChecklist]);
+			 		console.log("key = " + key);
+			 		console.log("currentChecklist = " + currentChecklist);
+			 		loadChecklist(currentChecklist, listOfChecklists[currentChecklist], true);
+			 	});
 		 	}    	
 		}
-		$('#'+key).on('vclick', function(){
-	 		currentChecklist = key;	
-	 		confirmDelete();
-	 		loadChecklist(key, listOfChecklists[currentChecklist], true);
-	 	});
+
 	 	$('#listOfChecklists:visible').listview('refresh');
 	} 	 	
  	
@@ -337,7 +343,7 @@ function clearCurrentList() {
 
 	orderCount = 1;
 
-	console.log('Cleared checklist, should be nothing here: ' + $('#checklist').html());
+	//console.log('Cleared checklist, should be nothing here: ' + $('#checklist').html());
 }
 
 function decodeURIandLoad(cl){
@@ -584,9 +590,8 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 		    		createNewItem(template[i][insideKey]);
 		    	}
 		    	else if( insideKey.match("sublist") != null ) {
-		    		console.log("does this even work");
 		    		for( k=0; k<template[i]['sublist'].length; k++ ) { // traverse through the sublist array of a checkbox item
-		    			console.log("***" + template[i]['sublist'][k]["sublist-checkbox-label"]);
+		    			//console.log("***" + template[i]['sublist'][k]["sublist-checkbox-label"]);
 		    			createNewSublistItem(template[i]['sublist'][k]["sublist-checkbox-label"]); 
 		    		}
 		    	}	    	
