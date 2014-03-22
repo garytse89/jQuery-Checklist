@@ -17,6 +17,7 @@ var inputField = '<div class="ui-block-a main"><input type="text" name="name" id
 var inputButton = '<div class="ui-block-b main"><input type="button" value="Add" id="inputButton" data-inline="false" data-icon="plus"/></div>';
 
 var deleting = false;
+var disableRename = false;
 
 $.event.special.tap.emitTapOnTaphold = false;
 var checkboxBeingRenamed = undefined;
@@ -111,7 +112,7 @@ function createNewItem( fieldValue ) {
     }); 
 
     $( 'div.checkbox-'+itemNum ).bind( "taphold", function(event) {
-    	if( readOnly == true ) return; // no changes allowed in readOnly
+    	if( readOnly == true || disableRename == true ) return; // no changes allowed in readOnly
 
     	console.log("Rename, cut off click or mouseup for now");
     	$('#inputGrid').hide(); // if input grid was visible, hide it now
@@ -164,7 +165,7 @@ function createNewLabel(fieldValue) {
 
     // allow renaming
     $( 'div.label-'+itemNum ).bind( "taphold", function(event) {
-    	if( readOnly == true ) return; // no changes allowed in readOnly
+    	if( readOnly == true || disableRename == true ) return; // no changes allowed in readOnly
 
     	console.log("Rename, cut off click or mouseup for now");
     	$('#inputGrid').hide(); // if input grid was visible, hide it now
@@ -529,6 +530,8 @@ function loadChecklistFromHTML(html) {
 	    }); 
 
 		$(this).children('div').bind( "taphold", function(event) {
+			if( readOnly == true || disableRename == true ) return;
+
 	    	console.log("Rename, cut off click or mouseup for now");
 	    	$('#inputGrid').hide(); // if input grid was visible, hide it now
 	    	$('#renameGrid').show();
@@ -611,38 +614,14 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 }
 
 function resave(){
-	
-	// mouse drag finished, add back taphold listeners for renaming
-	eachListItem = $('#checklist').children('li').each( function() {
-		$(this).children('div').bind( "taphold", function(event) {
-	    	console.log("Rename, cut off click or mouseup for now");
-	    	$('#inputGrid').hide(); // if input grid was visible, hide it now
-	    	$('#renameGrid').show();
-	    	if( $(this).children('label').text() ) {
-	    		$('#renameField').val($(this).children('label').text()); // if item
-	    		checkboxBeingRenamed = $(this).children('input[type=checkbox]');
 
-	    		$(this).toggleClass('rename');
-
-	    		$(this).children('input[type=checkbox]').on('click mouseup', function(e) {
-			    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
-			    	e.stopPropagation();
-			    	e.preventDefault();
-			    });
-	    	} else {
-	    		$(this).toggleClass('rename');
-	    		$('#renameField').val($(this).children('span').text()); // if label, not item
-	    		labelBeingRenamed = $(this).children('span');
-	    		checkboxBeingRenamed = undefined;	    		
-	    	}		    	
-	    });
-	});
+	// re-enable renaming
+	disableRename = false;
 
 	// if item or label was also being renamed and then dragged, cancel that
 	cancelRename();
 
 	$('ul#checklist > li').each(function() {
-		console.log("does this happen a few times after delete");
     	if( $(this).children('ul').html() == '' ) { 
     		// if sublist no longer exists, remove the (+) button
     		console.log('remove (+) button');
@@ -740,7 +719,6 @@ function changeName() {
 
 function cancelRename() {
 	if( checkboxBeingRenamed != undefined ) {
-		console.log('rebind checkbox');
 		checkboxBeingRenamed.off('click mouseup');
 		checkboxBeingRenamed.parent().removeClass('rename');
 	} else if( labelBeingRenamed != undefined ) { 
@@ -752,10 +730,10 @@ function cancelRename() {
 
 function deleteDetected(item, pos) {
 	// disable taphold for all items
-	console.log("Mouse drag detected, disable rename, moved = " + pos);
-	eachListItem = $('#checklist').children('li').each( function() {
-		$(this).children('div').off('taphold');
-	});
+	disableRename = true;
+	// eachListItem = $('#checklist').children('li').each( function() {
+	// 	$(this).children('div').off('taphold');
+	// });
 
 	something = item; // for debug
 
