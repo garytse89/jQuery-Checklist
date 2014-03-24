@@ -102,6 +102,13 @@ function createNewSublistItem( fieldValue ) {
 	    });
     });
 
+    $( 'div.sublist-checkbox-'+subOrderCount ).bind("mousedown", function(event) {
+    	if( readOnly == true ) {
+    		
+    		return false;
+    	}
+    });
+
     subOrderCount++;
 }
 
@@ -197,6 +204,13 @@ function createNewItem( fieldValue ) {
 	    });
     });  
 
+    $( 'div.checkbox-'+itemNum ).bind("mousedown", function(event) {
+    	if( readOnly == true ) {
+    		
+    		return false;
+    	}
+    });
+
     // do not run this line if this is an item created from a template, or it will cause an infinite loop in loadChecklist()
     if(!fieldValue) addToCollapsableSection(); // forces a collapsed section list to show itself again 
 
@@ -242,6 +256,13 @@ function createNewLabel(fieldValue) {
     	checkboxBeingRenamed = undefined;
     	labelBeingRenamed = $(this).children('span');
     }); 
+
+    $( 'div.label-'+itemNum ).bind("mousedown", function(event) {
+    	if( readOnly == true ) {
+    		
+    		return false;
+    	}
+    });
 
   	orderCount++;	
 
