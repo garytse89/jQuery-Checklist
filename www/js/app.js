@@ -40,6 +40,8 @@ function createNewSublistItem( fieldValue ) {
     $('#checklist').children('li').last().children('ul').append(newSublistItem);
 
 	$('#sublist-checkbox-'+subOrderCount).change( function(event) { 
+		if( $(this).parent().hasClass('rename') ) return; // don't trigger checkbox change event if renaming
+
 		if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
 			
 			var otherItemsChecked = true;
@@ -92,12 +94,13 @@ function createNewSublistItem( fieldValue ) {
     	$('#renameGrid').show();
     	$('#renameField').val($(this).children('label').text());
 
-    	checkboxBeingRenamed = $('#sublist-checkbox-'+subOrderCount);
+    	checkboxBeingRenamed = $(this).children('input[type=checkbox]'); // instead of $('#sublist-checkbox'+subOrderCount), because the naming is probably different at the time of binding
 
     	// add class to indicate renaming
     	$(this).toggleClass('rename');
 
-    	$('#sublist-checkbox-'+subOrderCount).on('click mouseup', function(e) {
+    	// prevents checkbox from getting ticked, while line 43 if-return statement prevents bubbling up to parent
+    	$(this).children('input[type=checkbox]').on('click mouseup', function(e) {
 	    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
 	    	e.stopPropagation();
 	    	e.preventDefault();
