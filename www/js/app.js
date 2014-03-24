@@ -34,7 +34,7 @@ function createNewSublistItem( fieldValue ) {
 		subOrderCount = 1;
 	}
 
-	var newSublistItem = '<li><div class="sublist-checkbox-'+subOrderCount+'"><input class="css-checkbox" data-role="none" type="checkbox" name="sublist-checkbox-'+subOrderCount+'" id="sublist-checkbox-'+subOrderCount+'"  data-inline="true" />\
+	var newSublistItem = '<li class="noStyle"><div class="sublist-checkbox-'+subOrderCount+'"><input class="css-checkbox" data-role="none" type="checkbox" name="sublist-checkbox-'+subOrderCount+'" id="sublist-checkbox-'+subOrderCount+'"  data-inline="true" />\
                 <label for="sublist-checkbox-'+subOrderCount+'" class="css-label">' + inputValue + '</label></div></li>';
 
     $('#checklist').children('li').last().children('ul').append(newSublistItem);
@@ -97,7 +97,7 @@ function createNewSublistItem( fieldValue ) {
     	// add class to indicate renaming
     	$(this).toggleClass('rename');
 
-    	$('#sublist-checkbox-'+itemNum).on('click mouseup', function(e) {
+    	$('#sublist-checkbox-'+subOrderCount).on('click mouseup', function(e) {
 	    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
 	    	e.stopPropagation();
 	    	e.preventDefault();

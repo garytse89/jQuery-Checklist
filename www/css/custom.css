@@ -7,6 +7,10 @@
 	font-size:20px;
 }
 
+.noStyle {
+	list-style: none !important;
+}
+
 .list {
 	list-style: none !important;
 	display: inline-block;
