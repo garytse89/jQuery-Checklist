@@ -41,27 +41,29 @@ function createNewSublistItem( fieldValue ) {
 
 	$('#sublist-checkbox-'+subOrderCount).change( function(event) { 
 		if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
-			console.log('yes');
-
+			
 			var otherItemsChecked = true;
 
 			$(this).parent().parent().parent().children('li').each( function() {
 				if( $(this).children('div').html() ) { // prevents "ui-sortable-placeholder", an automatically inserted <li>, to be counted as a checkbox
 					otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
-					console.log("are other items checked? " + otherItemsChecked );
 				}
 			});
 
-			if( otherItemsChecked == true ) {
-				// check the parent as well
-				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", true);
-			} else if( otherItemsChecked == false )  {
-				// if one sublist item is unchecked, uncheck the parent
-				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", false);
-			}
+			myParent = $(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]');
+			myParent.prop("checked", otherItemsChecked);
+
+			// checking of a sublist item affects the parent's checked flag (true/false) in the listItems array
+			listItems.forEach(function(element){ 
+				if(element.order == myParent.attr('id').replace('checkbox-','')) {
+					element.checked = otherItemsChecked;
+				}
+			});
+
+			checkForCollapsableSection();
 		}
 
-		else {
+		else {			
 
 			var parentChecked = $(this).is(':checked');
 	    	
@@ -142,24 +144,26 @@ function createNewItem( fieldValue ) {
 
 		// if this is a sublist item
 		if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
-			console.log('yes');
-
+			
 			var otherItemsChecked = true;
 
 			$(this).parent().parent().parent().children('li').each( function() {
 				if( $(this).children('div').html() ) { // prevents "ui-sortable-placeholder", an automatically inserted <li>, to be counted as a checkbox
 					otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
-					console.log("are other items checked? " + otherItemsChecked );
 				}
 			});
 
-			if( otherItemsChecked == true ) {
-				// check the parent as well
-				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", true);
-			} else if( otherItemsChecked == false )  {
-				// if one sublist item is unchecked, uncheck the parent
-				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", false);
-			}
+			myParent = $(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]');
+			myParent.prop("checked", otherItemsChecked);
+
+			// checking of a sublist item affects the parent's checked flag (true/false) in the listItems array
+			listItems.forEach(function(element){ 
+				if(element.order == myParent.attr('id').replace('checkbox-','')) {
+					element.checked = otherItemsChecked;
+				}
+			});
+
+			checkForCollapsableSection();
 		}
 
 		else {
@@ -294,7 +298,6 @@ function checkForCollapsableSection() {
 	for( i=0; i<listItems.length; i++ ) {
 		// add a label and its section into sectionedItems, then check whether or not its checkboxes are ticked
 		if( listItems[i].checkbox == false ) {
-			console.log('Label found');
 			var beginningElement = i+1;
 			var allItemsChecked = true;
 			var currentSectionCounter = i+1;
@@ -317,28 +320,7 @@ function checkForCollapsableSection() {
 			beginningElement is the index of the first checkbox item
 			*/
 
-			console.log("If this section has ALL ITEMS CHECKED!..Enable (-) : " + allItemsChecked);
-
 			if( allItemsChecked == true ) {
-
-				// var addNewSection = true;
-
-				// for( i=0; i<sectionedItems.length; i++ ) {
-				// 	if( sectionedItems[i][0] == listItems[beginningElement-1].selector ) 
-				// 		addNewSection = false;
-				// }
-
-				// if( addNewSection == true ) { 
-				// 	var newSection = [];
-				// 	newSection.push(listItems[beginningElement-1].selector);
-
-				// 	for( k = beginningElement; k<currentSectionCounter; k++ ) {
-				// 		listItems[k].selector.hide('slow');
-				// 		newSection.push(listItems[k].selector);
-				// 	}
-
-				// 	sectionedItems.push(newSection);
-				// }
 
 				if( listItems[beginningElement-1].selector.children('a').length == 0 ) {
 					var expandButton = '<a href="#" id="collapseSectionButton">(-)</a>'; // start off by collapsing, so display (+)
