@@ -39,6 +39,67 @@ function createNewSublistItem( fieldValue ) {
 
     $('#checklist').children('li').last().children('ul').append(newSublistItem);
 
+	$('#sublist-checkbox-'+subOrderCount).change( function(event) { 
+		if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
+			console.log('yes');
+
+			var otherItemsChecked = true;
+
+			$(this).parent().parent().parent().children('li').each( function() {
+				otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
+				console.log("are other items checked? " + otherItemsChecked);
+			});
+
+			if( otherItemsChecked == true ) {
+				// check the parent as well
+				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", true);
+			} else if( otherItemsChecked == false )  {
+				// if one sublist item is unchecked, uncheck the parent
+				$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", false);
+			}
+		}
+
+		else {
+
+			var parentChecked = $(this).is(':checked');
+	    	
+	    	$('#checkbox-'+subOrderCount).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
+	  		    return parentChecked;
+			});			
+
+			console.log("turned a checkbox into->" + parentChecked);
+
+			// the following code is for collapsing each labelled section - we only care if the parent is checked or not
+		   	// since if a section's sublist item is unchecked, its parent will not be checked regardless
+			listItems.forEach(function(element) {
+		    	if( element.order == subOrderCount ) {
+		    		element.checked = parentChecked;
+		    	}
+		    });
+
+		    checkForCollapsableSection();
+	    }
+    }); 
+
+    $( 'div.sublist-checkbox-'+subOrderCount ).bind( "taphold", function(event) {
+    	if( readOnly == true || disableRename == true ) return; // no changes allowed in readOnly
+
+    	$('#inputGrid').hide(); // if input grid was visible, hide it now
+    	$('#renameGrid').show();
+    	$('#renameField').val($(this).children('label').text());
+
+    	checkboxBeingRenamed = $('#sublist-checkbox-'+subOrderCount);
+
+    	// add class to indicate renaming
+    	$(this).toggleClass('rename');
+
+    	$('#sublist-checkbox-'+itemNum).on('click mouseup', function(e) {
+	    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
+	    	e.stopPropagation();
+	    	e.preventDefault();
+	    });
+    });
+
     subOrderCount++;
 }
 
@@ -63,8 +124,9 @@ function createNewItem( fieldValue ) {
     	"order" : itemNum, // probably not needed....
     });
 
+    // auto ticking of higher level boxes
 	$('#checkbox-'+itemNum).change( function(event) { 
-		if( readOnly == true ) return; // no changes allowed in readOnly
+		//if( readOnly == true ) return;
 
 		//console.log('Is this a sublist item?');
 		//console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
@@ -602,6 +664,8 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 		    	}	    	
 		  	}
 		}
+
+		resave(); // run this once to add +/- buttons to parent checkbox items
 
 		// transition to current checklist page
 		if(transitionToHome == true) {
