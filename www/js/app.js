@@ -739,6 +739,12 @@ function allowCollapsableSections() {
 				for( j=i+1; j<listItems.length; j++ ) {
 					if( listItems[j].checkbox == true ) {
 						listItems[j].selector.toggle('slow');
+						// if this item has sublist items, hide/show those too
+						if( listItems[j].sublist ) {
+							for( k=0; k<listItems[j].sublist.length; k++ ) {
+								listItems[j].sublist[k].selector.toggle('slow');
+							}
+						}
 					} else {
 						break;
 					}
