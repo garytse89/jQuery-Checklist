@@ -46,8 +46,10 @@ function createNewSublistItem( fieldValue ) {
 			var otherItemsChecked = true;
 
 			$(this).parent().parent().parent().children('li').each( function() {
-				otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
-				console.log("are other items checked? " + otherItemsChecked);
+				if( $(this).children('div').html() ) { // prevents "ui-sortable-placeholder", an automatically inserted <li>, to be counted as a checkbox
+					otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
+					console.log("are other items checked? " + otherItemsChecked );
+				}
 			});
 
 			if( otherItemsChecked == true ) {
@@ -138,8 +140,10 @@ function createNewItem( fieldValue ) {
 			var otherItemsChecked = true;
 
 			$(this).parent().parent().parent().children('li').each( function() {
-				otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
-				console.log("are other items checked? " + otherItemsChecked);
+				if( $(this).children('div').html() ) { // prevents "ui-sortable-placeholder", an automatically inserted <li>, to be counted as a checkbox
+					otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
+					console.log("are other items checked? " + otherItemsChecked );
+				}
 			});
 
 			if( otherItemsChecked == true ) {
@@ -555,8 +559,10 @@ function loadChecklistFromHTML(html) {
 				var otherItemsChecked = true;
 
 				$(this).parent().parent().parent().children('li').each( function() {
-					otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
-					console.log("are other items checked? " + otherItemsChecked);
+					if( $(this).children('div').html() ) { // prevents "ui-sortable-placeholder", an automatically inserted <li>, to be counted as a checkbox
+						otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
+						console.log("are other items checked? " + otherItemsChecked );
+					}
 				});
 
 				if( otherItemsChecked == true ) {
