@@ -988,6 +988,10 @@ $(document).ready(function() {
 		cancelRename();
 	});	
 
+	$('.cancelBtn').on('vclick', function() {
+		$('.ui-btn-active').removeClass('ui-btn-active'); // jQuery Mobile doesn't unhighlight clicked buttons automatically
+	});	
+
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
 	loadChecklist(null, existingChecklist, true, true);
