@@ -223,7 +223,7 @@ function createNewItem( fieldValue ) {
     listToArray();
 	listToBareArray();
 
-    $.jStorage.set(currentChecklist, $('#checklist').html()); 
+    $.jStorage.set(currentChecklist, bareListArray);
 }
 
 function createNewLabel(fieldValue) {
@@ -273,7 +273,7 @@ function createNewLabel(fieldValue) {
   	listToArray();
 	listToBareArray();
 
-  	$.jStorage.set(currentChecklist, $('#checklist').html());
+  	$.jStorage.set(currentChecklist, bareListArray);
 }
 
 
@@ -387,7 +387,7 @@ function renderTemplates() {
 			 		console.log("loading this checklist: " + listOfChecklists[currentChecklist]);
 			 		console.log("key = " + key);
 			 		console.log("currentChecklist = " + currentChecklist);
-			 		loadChecklist(currentChecklist, listOfChecklists[currentChecklist], true);
+			 		loadChecklist(currentChecklist, listOfChecklists[currentChecklist], true, false);
 			 	});
 		 	}    	
 		}
@@ -422,7 +422,7 @@ function decodeURIandLoad(cl){
 	cl = cl.replace("http://checklist/", "");
 	var decodedChecklist = decodeURIComponent(cl);
 	console.log(decodedChecklist);
-	loadChecklist(null, decodedChecklist, true);
+	loadChecklist(null, decodedChecklist, true, false);
 }
 
 function isChildItem() {
@@ -544,117 +544,32 @@ function listToArray(){
 	//console.log('Execution time (in milliseconds) ' + time);
 }
 
-function loadChecklistFromHTML(html) {
-	$('#checklist').append(html); 
-
-	// reattach check listeners (to check all sublist items) to each existing item created from HTML
-	// for each item, 1) add it to current checklist array, and 2) attach event listener (based on checkbox changes)
-	eachListItem = $('#checklist').children('li').each( function() {
-
-		$(this).children('div').children('input[type=checkbox]').change( function(event) { 
-			//console.log('Is this a sublist item?');
-			//console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
-
-			// if this is a sublist item
-			if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
-				console.log('yes');
-
-				var otherItemsChecked = true;
-
-				$(this).parent().parent().parent().children('li').each( function() {
-					if( $(this).children('div').html() ) { // prevents "ui-sortable-placeholder", an automatically inserted <li>, to be counted as a checkbox
-						otherItemsChecked = otherItemsChecked && $(this).children('div').children('input[type=checkbox]').is(':checked');
-						console.log("are other items checked? " + otherItemsChecked );
-					}
-				});
-
-				if( otherItemsChecked == true ) {
-					// check the parent as well
-					$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", true);
-				} else if( otherItemsChecked == false )  {
-					// if one sublist item is unchecked, uncheck the parent
-					$(this).parent().parent().parent().parent().children('div').children('input[type=checkbox]').prop( "checked", false);
-				}
-			}
-
-			else {
-
-				var parentChecked = $(this).is(':checked');
-
-			   	$(this).parent().parent().children('ul').find('input[type=checkbox]').prop( "checked", function( i, val ) {
-		  			return parentChecked;
-				});
-
-			   	// the following code is for collapsing each labelled section - we only care if the parent is checked or not
-			   	// since if a section's sublist item is unchecked, its parent will not be checked regardless
-				//console.log($(this).parent().attr('class').replace('checkbox-','')); // to get the '4' in 'checkbox-4', we get the checkbox's
-				// parent (div), its class ('checkbox-4'), then take out the 'checkbox-' string
-				var checkboxNum = $(this).parent().attr('class').replace('checkbox-','');
-				listItems.forEach(function(element) {					
-			    	if( element.order == checkboxNum ) {
-			    		element.checked = parentChecked;
-			    	}
-			    });
-
-			    checkForCollapsableSection();
-		    }		    
-	    }); 
-
-		$(this).children('div').bind( "taphold", function(event) {
-			if( readOnly == true || disableRename == true ) return;
-
-	    	console.log("Rename, cut off click or mouseup for now");
-	    	$('#inputGrid').hide(); // if input grid was visible, hide it now
-	    	$('#renameGrid').show();
-	    	if( $(this).children('label').text() ) {
-	    		$('#renameField').val($(this).children('label').text()); // if item
-	    		checkboxBeingRenamed = $(this).children('input[type=checkbox]');
-
-	    		$(this).toggleClass('rename');
-
-	    		$(this).children('input[type=checkbox]').on('click mouseup', function(e) {
-			    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
-			    	e.stopPropagation();
-			    	e.preventDefault();
-			    });
-	    	} else if( labelBeingRenamed != undefined ) {
-	    		$(this).toggleClass('rename');
-	    		$('#renameField').val($(this).children('span').text()); // if label, not item
-	    		labelBeingRenamed = $(this).children('span');
-	    		checkboxBeingRenamed = undefined;	    		
-	    	}		    	
-	    });  
-
-	    $(this).children('div').removeAttr("style"); // some checkboxes become hidden on refresh
-
-	});
-
-	listToArray();
-	listToBareArray();
-}
-
-function loadChecklist(nameOfTemplate, template, transitionToHome) {
+function loadChecklist(nameOfTemplate, template, transitionToHome, refresh) {
 	clearCurrentList();
 
-	var template = JSON.parse(template);
+	if( refresh == false ) {
 
-	if(!nameOfTemplate) { // when we load from a URI link
-		for( i=0; i<template.length; i++ ) {
-			for( var key in template[i] ) {
-				if( key.match("name") ) {
-					nameOfTemplate = template[i][key];
+		var template = JSON.parse(template);
+
+		if(!nameOfTemplate) { // when we load from a URI link
+			for( i=0; i<template.length; i++ ) {
+				for( var key in template[i] ) {
+					if( key.match("name") ) {
+						nameOfTemplate = template[i][key];
+					}
 				}
 			}
 		}
+
+		// change heading title of home page, restrict it to use-mode only
+		$('#homeTitle').text(nameOfTemplate + ' (checklist read-only mode)');
+		$('#editDialogLaunch').show();
+		$('#editDialogLaunch').text("Edit Mode");
+		readOnly = true;
+
+		templatechecker = template;
+
 	}
-
-	// change heading title of home page, restrict it to use-mode only
-	$('#homeTitle').text(nameOfTemplate + ' (checklist read-only mode)');
-	$('#editDialogLaunch').show();
-	$('#editDialogLaunch').text("Edit Mode");
-	readOnly = true;
-
-	templatechecker = template;
 
 	try {
 		for ( i=0; i<template.length; i++) {
@@ -711,8 +626,7 @@ function resave(){
 	listToArray();
 	listToBareArray();
 
-	$.jStorage.set(currentChecklist, $('#checklist').html());
-	//$.jStorage.set(currentChecklist, JSON.stringify(listItems));
+	$.jStorage.set(currentChecklist, bareListArray);
 }
 
 function allowSortable() {
@@ -755,10 +669,10 @@ function allowCollapsableSections() {
 		$(this).toggleClass('collapsed');
 		if( $(this).hasClass('collapsed') ) {
 			// if collapsed, the button should become '+'
-			$(this).text("(-)");
+			$(this).text("(+)");
 		}
 		else {
-			$(this).text("(+)");
+			$(this).text("(-)");
 		}
 	});
 }
@@ -793,7 +707,7 @@ function changeName() {
 
 	$('#renameGrid').hide();
 
-	$.jStorage.set(currentChecklist, $('#checklist').html()); 
+	$.jStorage.set(currentChecklist, bareListArray);
 }
 
 function cancelRename() {
@@ -963,7 +877,7 @@ $(document).ready(function() {
 		// re-render
 		var currentBareListArray = bareListArray;
 		clearCurrentList();
-		loadChecklist(currentChecklist, JSON.stringify(currentBareListArray));
+		loadChecklist(currentChecklist, JSON.stringify(currentBareListArray), false, false);
 
 		if( readOnlyTemp == false ) {
 			$('#homeTitle').text(currentChecklist + ' (use mode)');
@@ -1006,7 +920,7 @@ $(document).ready(function() {
 
 	/* Template page template links */
 	$('#confirmLoadTemplate').on('vclick', function(){
-		loadChecklist(null, templateToLoad, true);
+		loadChecklist(null, templateToLoad, true, false);
 	});
 
 	if( jStorageTesting == true ) {
@@ -1075,13 +989,11 @@ $(document).ready(function() {
 
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
-	loadChecklistFromHTML(existingChecklist);
+	loadChecklist(null, existingChecklist, true, true);
 
 	// load the template page
 	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
 	renderTemplates();
-
-	allowCollapsableSublists();
 
 	$('#editDialogLaunch').hide();
 
