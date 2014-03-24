@@ -669,7 +669,7 @@ function loadChecklist(nameOfTemplate, template, transitionToHome) {
 	// change heading title of home page, restrict it to use-mode only
 	$('#homeTitle').text(nameOfTemplate + ' (checklist read-only mode)');
 	$('#editDialogLaunch').show();
-	$('#editDialogLaunch').text("Read Only Mode");
+	$('#editDialogLaunch').text("Edit Mode");
 	readOnly = true;
 
 	templatechecker = template;
@@ -978,13 +978,13 @@ $(document).ready(function() {
 		loadChecklist(currentChecklist, JSON.stringify(currentBareListArray));
 
 		if( readOnlyTemp == false ) {
-			$('#homeTitle').text(currentChecklist + ' (edit mode)');
-			$(this).text("Read Only Mode");
+			$('#homeTitle').text(currentChecklist + ' (use mode)');
+			$(this).text("Edit Mode");
 			readOnly = true;
 		}
 		else {
-			$('#homeTitle').text(currentChecklist + ' (read only mode)');
-			$(this).text("Edit Mode");
+			$('#homeTitle').text(currentChecklist + ' (edit mode)');
+			$(this).text("Use Mode");
 			readOnly = false;
 		}
 	});
