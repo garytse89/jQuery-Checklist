@@ -140,12 +140,8 @@ function createNewItem( fieldValue ) {
 
     // auto ticking of higher level boxes
 	$('#checkbox-'+itemNum).change( function(event) { 
-		//if( readOnly == true ) return;
+		if( $(this).parent().hasClass('rename') ) return; // don't trigger checkbox change event if renaming
 
-		//console.log('Is this a sublist item?');
-		//console.log($(this).parent().parent().parent().parent().children('div').children('a').length);
-
-		// if this is a sublist item
 		if( $(this).parent().parent().parent().parent().children('div').children('a').length > 0 ) {
 			
 			var otherItemsChecked = true;
@@ -199,12 +195,12 @@ function createNewItem( fieldValue ) {
     	$('#renameGrid').show();
     	$('#renameField').val($(this).children('label').text());
 
-    	checkboxBeingRenamed = $('#checkbox-'+itemNum);
+    	checkboxBeingRenamed = $(this).children('input[type=checkbox]');
 
     	// add class to indicate renaming
     	$(this).toggleClass('rename');
 
-    	$('#checkbox-'+itemNum).on('click mouseup', function(e) {
+    	$(this).children('input[type=checkbox]').on('click mouseup', function(e) {
 	    	console.log("Stop propagation of normal mouse click (prevent checkbox) due to taphold (rename)");
 	    	e.stopPropagation();
 	    	e.preventDefault();
@@ -710,6 +706,8 @@ function changeName() {
 
 	$('#renameGrid').hide();
 
+	listToArray();
+	listToBareArray();
 	$.jStorage.set(currentChecklist, bareListArray);
 }
 
