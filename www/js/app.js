@@ -92,6 +92,8 @@ function createNewSublistItem( fieldValue ) {
     $( 'div.sublist-checkbox-'+subOrderCount ).bind( "taphold", function(event) {
     	if( readOnly == true || disableRename == true ) return; // no changes allowed in readOnly
 
+    	disableRename = true; // do not allow multiple renames 
+
     	$('#inputGrid').hide(); // if input grid was visible, hide it now
     	$('#renameGrid').show();
     	$('#renameField').val($(this).children('label').text());
@@ -99,6 +101,7 @@ function createNewSublistItem( fieldValue ) {
     	checkboxBeingRenamed = $(this).children('input[type=checkbox]'); // instead of $('#sublist-checkbox'+subOrderCount), because the naming is probably different at the time of binding
 
     	// add class to indicate renaming
+    	$(this).children('label').text($(this).children('label').text() + " (renaming)");
     	$(this).toggleClass('rename');
 
     	// prevents checkbox from getting ticked, while line 43 if-return statement prevents bubbling up to parent
@@ -192,6 +195,8 @@ function createNewItem( fieldValue ) {
     $( 'div.checkbox-'+itemNum ).bind( "taphold", function(event) {
     	if( readOnly == true || disableRename == true ) return; // no changes allowed in readOnly
 
+    	disableRename = true; // do not allow multiple renames 
+
     	console.log("Rename, cut off click or mouseup for now");
     	$('#inputGrid').hide(); // if input grid was visible, hide it now
     	$('#renameGrid').show();
@@ -200,6 +205,7 @@ function createNewItem( fieldValue ) {
     	checkboxBeingRenamed = $(this).children('input[type=checkbox]');
 
     	// add class to indicate renaming
+    	$(this).children('label').text($(this).children('label').text() + " (renaming)");
     	$(this).toggleClass('rename');
 
     	$(this).children('input[type=checkbox]').on('click mouseup', function(e) {
@@ -252,11 +258,14 @@ function createNewLabel(fieldValue) {
     $( 'div.label-'+itemNum ).bind( "taphold", function(event) {
     	if( readOnly == true || disableRename == true ) return; // no changes allowed in readOnly
 
+    	disableRename = true; // do not allow multiple renames 
+
     	console.log("Rename, cut off click or mouseup for now");
     	$('#inputGrid').hide(); // if input grid was visible, hide it now
     	$('#renameGrid').show();
     	$('#renameField').val($(this).children('span').text());
 
+    	$(this).children('span').text($(this).children('span').text() + " (renaming)");
     	$(this).toggleClass('rename');
     	checkboxBeingRenamed = undefined;
     	labelBeingRenamed = $(this).children('span');
@@ -558,6 +567,13 @@ function listToArray(){
 	//console.log('Execution time (in milliseconds) ' + time);
 }
 
+function rerender() {
+	// refreshes the current checklist based on data in bareListArray, useful when undesirable change occurs
+
+	// case used - deleting a sublisted item but undo-ing it puts the item into main list instead of sublist, so doing a rerender will override that
+	loadChecklist(null, bareListArray, false, true);
+}
+
 function loadChecklist(nameOfTemplate, template, transitionToHome, refresh) {
 	clearCurrentList();
 
@@ -732,25 +748,28 @@ function changeName() {
 	listToArray();
 	listToBareArray();
 	$.jStorage.set(currentChecklist, bareListArray);
+
+	disableRename = false; // allow renaming again
 }
 
 function cancelRename() {
 	if( checkboxBeingRenamed != undefined ) {
 		checkboxBeingRenamed.off('click mouseup');
 		checkboxBeingRenamed.parent().removeClass('rename');
+		checkboxBeingRenamed.next('label').text( checkboxBeingRenamed.next('label').text().replace(" (renaming)", "") ); // ugly code 
 	} else if( labelBeingRenamed != undefined ) { 
 		labelBeingRenamed.parent().removeClass('rename');
+		labelBeingRenamed.text( labelBeingRenamed.text().replace(" (renaming)", "") );
 	}
 
 	$('#renameGrid').hide();
+
+	disableRename = false; // allow renaming again
 }
 
 function deleteDetected(item, pos) {
-	// disable taphold for all items
-	disableRename = true;
-	// eachListItem = $('#checklist').children('li').each( function() {
-	// 	$(this).children('div').off('taphold');
-	// });
+	
+	disableRename = true; // disable taphold (renaming) for all items
 
 	something = item; // for debug
 
@@ -763,20 +782,23 @@ function deleteDetected(item, pos) {
 		var confirmDeleteButton = '<a href="#" id="confirmDeleteItem" class="ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all ui-btn-inline"></a>';
         var undoDeleteButton = '<a href="#" id="undoDeleteItem" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all ui-btn-inline"></a>';
 
-		$(item).hide('fast');
-		$(item).parent().append(confirmDeleteButton);
-		$(item).parent().append(undoDeleteButton);
+		$(item).hide('fast'); // where $(item) corresponds to the <li> of the sublist item
+		$(item).after(confirmDeleteButton);
+		$(item).after(undoDeleteButton);
 
 		$('#undoDeleteItem').on('vclick', function(e) {
 			$(item).show('slow');
 			deleting = false;
+			disableRename = false;
 			$('#undoDeleteItem').remove();
 			$('#confirmDeleteItem').remove();
+			rerender(); // bug exists where a sublisted item is not placed back into the sublist, need to re-render list from raw data
 		});
 
 		$('#confirmDeleteItem').on('vclick', function(e) {
 			$(item).remove();
 			deleting = false;
+			disableRename = false;
 			$('#undoDeleteItem').remove();
 			$('#confirmDeleteItem').remove();
 			resave();	
