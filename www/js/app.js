@@ -31,7 +31,7 @@ function createNewSublistItem( fieldValue ) {
 	// find the last item in the current checklist HTML, insert an <ul> if it doesnt exist, and then append the sublist item to the <ul>
 	if($('#checklist').children('li').last().children('ul').length == 0 ) {
 		$('#checklist').children('li').last().append('<ul></ul>');
-		subOrderCount = 1;
+		//subOrderCount = 1;
 	}
 
 	var newSublistItem = '<li class="noStyle"><div class="sublist-checkbox-'+subOrderCount+'"><input class="css-checkbox" data-role="none" type="checkbox" name="sublist-checkbox-'+subOrderCount+'" id="sublist-checkbox-'+subOrderCount+'"  data-inline="true" />\
@@ -322,7 +322,7 @@ function checkForCollapsableSection() {
 			if( allItemsChecked == true ) {
 
 				if( listItems[beginningElement-1].selector.children('a').length == 0 ) {
-					var expandButton = '<a href="#" id="collapseSectionButton">(-)</a>'; // start off by collapsing, so display (+)
+					var expandButton = '<a href="#" class="collapseSectionButton">(-)</a>'; // start off by collapsing, so display (+)
 	    			listItems[beginningElement-1].selector.append(expandButton); // append '+' button   
 	    			allowCollapsableSections();
 
@@ -617,7 +617,7 @@ function resave(){
     	} else if( typeof $(this).children('ul').html() != "undefined" && $(this).children('div').children('a').length == 0 ){ // cannot be undefined
     		// collapsable button is only added if it didn't exist already (jQuery selector for it should have length of 0 then)
     		console.log("we're adding a (+) button due to this html: " + $(this).children('ul').html());
-    		var expandButton = '<a href="#" id="collapseButton">(-)</a>';
+    		var expandButton = '<a href="#" class="collapseButton">(-)</a>';
     		$(this).children('div').append(expandButton); // append '+' button   
     		allowCollapsableSublists();  
     	}    	
@@ -644,7 +644,7 @@ function allowSortable() {
 function allowCollapsableSections() {
 	// this function is run on a nestedSortable->mouseStop(), since a new collapsable button is created and needs to have a listener
 	// it is also run on the page loading to attach listeners to all existing collapsable buttons
-	$('#collapseSectionButton').on('vclick', function(){
+	$('.collapseSectionButton').on('vclick', function(){
 		console.log("collapse section button pressed");
 
 		// identify current section first by getting selector for <div> of the related label
@@ -682,7 +682,7 @@ function allowCollapsableSections() {
 function allowCollapsableSublists() {
 	// this function is run on a nestedSortable->mouseStop(), since a new collapsable button is created and needs to have a listener
 	// it is also run on the page loading to attach listeners to all existing collapsable buttons
-	$('#collapseButton').on('vclick', function(){
+	$('.collapseButton').on('vclick', function(){
 		console.log("Collapse button is working");
 		$(this).parent().parent().children('ul').toggle('fast');
 		$(this).toggleClass('collapsed');
