@@ -811,6 +811,10 @@ function deleteDetected(item, pos) {
 	$('[data-role="button"]').button(); 
 }
 
+function removeButtonHighlights() {
+	$('.ui-btn-active').removeClass('ui-btn-active'); // jQuery Mobile doesn't unhighlight clicked buttons automatically
+}
+
 $(document).ready(function() {	
 
 	allowSortable();
@@ -891,7 +895,7 @@ $(document).ready(function() {
 
 	$('#clear').on('vclick', function(){ 
 		clearCurrentList();
-		$('.ui-btn-active').removeClass('ui-btn-active');
+		removeButtonHighlights();
 	});
 
 	/* Share the list */
@@ -954,7 +958,7 @@ $(document).ready(function() {
 		if( bareListArray.length == 0 ) {
 			$('#noSavingDialog').popup("open", { overlayTheme: "a" });
 			setTimeout(function(){ 
-				$('.ui-btn-active').removeClass('ui-btn-active'); // since this line is called before button becomes highlighted, need to delay the removal
+				removeButtonHighlights(); // since this line is called before button becomes highlighted, need to delay the removal
 			}, 300);
 		} else {
 			$('#saveDialog').popup("open", { overlayTheme: "a" });
@@ -1046,15 +1050,17 @@ $(document).ready(function() {
 	});	
 
 	$('#renameButton').on('vclick', function() {
+		removeButtonHighlights();
 		changeName();
 	});	
 
 	$('#cancelRenameButton').on('vclick', function() {
+		removeButtonHighlights();
 		cancelRename();
 	});	
 
 	$('.cancelBtn').on('vclick', function() {
-		$('.ui-btn-active').removeClass('ui-btn-active'); // jQuery Mobile doesn't unhighlight clicked buttons automatically
+		removeButtonHighlights();
 	});	
 
 	$('#confirmDeleteTemplateBtn').on('vclick', function() {
