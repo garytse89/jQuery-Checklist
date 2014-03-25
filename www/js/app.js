@@ -601,9 +601,10 @@ function loadChecklist(nameOfTemplate, template, transitionToHome, refresh) {
 }
 
 function resave(){
+	if( deleting == true ) return; // resave only when a delete is actually confirmed.
 
+	console.log('call resave');
 	// re-enable renaming
-	disableRename = false;
 
 	// if item or label was also being renamed and then dragged, cancel that
 	cancelRename();
