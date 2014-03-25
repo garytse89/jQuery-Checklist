@@ -644,6 +644,9 @@ function allowSortable() {
 function allowCollapsableSections() {
 	// this function is run on a nestedSortable->mouseStop(), since a new collapsable button is created and needs to have a listener
 	// it is also run on the page loading to attach listeners to all existing collapsable buttons
+	
+	$('.collapseSectionButton').off('vclick');
+	
 	$('.collapseSectionButton').on('vclick', function(){
 		console.log("collapse section button pressed");
 
