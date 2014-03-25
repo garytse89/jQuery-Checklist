@@ -618,7 +618,11 @@ function resave(){
     		console.log("we're adding a (+) button due to this html: " + $(this).children('ul').html());
     		var expandButton = '<a href="#" id="collapseButton">(-)</a>';
     		$(this).children('div').append(expandButton); // append '+' button   
-    		allowCollapsableSublists();  		
+    		allowCollapsableSublists();  
+
+    		$(this).children('ul').children('li').each(function() {		
+    			$(this).addClass('noStyle');
+    		});
     	}    	
 	})
 
