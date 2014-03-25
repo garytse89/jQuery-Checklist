@@ -296,7 +296,10 @@ function addToCollapsableSection() {
 function checkForCollapsableSection() {
 	for( i=0; i<listItems.length; i++ ) {
 		// add a label and its section into sectionedItems, then check whether or not its checkboxes are ticked
-		if( listItems[i].checkbox == false ) {
+		if( listItems[i].checkbox == false && i < listItems.length-1 ) { // if label is very last item, don't bother
+			
+			console.log("label found");
+		
 			var beginningElement = i+1;
 			var allItemsChecked = true;
 			var currentSectionCounter = i+1;
@@ -646,7 +649,7 @@ function allowCollapsableSections() {
 	// it is also run on the page loading to attach listeners to all existing collapsable buttons
 	
 	$('.collapseSectionButton').off('vclick');
-	
+
 	$('.collapseSectionButton').on('vclick', function(){
 		console.log("collapse section button pressed");
 
