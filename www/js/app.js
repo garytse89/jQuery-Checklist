@@ -840,6 +840,7 @@ $(document).ready(function() {
 
 	$('#clear').on('vclick', function(){ 
 		clearCurrentList();
+		$('.ui-btn-active').removeClass('ui-btn-active');
 	});
 
 	/* Share the list */
