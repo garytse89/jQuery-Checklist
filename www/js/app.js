@@ -398,13 +398,13 @@ function renderTemplates() {
 		 		$('#listOfChecklists').append('<li id="listTemplate"><a href="#" id='+key+'>'+key+'</a></li>');	
 
 		 		$('#'+key).on('vclick', function(){
+		 			var checklistToLoad = $(this).attr('id');
 					console.log("you have clicked on the template link : " + $(this).attr('id'));
-			 		currentChecklist = $(this).attr('id');
 			 		confirmDelete();
-			 		console.log("loading this checklist: " + listOfChecklists[currentChecklist]);
+			 		console.log("loading this checklist: " + listOfChecklists[checklistToLoad]);
 			 		console.log("key = " + key);
-			 		console.log("currentChecklist = " + currentChecklist);
-			 		loadChecklist(currentChecklist, listOfChecklists[currentChecklist], true, false);
+			 		console.log("currentChecklist = " + checklistToLoad);
+			 		loadChecklist(checklistToLoad, listOfChecklists[checklistToLoad], true, false);
 			 	});
 
 			 	$('#'+key).on('taphold', function(e){
@@ -592,7 +592,7 @@ function loadChecklist(nameOfTemplate, template, transitionToHome, refresh) {
 		}
 
 		// change heading title of home page, restrict it to use-mode only
-		$('#homeTitle').text(nameOfTemplate + ' (checklist read-only mode)');
+		$('#homeTitle').text(nameOfTemplate + ' (unsaved)');
 		$('#editDialogLaunch').show();
 		$('#editDialogLaunch').text("Edit Mode");
 		readOnly = true;
@@ -600,6 +600,9 @@ function loadChecklist(nameOfTemplate, template, transitionToHome, refresh) {
 		templatechecker = template;
 
 	}
+
+	if( nameOfTemplate ) currentChecklist = nameOfTemplate;
+	else currentChecklist = 'untitled';
 
 	try {
 		for ( i=0; i<template.length; i++) {
@@ -831,6 +834,8 @@ $(document).ready(function() {
 
 	$('#newItem').on('vclick', function(){
 		if( readOnly == true ) return; // no changes allowed in readOnly
+		
+		cancelRename();
 
 		if( inputShown == false ) {
 			$('#inputGrid').show();
@@ -849,6 +854,8 @@ $(document).ready(function() {
 	$('#newLabel').on('vclick', function(){
 		if( readOnly == true ) return; // no changes allowed in readOnly
 
+		cancelRename();
+
 		$('#inputGrid').show();
 		if( inputShown == false ) {
 			$('#inputGrid').show();
@@ -865,8 +872,10 @@ $(document).ready(function() {
 	});
 
 	$('#templatesLink').on('vclick', function(){
+		cancelRename();
 		// load page manually instead of using the a href link, which uses the default slow click
 		$.mobile.changePage('#templates', {transition: 'slide'});
+
 	});
 
 	$('#homeLink').on('vclick', function(){
@@ -876,6 +885,7 @@ $(document).ready(function() {
 
 	/* Delete the whole list */
 	$('#clearDialogLaunch').on('vclick', function(){ 
+		cancelRename();
 		$('#clearDialog').popup("open", { overlayTheme: "a" });
 	});
 
@@ -940,6 +950,7 @@ $(document).ready(function() {
 
 	/* Save the list as a template */
 	$('#saveDialogLaunch').on('vclick', function(){ 
+		cancelRename();
 		if( bareListArray.length == 0 ) {
 			$('#noSavingDialog').popup("open", { overlayTheme: "a" });
 			setTimeout(function(){ 
