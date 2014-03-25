@@ -894,7 +894,14 @@ $(document).ready(function() {
 
 	/* Save the list as a template */
 	$('#saveDialogLaunch').on('vclick', function(){ 
-		$('#saveDialog').popup("open", { overlayTheme: "a" });
+		if( bareListArray.length == 0 ) {
+			$('#noSavingDialog').popup("open", { overlayTheme: "a" });
+			setTimeout(function(){ 
+				$('.ui-btn-active').removeClass('ui-btn-active'); // since this line is called before button becomes highlighted, need to delay the removal
+			}, 300);
+		} else {
+			$('#saveDialog').popup("open", { overlayTheme: "a" });
+		}
 	});
 
 	$('#save').on('vclick', function(){
