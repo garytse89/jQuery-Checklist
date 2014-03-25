@@ -111,10 +111,20 @@
                         <div data-role="header" data-theme="a" class="ui-corner-top">
                             <h1>Delete unsaved checklist?</h1>
                         </div>
-                    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-                        <h3 class="ui-title">Untitled checklist needs to be saved</h3>
-                        <a href="#" id="confirmLoadTemplate" data-role="button" data-inline="true" data-theme="b">Confirm</a>
-                        <a href="#" class="cancelBtn" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>                                 
+                        <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                            <h3 class="ui-title">Untitled checklist needs to be saved</h3>
+                            <a href="#" id="confirmLoadTemplate" data-role="button" data-inline="true" data-theme="b">Confirm</a>
+                            <a href="#" class="cancelBtn" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>     
+                        </div>
+                    </div>
+
+                    <div data-role="popup" id="confirmDeleteTemplate" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                        <div data-role="header" data-theme="a" class="ui-corner-top">
+                            <h1>Delete this template?</h1>
+                        </div>
+                        <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+                            <a href="#" id="confirmDeleteTemplateBtn" data-role="button" data-inline="true" data-theme="b">Confirm</a>
+                            <a href="#" class="cancelBtn" data-role="button" data-inline="true" data-rel="back" data-theme="c">Cancel</a>     
                         </div>
                     </div>
 

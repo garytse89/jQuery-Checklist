@@ -10,6 +10,8 @@ var readOnly = false;
 var jStorageTesting = false; 
 var currentChecklist = 'untitled'; // string name of the current list
 var templateToLoad = null; // by default, app will load the checklist called 'untitled' and set this to be the contents of it (JSON)
+var templateToDelete = null;
+
 orderCount=1; // enumeration counter for each list item or label; one existing item so current counter starts off at 2
 subOrderCount=1;
 
@@ -299,7 +301,7 @@ function checkForCollapsableSection() {
 		if( listItems[i].checkbox == false && i < listItems.length-1 ) { // if label is very last item, don't bother
 			
 			console.log("label found");
-		
+
 			var beginningElement = i+1;
 			var allItemsChecked = true;
 			var currentSectionCounter = i+1;
@@ -373,6 +375,10 @@ function confirmDelete() {
 	}
 }
 
+function confirmDeleteTemplate() {
+	$("#confirmDeleteTemplate").popup("open", { overlayTheme: "a" });
+}
+
 function renderTemplates() {
 	$('#listOfChecklists').remove();
 	$('#templateGroup').append('<ul data-role="listview" data-filter="true" data-inset="true" id="listOfChecklists"></ul>');
@@ -390,6 +396,12 @@ function renderTemplates() {
 			 		console.log("key = " + key);
 			 		console.log("currentChecklist = " + currentChecklist);
 			 		loadChecklist(currentChecklist, listOfChecklists[currentChecklist], true, false);
+			 	});
+
+			 	$('#'+key).on('taphold', function(e){
+			 		e.stopPropagation();
+			 		templateToDelete = $(this).attr('id');
+			 		confirmDeleteTemplate();
 			 	});
 		 	}    	
 		}
@@ -919,6 +931,7 @@ $(document).ready(function() {
 	$('#save').on('vclick', function(){
 
 		var savedListName = $('#saveField').val().replace(/\s/g,"-"); // replace spaces with hyphens for valid id
+		savedListName = savedListName.replace(/\./g, '-'); // replace periods with hyphens
 
 		bareListArray.push( { "name" : savedListName } ); // bareListArray.name or ["name"] = savedListName; won't be seen or stringified
 	
@@ -1011,9 +1024,23 @@ $(document).ready(function() {
 		$('.ui-btn-active').removeClass('ui-btn-active'); // jQuery Mobile doesn't unhighlight clicked buttons automatically
 	});	
 
+	$('#confirmDeleteTemplateBtn').on('vclick', function() {
+		console.log("delete this template");
+		$('#'+templateToDelete).remove();
+		for( var key in listOfChecklists ) {
+			if( key == templateToDelete ) {
+				delete listOfChecklists[key];
+			}
+		}
+
+		$.jStorage.set('listOfChecklists', listOfChecklists);
+
+		$( "#confirmDeleteTemplate" ).popup( "close" )
+	});	
+
 	// load existing checklist
 	var existingChecklist = $.jStorage.get('untitled');
-	loadChecklist(null, existingChecklist, true, true);
+	loadChecklist(null, existingChecklist, false, true); // name of template is [null] (untitled), template, transitionToHome, refresh
 
 	// load the template page
 	listOfChecklists = $.jStorage.get('listOfChecklists') || {}; // if variable didn't exist in local storage, use empty object instead
