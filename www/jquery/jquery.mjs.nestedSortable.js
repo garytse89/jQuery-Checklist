@@ -45,7 +45,6 @@
 		},
 
 		_mouseDrag: function(event) {
-
 			if( readOnly == true ) return; // no changes allowed in readOnly
 
 			//Compute the helpers position
@@ -96,45 +95,45 @@
 			//Regenerate the absolute position used for position checks
 			this.positionAbs = this._convertPositionTo("absolute");
 
-      // Find the top offset before rearrangement,
-      var previousTopOffset = this.placeholder.offset().top;
+		      // Find the top offset before rearrangement,
+		      var previousTopOffset = this.placeholder.offset().top;
 
-			//Set the helper position
-			if(!this.options.axis || this.options.axis != "y") this.helper[0].style.left = this.position.left+'px';
-			if(!this.options.axis || this.options.axis != "x") this.helper[0].style.top = this.position.top+'px';
+					//Set the helper position
+					if(!this.options.axis || this.options.axis != "y") this.helper[0].style.left = this.position.left+'px';
+					if(!this.options.axis || this.options.axis != "x") this.helper[0].style.top = this.position.top+'px';
 
-			//Rearrange
-			for (var i = this.items.length - 1; i >= 0; i--) {
+					//Rearrange
+					for (var i = this.items.length - 1; i >= 0; i--) {
 
-				//Cache variables and intersection, continue if no intersection
-				var item = this.items[i], itemElement = item.item[0], intersection = this._intersectsWithPointer(item);
-				if (!intersection) continue;
+						//Cache variables and intersection, continue if no intersection
+						var item = this.items[i], itemElement = item.item[0], intersection = this._intersectsWithPointer(item);
+						if (!intersection) continue;
 
-				if(itemElement != this.currentItem[0] //cannot intersect with itself
-					&&	this.placeholder[intersection == 1 ? "next" : "prev"]()[0] != itemElement //no useless actions that have been done before
-					&&	!$.contains(this.placeholder[0], itemElement) //no action if the item moved is the parent of the item checked
-					&& (this.options.type == 'semi-dynamic' ? !$.contains(this.element[0], itemElement) : true)
-					//&& itemElement.parentNode == this.placeholder[0].parentNode // only rearrange items within the same container
-				) {
+						if(itemElement != this.currentItem[0] //cannot intersect with itself
+							&&	this.placeholder[intersection == 1 ? "next" : "prev"]()[0] != itemElement //no useless actions that have been done before
+							&&	!$.contains(this.placeholder[0], itemElement) //no action if the item moved is the parent of the item checked
+							&& (this.options.type == 'semi-dynamic' ? !$.contains(this.element[0], itemElement) : true)
+							//&& itemElement.parentNode == this.placeholder[0].parentNode // only rearrange items within the same container
+						) {
 
-					$(itemElement).mouseenter();
+							$(itemElement).mouseenter();
 
-					this.direction = intersection == 1 ? "down" : "up";
+							this.direction = intersection == 1 ? "down" : "up";
 
-					if (this.options.tolerance == "pointer" || this._intersectsWithSides(item)) {
-						$(itemElement).mouseleave();
-						this._rearrange(event, item);
-					} else {
-						break;
+							if (this.options.tolerance == "pointer" || this._intersectsWithSides(item)) {
+								$(itemElement).mouseleave();
+								this._rearrange(event, item);
+							} else {
+								break;
+							}
+
+							// Clear emtpy ul's/ol's
+							this._clearEmpty(itemElement);
+
+							this._trigger("change", event, this._uiHash());
+							break;
+						}
 					}
-
-					// Clear emtpy ul's/ol's
-					this._clearEmpty(itemElement);
-
-					this._trigger("change", event, this._uiHash());
-					break;
-				}
-			}
 
 			var parentItem = (this.placeholder[0].parentNode.parentNode &&
 							 $(this.placeholder[0].parentNode.parentNode).closest('.ui-sortable').length)
@@ -143,7 +142,7 @@
 			    level = this._getLevel(this.placeholder),
 			    childLevels = this._getChildLevels(this.helper);
 
-      // To find the previous sibling in the list, keep backtracking until we hit a valid list item.
+      		// To find the previous sibling in the list, keep backtracking until we hit a valid list item.
 			var previousItem = this.placeholder[0].previousSibling ? $(this.placeholder[0].previousSibling) : null;
 			if (previousItem != null) {
 				while (previousItem[0].nodeName.toLowerCase() != 'li' || previousItem[0] == this.currentItem[0] || previousItem[0] == this.helper[0]) {
@@ -156,18 +155,18 @@
 				}
 			}
 
-      // To find the next sibling in the list, keep stepping forward until we hit a valid list item.
-      var nextItem = this.placeholder[0].nextSibling ? $(this.placeholder[0].nextSibling) : null;
-      if (nextItem != null) {
-        while (nextItem[0].nodeName.toLowerCase() != 'li' || nextItem[0] == this.currentItem[0] || nextItem[0] == this.helper[0]) {
-          if (nextItem[0].nextSibling) {
-            nextItem = $(nextItem[0].nextSibling);
-          } else {
-            nextItem = null;
-            break;
-          }
-        }
-      }
+	      // To find the next sibling in the list, keep stepping forward until we hit a valid list item.
+	      var nextItem = this.placeholder[0].nextSibling ? $(this.placeholder[0].nextSibling) : null;
+	      if (nextItem != null) {
+	        while (nextItem[0].nodeName.toLowerCase() != 'li' || nextItem[0] == this.currentItem[0] || nextItem[0] == this.helper[0]) {
+	          if (nextItem[0].nextSibling) {
+	            nextItem = $(nextItem[0].nextSibling);
+	          } else {
+	            nextItem = null;
+	            break;
+	          }
+	        }
+	      }
 
 			var newList = document.createElement(o.listType);
 
