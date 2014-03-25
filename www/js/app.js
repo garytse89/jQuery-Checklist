@@ -837,7 +837,10 @@ $(document).ready(function() {
 	$('#renameGrid').hide();	
 
 	$('#newItem').on('vclick', function(){
-		if( readOnly == true ) return; // no changes allowed in readOnly
+		if( readOnly == true ) {
+			removeButtonHighlights();
+			return; // no changes allowed in readOnly
+		}
 		
 		cancelRename();
 
@@ -856,7 +859,10 @@ $(document).ready(function() {
 	});
 
 	$('#newLabel').on('vclick', function(){
-		if( readOnly == true ) return; // no changes allowed in readOnly
+		if( readOnly == true ) {
+			removeButtonHighlights();
+			return; // no changes allowed in readOnly
+		}
 
 		cancelRename();
 
