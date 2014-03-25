@@ -742,12 +742,12 @@ function deleteDetected(item, pos) {
 		console.log('removeeeeee');		
 		//item.remove();
 
-		var confirmDeleteButton = '<a href="#" id="confirmDeleteItem" data-mini="true" data-role="button" data-inline="true">Delete</a>';
-		var undoDeleteButton = '<a href="#" id="undoDeleteItem" data-mini="true" data-role="button" data-inline="true">Undo</a>';
+		var confirmDeleteButton = '<a href="#" id="confirmDeleteItem" class="ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all ui-btn-inline"></a>';
+        var undoDeleteButton = '<a href="#" id="undoDeleteItem" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all ui-btn-inline"></a>';
 
 		$(item).hide('slow');
-		$(item).after(confirmDeleteButton);
-		$(item).after(undoDeleteButton);
+		$(item).parent().append(confirmDeleteButton);
+		$(item).parent().append(undoDeleteButton);
 
 		$('#undoDeleteItem').on('vclick', function(e) {
 			$(item).show('slow');
@@ -762,10 +762,10 @@ function deleteDetected(item, pos) {
 			$('#undoDeleteItem').remove();
 			$('#confirmDeleteItem').remove();
 			resave();	
-		});
-
-		$('[type="button"]').button();			
+		});			
 	}	
+
+	$('[data-role="button"]').button(); 
 }
 
 $(document).ready(function() {	
