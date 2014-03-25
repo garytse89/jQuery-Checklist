@@ -682,6 +682,8 @@ function allowCollapsableSections() {
 function allowCollapsableSublists() {
 	// this function is run on a nestedSortable->mouseStop(), since a new collapsable button is created and needs to have a listener
 	// it is also run on the page loading to attach listeners to all existing collapsable buttons
+
+	$('.collapseButton').off('vclick'); // remove existing listeners to avoid duplicates, or else function will run multiple times on a click
 	$('.collapseButton').on('vclick', function(){
 		console.log("Collapse button is working");
 		$(this).parent().parent().children('ul').toggle('fast');
