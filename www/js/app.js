@@ -620,12 +620,10 @@ function resave(){
     		var expandButton = '<a href="#" id="collapseButton">(-)</a>';
     		$(this).children('div').append(expandButton); // append '+' button   
     		allowCollapsableSublists();  
-
-    		$(this).children('ul').children('li').each(function() {		
-    			$(this).addClass('noStyle');
-    		});
     	}    	
-	})
+	});
+
+	$('li').addClass('noStyle');
 
 	listToArray();
 	listToBareArray();
@@ -745,7 +743,7 @@ function deleteDetected(item, pos) {
 		var confirmDeleteButton = '<a href="#" id="confirmDeleteItem" class="ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all ui-btn-inline"></a>';
         var undoDeleteButton = '<a href="#" id="undoDeleteItem" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all ui-btn-inline"></a>';
 
-		$(item).hide('slow');
+		$(item).hide('fast');
 		$(item).parent().append(confirmDeleteButton);
 		$(item).parent().append(undoDeleteButton);
 
