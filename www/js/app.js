@@ -637,9 +637,6 @@ function loadChecklist(nameOfTemplate, template, transitionToHome, refresh) {
 function resave(){
 	if( deleting == true ) return; // resave only when a delete is actually confirmed.
 
-	console.log('call resave');
-	// re-enable renaming
-
 	// if item or label was also being renamed and then dragged, cancel that
 	cancelRename();
 
@@ -663,6 +660,8 @@ function resave(){
 	listToBareArray();
 
 	$.jStorage.set(currentChecklist, bareListArray);
+	
+	checkForCollapsableSection(); // if section is now empty, the label should not have a +/- button anymore
 }
 
 function allowSortable() {
@@ -841,7 +840,7 @@ $(document).ready(function() {
 			removeButtonHighlights();
 			return; // no changes allowed in readOnly
 		}
-		
+
 		cancelRename();
 
 		if( inputShown == false ) {
