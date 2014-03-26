@@ -38,7 +38,7 @@
             <ul id="checklist" class = "list" data-role="none" data-inset="true">
             </ul>
 
-            <div data-role="popup" id="saveDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+            <div data-role="popup" id="saveDialog" data-transition="pop" data-overlay-theme="a" data-theme="a" data-dismissible="false" class="ui-corner-all">
             <div data-role="header" data-theme="a" class="ui-corner-top">
                 <h1>Save</h1>
             </div>
@@ -55,7 +55,7 @@
                 <p>Empty list cannot be saved.<p>
             </div>
 
-            <div data-role="popup" id="clearDialog" data-overlay-theme="a" data-theme="c" data-dismissible="false" data-transition="pop" class="ui-corner-all">
+            <div data-role="popup" id="clearDialog" data-overlay-theme="a" data-theme="a" data-dismissible="false" data-transition="pop" class="ui-corner-all">
             <div data-role="header" data-theme="a" class="ui-corner-top">
                 <h1>Clear</h1>
             </div>
@@ -97,7 +97,6 @@
             <div data-role="header">
                 <a href="#" id="homeLink" data-icon="home" data-iconpos="notext" data-transition="slide">Home</a>
                 <h1>Templates</h1>               
-                <a href="#" id="loadDialogLaunch" data-rel="popup" data-transition="pop" data-icon="plus" data-position-to="window">Load Template</a>
             </div>
         </header>   
         <div data-role="content"> 
@@ -107,7 +106,7 @@
                     <ul data-role="listview" id="listOfChecklists" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
                     </ul>
 
-                    <div data-role="popup" id="confirmDelete" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                    <div data-role="popup" id="confirmDelete" data-transition="pop" data-overlay-theme="a" data-theme="a" data-dismissible="false" class="ui-corner-all">
                         <div data-role="header" data-theme="a" class="ui-corner-top">
                             <h1>Delete unsaved checklist?</h1>
                         </div>
@@ -118,7 +117,7 @@
                         </div>
                     </div>
 
-                    <div data-role="popup" id="confirmDeleteTemplate" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                    <div data-role="popup" id="confirmDeleteTemplate" data-transition="pop" data-overlay-theme="a" data-theme="a" data-dismissible="false" class="ui-corner-all">
                         <div data-role="header" data-theme="a" class="ui-corner-top">
                             <h1>Delete this template?</h1>
                         </div>
@@ -128,7 +127,7 @@
                         </div>
                     </div>
 
-                    <div data-role="popup" id="loadDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                    <div data-role="popup" id="loadDialog" data-transition="pop" data-overlay-theme="a" data-theme="a" data-dismissible="false" class="ui-corner-all">
                     <div data-role="header" data-theme="a" class="ui-corner-top">
                         <h1>Load</h1>
                     </div>
@@ -140,7 +139,7 @@
                         </div>
                     </div>
 
-                    <div data-role="popup" id="shareTemplateDialog" data-transition="pop" data-overlay-theme="a" data-theme="c" data-dismissible="false" class="ui-corner-all">
+                    <div data-role="popup" id="shareTemplateDialog" data-transition="pop" data-overlay-theme="a" data-theme="a" data-dismissible="false" class="ui-corner-all">
                         <div data-role="header" data-theme="a" class="ui-corner-top">
                             <h1>Choose a template to share</h1>
                         </div>
@@ -163,6 +162,7 @@
         <footer data-role="footer" data-position="fixed" data-tap-toggle="false">
             <nav data-role="navbar">
                 <ul>
+                    <li id="loadDialogLaunch"><a href="#" data-rel="popup" data-transition="pop" data-icon="plus" data-position-to="window">Load Template</a></li>
                     <li id="shareDialogLaunch"><a href="#" data-icon="plus">Share A Template</a></li>
                 </ul>
             </nav>
