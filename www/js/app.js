@@ -309,8 +309,6 @@ function checkForCollapsableSection() {
 		// add a label and its section into sectionedItems, then check whether or not its checkboxes are ticked
 		if( listItems[i].checkbox == false && i < listItems.length-1 ) { // if label is very last item, don't bother
 			
-			console.log("label found");
-
 			var beginningElement = i+1;
 			var allItemsChecked = true;
 			var currentSectionCounter = i+1;
@@ -318,7 +316,7 @@ function checkForCollapsableSection() {
 			var nextLabelFound = false;
 			for( j=i+1; j<listItems.length; j++ ) {
 				if( listItems[j].checkbox == true && nextLabelFound == false ) {
-					//console.log("Check if this item is checked: " + listItems[j].label + " = " + listItems[j].checked); // check if each checkbox is checked
+					console.log("Check if this item is checked: " + listItems[j].label + " = " + listItems[j].checked); // check if each checkbox is checked
 					allItemsChecked = allItemsChecked & listItems[j].checked;
 					//if(allItemsChecked == false) break;
 					currentSectionCounter++;
@@ -523,14 +521,14 @@ function listToArray(){
 			if( isParentItem($(this)) == true ) {
 				// push each sublist item into sublist
 				var sublistObject = [];
-				var counter = 1;
+				var counter = 1;				
 
 				$(this).children('ul').children('li').each( function() {
 					sublistObject.push( {
 						"selector" : $(this).children('div'),
 				    	"label" : $(this).children('div').children('label').text(),
 				    	"checkbox" : true, // label would be false
-				    	"checked" : false,
+				    	"checked" : $(this).children('div').children('input[type=checkbox]').is(':checked'),
 				    	"order" : counter, // probably not needed....
 					});
 					counter++;
@@ -540,7 +538,7 @@ function listToArray(){
 			    	"selector" : $(this).children('div'),
 			    	"label" : $(this).children('div').children('label').text(),
 			    	"checkbox" : true, // label would be false
-			    	"checked" : false,
+			    	"checked" : $(this).children('div').children('input[type=checkbox]').is(':checked'),
 			    	"order" : $(this).children('div').attr('class').replace('checkbox-',''),
 			    	"sublist" : sublistObject,
 			    });		    	
@@ -549,11 +547,13 @@ function listToArray(){
 
 			} else {
 
+				parentTester = $(this).children('div').children('input[type=checkbox]');
+
 				listItems.push( {
 			    	"selector" : $(this).children('div'), // <input class="css-checkbox"....><label>...
 			    	"label" : $(this).children('div').children('label').text(),
 			    	"checkbox" : true, // label would be false
-			    	"checked" : false,
+			    	"checked" : $(this).children('div').children('input[type=checkbox]').is(':checked'),
 			    	"order" : $(this).children('div').attr('class').replace('checkbox-',''),
 			    });			    
 
@@ -656,12 +656,14 @@ function resave(){
 
 	$('li').addClass('noStyle');
 
+	checkForCollapsableSection(); // if section is now empty, the label should not have a +/- button anymore
+	// this must come before listToArray() - listToArray sets all checkboxes back to false
+
 	listToArray();
 	listToBareArray();
 
 	$.jStorage.set(currentChecklist, bareListArray);
 	
-	checkForCollapsableSection(); // if section is now empty, the label should not have a +/- button anymore
 }
 
 function allowSortable() {
@@ -794,7 +796,8 @@ function deleteDetected(item, pos) {
 			disableRename = false;
 			$('#undoDeleteItem').remove();
 			$('#confirmDeleteItem').remove();
-			rerender(); // bug exists where a sublisted item is not placed back into the sublist, need to re-render list from raw data
+			//rerender(); // bug exists where a sublisted item is not placed back into the sublist, need to re-render list from raw data
+			// however rerendering unchecks all boxes, which is undesirable
 		});
 
 		$('#confirmDeleteItem').on('vclick', function(e) {
