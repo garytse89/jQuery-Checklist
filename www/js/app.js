@@ -780,7 +780,7 @@ function deleteDetected(item, pos) {
 	if( pos < -20 && deleting == false) {
 		deleting = true;
 		// treat as a swipe left delete
-		console.log('removeeeeee');		
+		console.log('remove an item (undo and delete allowed)');		
 		//item.remove();
 
 		var confirmDeleteButton = '<a href="#" id="confirmDeleteItem" class="ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all ui-btn-inline"></a>';
@@ -1051,6 +1051,7 @@ $(document).ready(function() {
 			createNewLabel();
 		}
 		$('#inputField').val('');
+		$('#inputField').focus();
 	}
 
 	$('#inputButton').on('vclick', function() {
